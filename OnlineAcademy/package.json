@@ -1,0 +1,12 @@
+{
+  "name": "online-academy",
+  "version": "0.0.0",
+  "description": "OnlineAcademy",
+  "main": "app.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
