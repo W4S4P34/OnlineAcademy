@@ -3,14 +3,13 @@ const model = require('../models/user.model');
 const bcrypt = require('bcrypt');
 const emailService = require('../controllers/emailService.route');
 const jwt = require('jsonwebtoken');
-const middleware = require('../middleware/middleware');
-//const category = require('../models/login.model');
+
+
 
 const router = express.Router();
-const PRIVATE_KEY = "5E884898DA28047151D0E56F8DC6292773603D0D6AABBDD62A11EF721D1542D8";
 
-router.get('/login', middleware.isAuthorized ,async (req, res) => {
-    if (res.locals.post) {
+router.get('/login' ,async (req, res) => {
+    if (res.locals.isAuthorized) {
         res.send("Watch List");
     }
     else {
@@ -18,6 +17,8 @@ router.get('/login', middleware.isAuthorized ,async (req, res) => {
     }
     await model.GetAll();
 })
+
+
 
 router.post('/login', async (req, res) => {
     const user = await model.GetByID(req.body);
@@ -30,7 +31,7 @@ router.post('/login', async (req, res) => {
 
         if (await bcrypt.compare(req.body.password, user.password)) {
             // Can't not sign this user -> Change object
-            res.cookie('tokenAuthorized', jwt.sign(user, PRIVATE_KEY), { maxAge: (2 * 60 * 60 * 1000), httpOnly: true });
+            res.cookie('tokenAuthorized', jwt.sign(user, process.env.PRIVATE_KEY), { maxAge: (2 * 60 * 60 * 1000), httpOnly: true });
             res.send("Success");
         }
         else {
@@ -44,15 +45,21 @@ router.post('/login', async (req, res) => {
 })
 
 router.get('/logout', function (req, res) {
-    const tokenAuthorized = req.cookies.tokenAuthorized;
-    if (tokenAuthorized) {
-        jwt.verify(tokenAuthorized, PRIVATE_KEY, (err, authData) => {
-            if (!err) {
-                res.clearCookie('tokenAuthorized');
-                res.redirect('http://yanghoco.ddns.net/user/login');
-            }
-        })
+    if (res.locals.isAuthorized) {
+        res.clearCookie('tokenAuthorized');
     }
+    res.redirect('http://yanghoco.ddns.net/user/login');
+    //const tokenAuthorized = req.cookies.tokenAuthorized;
+    //if (tokenAuthorized) {
+    //    jwt.verify(tokenAuthorized, process.env.PRIVATE_KEY, (err, authData) => {
+    //        if (!err) {
+    //            res.clearCookie('tokenAuthorized');
+    //            res.redirect('http://yanghoco.ddns.net/user/login');
+    //        }
+    //    })
+    //}
+    //else
+    //    res.redirect('http://yanghoco.ddns.net/user/login');
 })
 
 router.get('/register', function (req, res) {
@@ -69,7 +76,7 @@ router.post('/register', async (req, res) => {
         //#region Fields
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
         const user = { username: req.body.username, password: hashedPassword, email: req.body.email };
-        const token = jwt.sign(user, PRIVATE_KEY, { expiresIn: '10m' });
+        const token = jwt.sign(user, process.env.PRIVATE_KEY, { expiresIn: '10m' });
         //#endregion
 
         //#region Log
@@ -88,11 +95,10 @@ router.post('/register', async (req, res) => {
     } catch (e) {
         res.status(500).send("Catch Error: " + e);
     }
-
 })
 router.get('/confirmation/:token', function (req, res) {
     try {
-        jwt.verify(req.params.token, PRIVATE_KEY,async (err, authData) => {
+        jwt.verify(req.params.token, process.env.PRIVATE_KEY,async (err, authData) => {
             if (err) {
                 res.send("OTP expires");
             }
@@ -107,9 +113,17 @@ router.get('/confirmation/:token', function (req, res) {
     }
 })
 
-router.get('/myWatchList', middleware.isAuthorized, function (req, res) {
-    if (res.locals.post) {
-        res.send("Watch List");
+router.get('/myWatchList', function (req, res) {
+    if (res.locals.isAuthorized) {
+        res.send("My Watch List");
+    }
+    else {
+        res.redirect('http://yanghoco.ddns.net/user/login');
+    }
+})
+router.get('/info', function (req, res) {
+    if (res.locals.isAuthorized) {
+        res.send("My Information");
     }
     else {
         res.redirect('http://yanghoco.ddns.net/user/login');

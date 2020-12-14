@@ -1,6 +1,4 @@
 const nodemailer = require("nodemailer");
-const GMAIL_USER = 'yanghoco3002@gmail.com'
-const GMAIL_PASSWORD = '9:00*pm*15/04'
 
 module.exports = {
     sendConfirmationEmail(user, token ,callback) {
@@ -8,8 +6,8 @@ module.exports = {
             service: 'gmail',
             secure: true,
             auth: {
-                user: GMAIL_USER,
-                pass: GMAIL_PASSWORD
+                user: process.env.GMAIL_USER,
+                pass: process.env.GMAIL_PASSWORD
             },
             tls: {
                 // do not fail on invalid certs
@@ -18,7 +16,7 @@ module.exports = {
         });
         const url = `http://yanghoco.ddns.net/user/confirmation/${token}`;
         let mailOptions = {
-            from: GMAIL_USER,
+            from: process.env.GMAIL_USER,
             to: user.email,
             subject: 'Message',
             text: 'Hi',

@@ -13,7 +13,6 @@ module.exports = {
         const sql = "select * from student";
         const [rows, fields] = await db.load(sql);
         console.log(rows);
-        
     },
 
     async Add(user) {
@@ -43,8 +42,7 @@ module.exports = {
             password: rows[0].password,
             email: rows[0].email,
             name: rows[0].name,
-            phoneNumber: rows[0].phone_number,
-            gender: rows[0].gender
+            phoneNumber: rows[0].phone_number
         };
     },
 

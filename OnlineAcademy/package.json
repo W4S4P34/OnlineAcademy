@@ -9,12 +9,15 @@
   "dependencies": {
     "bcrypt": "^5.0.0",
     "cookie-parser": "^1.4.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-handlebars": "^5.2.0",
     "ip": "^1.1.5",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "mysql2": "^2.2.5",
-    "nodemailer": "^6.4.17"
+    "nodemailer": "^6.4.17",
+    "passport": "^0.4.1",
+    "passport-facebook": "^3.0.0"
   }
 }
