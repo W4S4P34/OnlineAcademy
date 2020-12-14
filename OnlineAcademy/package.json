@@ -1,10 +1,21 @@
 {
   "name": "online-academy",
-  "version": "0.0.0",
-  "description": "OnlineAcademy",
+  "version": "1.0.0",
+  "description": "A website provides online courses",
+  "homepage": "https://github.com/lathanhthai1905/FinalProject-OnlineAcademy-18CLC-KTPM2",
   "main": "app.js",
-  "author": {
-    "name": ""
+  "contributors": [
+    {
+      "name": "La Thanh Thai",
+      "email": "18127207@student.hcmus.edu.vn"
+    },
+    {
+      "name": "Hy Phu Quyen",
+      "email": "18127195@student.hcmus.edu.vn"
+    }
+  ],
+  "scripts": {
+    "start": "node app"
   },
   "dependencies": {
     "bcrypt": "^5.0.0",
