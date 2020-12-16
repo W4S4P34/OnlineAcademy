@@ -358,7 +358,8 @@ MigrationBackup/
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
 
-# Node_Modules
+# Node_Modules,Resource
 node_modules/
+resourse/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio

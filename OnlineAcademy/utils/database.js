@@ -6,7 +6,7 @@ const promisePool = pool.promise();
 
 module.exports = {
     load(sql, condition) {
-        console.log(condition);
+        console.log("condition: " + condition);
         return promisePool.query(sql,condition);
     },
     add(entity, tableName) {

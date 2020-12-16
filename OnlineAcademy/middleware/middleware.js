@@ -12,6 +12,7 @@ module.exports = {
                         console.log("Login Success");
                         isAuthorized = true;
                         res.locals.user = authData;
+                        
                     }
                 })
             } catch (e) {}

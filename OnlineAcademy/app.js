@@ -2,7 +2,6 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-
 const exphbs = require('express-handlebars');
 const ip = require("ip");
 
@@ -15,7 +14,9 @@ require('dotenv').config();
 
 app.use(cookieParser());
 app.use(morgan('dev'));
-app.use(middleware.CheckAuthorized);
+app.use(express.urlencoded({
+    extended: true
+}));
 
 app.engine('hbs', exphbs({
     defaultLayout: 'main',
@@ -29,10 +30,7 @@ app.use('/views/assets', express.static('views/assets'));
 
 // Program configurations
 app.set('view engine', 'hbs');
-
-app.use(express.urlencoded({
-    extended: true
-}));
+app.use(middleware.CheckAuthorized);
 
 // Controllers declaration
 try {
@@ -41,16 +39,6 @@ try {
 } catch (e) {
     console.log(e);
 }
-
-// Handle error
-//app.get('/err', function (req, res) {
-//    throw new Error('Error!');
-//});
-
-//app.use(function (err, req, res, next) {
-//    console.log("Error call");
-//    res.status(404).send("Link not found");
-//})
 
 // App start listening
 app.listen(process.env.PORT, ip.address(), function () {

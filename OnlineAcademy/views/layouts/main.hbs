@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -23,6 +23,12 @@
     <!--Fontawesome-->
     <link rel="stylesheet" href="views/assets/css/font-awesome.min.css">
 
+    <script>
+        jQuery(function () {
+
+
+        });
+    </script>
 </head>
 
 <body>
@@ -42,22 +48,22 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav pull-right mainNav">
-                    <li class="active">
-                        <a href="#">Home</a>
+                    <li id="home">
+                        <a href="/">Home</a>
                     </li>
-                    <li>
-                        <a href="#">About</a>
+                    <li id="about">
+                        <a href="/about">About</a>
                     </li>
-                    <li>
-                        <a href="#">Courses</a>
+                    <li id="course">
+                        <a href="/course">Courses</a>
                     </li>
-                    <li>
+                    <li id="price">
                         <a href="#">Price</a>
                     </li>
-                    <li>
+                    <li id="video">
                         <a href="#">Videos</a>
                     </li>
-                    <li class="dropdown">
+                    <li class="dropdown" id="pages">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Pages
                             <b class="caret"></b>
@@ -68,7 +74,7 @@
                             <li><a href="#">Dummy Link3</a></li>
                         </ul>
                     </li>
-                    <li><a href="#">Contact</a></li>
+                    <li id="contact"><a href="/contact">Contact</a></li>
 
                 </ul>
             </div>
@@ -112,6 +118,13 @@
                 imagePath: 'views/assets/images/'
             });
 
+
+
+        });
+
+        jQuery(() => {
+            const currentView = '{{currentView}}';
+            jQuery(currentView).addClass("active");
         });
     </script>
 
