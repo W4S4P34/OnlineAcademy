@@ -3,6 +3,7 @@ const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const exphbs = require('express-handlebars');
+const express_handlebars_sections = require('express-handlebars-sections');
 const ip = require("ip");
 
 // Self-Definition modules
@@ -22,7 +23,10 @@ app.engine('hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs',
     layoutsDir: __dirname + '/views/layouts/',
-    partialsDir: __dirname + '/views/partials/'
+    partialsDir: __dirname + '/views/partials/',
+    helpers: {
+        section: express_handlebars_sections()
+    }
 }));
 
 // Static declaration

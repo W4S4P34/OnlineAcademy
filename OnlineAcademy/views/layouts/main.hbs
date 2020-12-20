@@ -22,13 +22,6 @@
 
     <!--Fontawesome-->
     <link rel="stylesheet" href="views/assets/css/font-awesome.min.css">
-
-    <script>
-        jQuery(function () {
-
-
-        });
-    </script>
 </head>
 
 <body>
@@ -46,37 +39,102 @@
                     <img src="views/assets/images/logo.png" alt="EduHub">
                 </a>
             </div>
+
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav pull-right mainNav">
+
                     <li id="home">
                         <a href="/">Home</a>
                     </li>
+
+                    <li class="dropdown" id="categories">
+                        <a class="dropdown-toggle noselect disabled" role="button" data-toggle="dropdown">
+                            Categories
+                            <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="/categories">Dummy Link1</a>
+                            </li>
+
+                            <li class="subdropdown">
+                                <a href="/categories" class="dropdown-toggle noselect disabled" role="button"
+                                    data-toggle="subdropdown">
+                                    Console App Development
+                                </a>
+
+                                <ul class="dropdown-submenu">
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Dummy Link3.1</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Dummy Link3.2</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Console Development</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+
+                            <li class="subdropdown">
+                                <a href="/categories" class="dropdown-toggle noselect disabled" role="button"
+                                    data-toggle="subdropdown">
+                                    Mobile Web Development
+                                </a>
+
+                                <ul class="dropdown-submenu">
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Dummy Link3.1</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Dummy Link3.2</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Mobile Development For Android</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+
+                             <li class="subdropdown">
+                                <a href="/categories" class="dropdown-toggle noselect disabled" role="button"
+                                    data-toggle="subdropdown">
+                                    Game Development
+                                </a>
+
+                                <ul class="dropdown-submenu">
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Dummy Link3.1</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Dummy Link3.2</a>
+                                    </li>
+
+                                    <li>
+                                        <a class="dropdown-item" href="/categories">Game Development For Android</a>
+                                    </li>
+                                </ul>
+
+                            </li>
+
+                        </ul>
+                    </li>
+
                     <li id="about">
                         <a href="/about">About</a>
                     </li>
-                    <li id="course">
-                        <a href="/course">Courses</a>
-                    </li>
-                    <li id="price">
-                        <a href="#">Price</a>
-                    </li>
-                    <li id="video">
-                        <a href="#">Videos</a>
-                    </li>
-                    <li class="dropdown" id="pages">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            Pages
-                            <b class="caret"></b>
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a href="#">Dummy Link1</a></li>
-                            <li><a href="#">Dummy Link2</a></li>
-                            <li><a href="#">Dummy Link3</a></li>
-                        </ul>
-                    </li>
+
                     <li id="contact"><a href="/contact">Contact</a></li>
 
                 </ul>
+
             </div>
             <!--/.nav-collapse -->
         </div>
@@ -102,25 +160,8 @@
     <script src="views/assets/js/custom.js"></script>
 
     <script>
-        jQuery(function () {
 
-            jQuery('#camera_wrap_4').camera({
-                transPeriod: 500,
-                time: 3000,
-                height: '600',
-                loader: 'false',
-                pagination: true,
-                thumbnails: false,
-                hover: false,
-                playPause: false,
-                navigation: false,
-                opacityOnGrid: false,
-                imagePath: 'views/assets/images/'
-            });
-
-
-
-        });
+        {{{_sections.camera_wrap}}}
 
         jQuery(() => {
             const currentView = '{{currentView}}';
