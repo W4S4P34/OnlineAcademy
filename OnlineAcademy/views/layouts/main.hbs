@@ -54,76 +54,28 @@
                         </a>
 
                         <ul class="dropdown-menu">
+                            {{#each listCourseFields}}
+                            {{#if this.empty}}
                             <li>
-                                <a class="dropdown-item" href="/categories">Dummy Link1</a>
+                                <a class="dropdown-item" href='/course/byField/{{this.name}}'>{{this.name}}</a>
                             </li>
-
+                            {{else}}
                             <li class="subdropdown">
-                                <a href="/categories" class="dropdown-toggle noselect disabled" role="button"
-                                    data-toggle="subdropdown">
-                                    Console App Development
+                                <a href="/course/byField/{{this.name}}" class="dropdown-toggle noselect disabled" role="button"
+                                   data-toggle="subdropdown">
+                                    {{this.name}}
                                 </a>
-
                                 <ul class="dropdown-submenu">
+                                    {{#each this.listTheme}}
                                     <li>
-                                        <a class="dropdown-item" href="/categories">Dummy Link3.1</a>
+                                        <a class="dropdown-item" href='/course/byTheme/{{this.theme}}'>{{this.theme}}</a>
                                     </li>
-
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Dummy Link3.2</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Console Development</a>
-                                    </li>
+                                    {{/each}}
                                 </ul>
 
                             </li>
-
-                            <li class="subdropdown">
-                                <a href="/categories" class="dropdown-toggle noselect disabled" role="button"
-                                    data-toggle="subdropdown">
-                                    Mobile Web Development
-                                </a>
-
-                                <ul class="dropdown-submenu">
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Dummy Link3.1</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Dummy Link3.2</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Mobile Development For Android</a>
-                                    </li>
-                                </ul>
-
-                            </li>
-
-                             <li class="subdropdown">
-                                <a href="/categories" class="dropdown-toggle noselect disabled" role="button"
-                                    data-toggle="subdropdown">
-                                    Game Development
-                                </a>
-
-                                <ul class="dropdown-submenu">
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Dummy Link3.1</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Dummy Link3.2</a>
-                                    </li>
-
-                                    <li>
-                                        <a class="dropdown-item" href="/categories">Game Development For Android</a>
-                                    </li>
-                                </ul>
-
-                            </li>
-
+                            {{/if}}
+                            {{/each}}
                         </ul>
                     </li>
 
