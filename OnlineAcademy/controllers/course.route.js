@@ -10,17 +10,35 @@ router.get('/byField/:field', async (req, res) => {
     res.locals.listCourse = await model.GetCourseByField(req.params.field);
     res.render('vwCategories/index');
 })
-router.get('/byTheme/:theme', async (req, res) => {
+router.get('/about', async (req, res) => {
+    res.locals.currentView = '#about';
+    res.locals.listCourseFields = await model.GetAllFields();
+    res.render('vwAbout/index');
+})
+router.get('/categories', async (req, res) => {
     res.locals.currentView = '#categories';
     res.locals.listCourseFields = await model.GetAllFields();
-    res.locals.listCourse = await model.GetCourseByTheme(req.params.theme);
     res.render('vwCategories/index');
 })
-router.get('/detail/:id', async (req, res) => {
-    res.locals.currentView = '#categories';
+router.get('/contact', async (req, res) => {
+    res.locals.currentView = '#contact';
     res.locals.listCourseFields = await model.GetAllFields();
-    res.locals.detailCourse = await model.GetDetailCourseById(req.params.id);
+    res.render('vwContact/index');
+})
+router.get('/course/byField/:field',async (req, res) => {
+    res.locals.currentView = '#categories';
+    const result = await model.GetCourseByField(req.params.field);
+    res.locals.listCourseFields = await model.GetAllFields();
+    // console.log(req.params.field);
     res.render('vwCategories/index');
+})
+router.get('/course/byTheme/:theme', async (req, res) => {
+    res.locals.currentView = '#categories';
+    const result = await model.GetCourseByTheme(req.params.theme);
+    res.locals.listCourseFields = await model.GetAllFields();
+    // console.log(req.params.theme);
+    res.render('vwCategories/index');
+
 })
 module.exports = router;
 
