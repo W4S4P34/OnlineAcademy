@@ -361,5 +361,6 @@ MigrationBackup/
 # Node_Modules,Resource
 node_modules/
 resourse/
+resource/
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudio

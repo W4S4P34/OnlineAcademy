@@ -30,15 +30,16 @@ app.engine('hbs', exphbs({
 }));
 
 // Static declaration
+app.use('/resource', express.static('resource'));
 app.use('/views/assets', express.static('views/assets'));
-
 // Program configurations
 app.set('view engine', 'hbs');
 app.use(middleware.CheckAuthorized);
 
 // Controllers declaration
 try {
-    app.use('/', require('./controllers/course.route'));
+    app.use('/', require('./controllers/homepage.route'));
+    app.use('/course', require('./controllers/course.route'));
     app.use('/user', require('./controllers/user.route'));
 } catch (e) {
     console.log(e);

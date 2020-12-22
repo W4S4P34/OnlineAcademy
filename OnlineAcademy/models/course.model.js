@@ -50,9 +50,7 @@ module.exports = {
                 empty: tmp == null,
                 listTheme: tmp
             })
-            console.log(listCourseFields[i].listTheme);
         }
-        console.log(listCourseFields);
         return listCourseFields;
     },
     async GetThemeByField(name) {
@@ -64,7 +62,7 @@ module.exports = {
         return rows;
     },
     async GetCourseByField(field) {
-        const sql = 'select course.* from fields join course on course.fieldsId = fields.Id and name = ?';
+        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,round(avg(feedback.star),1) as star,count(feedback.star) as rateNumber,course.imagePath,course.price from fields join course on course.fieldsId = fields.Id and fields.name = ? join lecturer on course.lecturerId = lecturer.Id join feedback on feedback.courseId = course.Id group by course.title';
         const condition = [field];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length == 0)
@@ -72,11 +70,19 @@ module.exports = {
         return rows;
     },
     async GetCourseByTheme(theme) {
-        const sql = 'select course.* from fields join course on course.fieldsId = fields.Id and fields.theme = ?';
+        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,round(avg(feedback.star),1) as star,count(feedback.star) as rateNumber,course.imagePath,course.price from fields join course on course.fieldsId = fields.Id and fields.theme = ? join lecturer on course.lecturerId = lecturer.Id join feedback on feedback.courseId = course.Id group by course.title';
         const condition = [theme];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length == 0)
             return null;
         return rows;
     },
+    async GetDetailCourseById(id) {
+        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,round(avg(feedback.star),1) as star,count(feedback.star) as rateNumber,course.imagePath,course.price from course join fields on fields.id = course.fieldsId join feedback on feedback.courseId = course.id join lecturer on lecturer.id = course.lecturerId where course.id = ? group by course.id';
+        const condition = [id];
+        const [rows, fields] = await db.load(sql, condition);
+        if (rows.length == 0)
+            return null;
+        return rows[0];
+    }
 };
