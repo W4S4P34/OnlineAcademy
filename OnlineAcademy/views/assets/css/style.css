@@ -1253,3 +1253,192 @@ nav#filter a.current {
 	user-select: none;
 	/* Non-prefixed version, currently upported by Chrome and Opera */
 }
+
+.sidebar-categories.panel,
+.main-categories.panel {
+	margin-top: 20px;
+	margin-bottom: 0px;
+	background-color: #fff;
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	-webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+	box-shadow: 0 2px 2px rgba(0, 0, 0, .05);
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+.sidebar-categories .panel-heading,
+.main-categories .panel-heading {
+	font-size: 16px;
+	font-weight: bold;
+}
+
+.sidebar-categories .list-group .list-group-item.active {
+	background-color: #3d84e6;
+}
+
+/* **************************************** */
+/* Carousel */
+
+#carousel-simple .carousel-inner .cat-bg {
+	position: absolute;
+	z-index: 1;
+
+	background: rgba(61, 132, 230, 0.45);
+
+	width: 100%;
+	height: 100%;
+}
+
+#carousel-simple .carousel-inner .item .cat-title {
+	position: absolute;
+	z-index: 1;
+
+	width: 100%;
+	height: 100%;
+
+	text-align: center;
+	top: 50%;
+	transform: translate(0px, -80px);
+
+	font-family: 'Oswald', sans-serif;
+	font-size: 45px;
+	font-weight: bold;
+	color: #fff;
+}
+
+#carousel-simple .carousel-inner .item .cat-field {
+	position: absolute;
+	z-index: 1;
+
+	width: 100%;
+
+	text-align: center;
+	top: 50%;
+	transform: translate(0px, -20px);
+
+	font-family: 'Oswald', sans-serif;
+	font-size: 25px;
+	font-weight: bold;
+	color: #fff;
+}
+
+#carousel-simple .carousel-inner .item .cat-lecturer {
+	position: absolute;
+	z-index: 1;
+
+	width: 100%;
+
+	text-align: center;
+	top: 50%;
+	transform: translate(0px, 20px);
+
+	font-family: 'Oswald', sans-serif;
+	font-size: 20px;
+	color: #fff;
+}
+
+#carousel-simple .carousel-inner .item .cat-price {
+	position: absolute;
+	z-index: 1;
+
+	width: 100%;
+
+	left: 0%;
+	bottom: 0%;
+	transform: translate(150px, -30px);
+
+	font-family: 'Oswald', sans-serif;
+	font-size: 20px;
+	color: #fff;
+}
+
+#carousel-simple .carousel-inner .item .container {
+	display: block;
+	width: 100%;
+	height: 300px;
+	overflow: hidden;
+}
+
+#carousel-simple .carousel-inner .item .container img {
+	position: absolute;
+	width: 100%;
+	left: 0%;
+}
+
+#carousel-simple.carousel .left>i,
+#carousel-simple.carousel .right>i {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+}
+
+#carousel-simple.carousel .right>i {
+	left: auto;
+	right: 50px;
+}
+
+#carousel-simple.carousel .left>i {
+	left: 50px;
+	right: auto;
+}
+
+#carousel-simple .carousel-indicators .active {
+	background: rgba(0, 0, 0, 0.5);
+}
+
+#carousel-simple .carousel-indicators li {
+	border: 1px solid rgba(0, 0, 0, 0.7);
+	background: rgba(255, 255, 255, 0.7);
+}
+
+#carousel-simple .carousel-control {
+	color: rgba(255, 255, 255, 0.7);
+	z-index: 2;
+}
+
+/* **************************************** */
+/* Courses */
+
+#cat-all .pagination {
+	display: flex;
+	justify-content: center;
+}
+
+#cat-courses .thumbnail .container {
+	position: relative;
+	width: 100%;
+	height: 200px;
+	max-height: 200px;
+	overflow: hidden;
+}
+
+#cat-courses .thumbnail img {
+	max-height: 100%;
+    max-width: 100%;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+}
+
+#cat-transaction-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#cat-course-caption {
+	display: flex;
+	justify-content: space-between;
+}
+
+#cat-course-review {
+	display: flex;
+	justify-content: flex-end;
+}
