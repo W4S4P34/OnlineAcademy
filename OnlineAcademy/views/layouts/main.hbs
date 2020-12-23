@@ -57,18 +57,18 @@
                             {{#each listCourseFields}}
                             {{#if this.empty}}
                             <li>
-                                <a class="dropdown-item" href='/course/byField/{{this.name}}'>{{this.name}}</a>
+                                <a class="dropdown-item" href='/course/byField/{{this.name}}/?page=1'>{{this.name}}</a>
                             </li>
                             {{else}}
                             <li class="subdropdown">
-                                <a href="/course/byField/{{this.name}}" class="dropdown-toggle noselect disabled" role="button"
+                                <a href="/course/byField/{{this.name}}/?page=1" class="dropdown-toggle noselect disabled" role="button"
                                    data-toggle="subdropdown">
                                     {{this.name}}
                                 </a>
                                 <ul class="dropdown-submenu">
                                     {{#each this.listTheme}}
                                     <li>
-                                        <a class="dropdown-item" href='/course/byTheme/{{this.theme}}'>{{this.theme}}</a>
+                                        <a class="dropdown-item" href='/course/byTheme/{{this.theme}}/?page=1'>{{this.theme}}</a>
                                     </li>
                                     {{/each}}
                                 </ul>

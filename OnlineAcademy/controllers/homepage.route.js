@@ -5,22 +5,22 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
     res.locals.currentView = '#home';
-    res.locals.listCourseFields = await model.GetAllFields();
+    res.locals.listCourseFields = await model.GetAllFieldsAndTheme();
     res.render('vwHome/index');
 })
 router.get('/about', async (req, res) => {
     res.locals.currentView = '#about';
-    res.locals.listCourseFields = await model.GetAllFields();
+    res.locals.listCourseFields = await model.GetAllFieldsAndTheme();
     res.render('vwAbout/index');
 })
 router.get('/categories', async (req, res) => {
     res.locals.currentView = '#categories';
-    res.locals.listCourseFields = await model.GetAllFields();
+    res.locals.listCourseFields = await model.GetAllFieldsAndTheme();
     res.render('vwCategories/index');
 })
 router.get('/contact', async (req, res) => {
     res.locals.currentView = '#contact';
-    res.locals.listCourseFields = await model.GetAllFields();
+    res.locals.listCourseFields = await model.GetAllFieldsAndTheme();
     res.render('vwContact/index');
 })
 module.exports = router;

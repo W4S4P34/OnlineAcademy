@@ -20,11 +20,18 @@
                 <div class="panel-heading">Categories</div>
 
                 <div class="list-group">
-                    <a href="#" class="list-group-item active">
-                        <span class="badge">0</span>
-                        Cras justo odio
+                    {{#each listCourseFields}}
+                    {{#if this.isActive}}
+                    <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item active">
+                    {{else}}
+                    <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item">
+                    {{/if}}
+                    <span class="badge">{{this.courseNumber}}</span>
+                    {{this.name}}
                     </a>
-                    <a href="#" class="list-group-item">
+                    {{/each}}
+
+                    <!--<a href="#" class="list-group-item">
                         <span class="badge">0</span>
                         Dapibus ac facilisis in
                     </a>
@@ -39,7 +46,7 @@
                     <a href="#" class="list-group-item">
                         <span class="badge">0</span>
                         Vestibulum at eros
-                    </a>
+                    </a>-->
                 </div>
             </div>
         </div>
@@ -51,94 +58,47 @@
                 <div id="carousel-simple" class="carousel slide" data-ride="carousel">
                     <!-- Indicators -->
                     <ol class="carousel-indicators">
-                        <li data-target="#carousel-simple" data-slide-to="0" class="active"></li>
-                        <li data-target="#carousel-simple" data-slide-to="1"></li>
+                        {{#each listHighlightCourse}}
+                        {{#if @first}}
+                        <li data-target="#carousel-simple" data-slide-to={{this.rowNumber}} class="active"></li>
+                        {{else}}
+                        <li data-target="#carousel-simple" data-slide-to={{this.rowNumber}}></li>
+                        {{/if}}
+                        {{/each}}
+                        
+                        <!--<li data-target="#carousel-simple" data-slide-to="1"></li>
                         <li data-target="#carousel-simple" data-slide-to="2"></li>
-                        <li data-target="#carousel-simple" data-slide-to="3"></li>
+                        <li data-target="#carousel-simple" data-slide-to="3"></li>-->
                     </ol>
 
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
-                        <a href="" class="item active">
+                        {{#each listHighlightCourse}}
+                            {{#if @first}}
+                            <a href="" class="item active">
+                            {{else}}
+                            <a href="" class="item">
+                            {{/if}}
                             <div class="cat-bg">
                                 <div class="cat-title noselect">
-                                    Course name
+                                    {{this.title}}
                                 </div>
                                 <div class="cat-field noselect">
-                                    Field
+                                    {{this.fieldName}}
                                 </div>
                                 <div class="cat-lecturer noselect">
-                                    Lecturer
+                                    {{this.lecturerName}}
                                 </div>
                                 <div class="cat-price noselect">
-                                    $ 0.00
+                                    $ {{this.price}}
                                 </div>
                             </div>
 
                             <div class="container">
-                                <img class="img-responsive center-block" src="/views/assets/images/test-1.jpg">
+                                <img class="img-responsive center-block" src="/resource/public/course/{{this.id}}/photo.png">
                             </div>
-                        </a>
-                        <a href="" class="item">
-                            <div class="cat-bg">
-                                <div class="cat-title noselect">
-                                    Course name
-                                </div>
-                                <div class="cat-field noselect">
-                                    Field
-                                </div>
-                                <div class="cat-lecturer noselect">
-                                    Lecturer
-                                </div>
-                                <div class="cat-price noselect">
-                                    $ 0.00
-                                </div>
-                            </div>
-
-                            <div class="container">
-                                <img class="img-responsive center-block" src="/views/assets/images/portfolio/img2.jpg">
-                            </div>
-                        </a>
-                        <a href="" class="item">
-                            <div class="cat-bg">
-                                <div class="cat-title noselect">
-                                    Course name
-                                </div>
-                                <div class="cat-field noselect">
-                                    Field
-                                </div>
-                                <div class="cat-lecturer noselect">
-                                    Lecturer
-                                </div>
-                                <div class="cat-price noselect">
-                                    $ 0.00
-                                </div>
-                            </div>
-
-                            <div class="container">
-                                <img class="img-responsive center-block" src="/views/assets/images/portfolio/img3.jpg">
-                            </div>
-                        </a>
-                        <a href="" class="item">
-                            <div class="cat-bg">
-                                <div class="cat-title noselect">
-                                    Course name
-                                </div>
-                                <div class="cat-field noselect">
-                                    Field
-                                </div>
-                                <div class="cat-lecturer noselect">
-                                    Lecturer
-                                </div>
-                                <div class="cat-price noselect">
-                                    $ 0.00
-                                </div>
-                            </div>
-
-                            <div class="container">
-                                <img class="img-responsive center-block" src="/views/assets/images/portfolio/img1.jpg">
-                            </div>
-                        </a>
+                            </a>
+                        {{/each}}
                     </div>
 
                     <!-- Controls -->
@@ -157,30 +117,29 @@
 
                 <div id="cat-courses" class="container-fluid">
                     <div class="row">
-
+                        {{#each listCourse}}
                         <div class="col-md-4">
 
                             <div class="thumbnail">
                                 <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/test-1.jpg" alt="...">
+                                    <img class="img-responsive center-block" src="/resource/public/course/{{this.id}}/photo.png" alt="...">
                                 </div>
 
                                 <div class="caption">
                                     <div id="cat-course-caption">
-                                        <h3>Course Name</h3>
-                                        <h3>$ 0.00</h3>
+                                        <h3>{{this.title}}</h3>
+                                        <h3>$ {{this.price}}</h3>
                                     </div>
-                                    <h4>Field</h4>
-                                    <h5>Lecturer</h5>
+                                    <h4>{{this.fieldName}}</h4>
+                                    <h5>{{this.lecturerName}}</h5>
                                     <div id="cat-course-review">
                                         <p>
-                                            1000 likes &nbsp;
+                                            {{this.rateNumber}} likes &nbsp;
                                             <i class="fa fa-thumbs-up"></i>
                                         </p>
                                     </div>
-
                                     <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
+                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary" role="button">
                                             Details
                                         </a>
                                     </p>
@@ -188,142 +147,25 @@
 
                             </div>
                         </div>
-
-                        <div class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/photo-1.jpg" alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <h3>Course Name</h3>
-                                        <h3>$ 0.00</h3>
-                                    </div>
-                                    <h4>Field</h4>
-                                    <h5>Lecturer</h5>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/portfolio/img2.jpg" alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <h3>Course Name</h3>
-                                        <h3>$ 0.00</h3>
-                                    </div>
-                                    <h4>Field</h4>
-                                    <h5>Lecturer</h5>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/photo-1.jpg" alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <h3>Course Name</h3>
-                                        <h3>$ 0.00</h3>
-                                    </div>
-                                    <h4>Field</h4>
-                                    <h5>Lecturer</h5>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/photo-1.jpg" alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <h3>Course Name</h3>
-                                        <h3>$ 0.00</h3>
-                                    </div>
-                                    <h4>Field</h4>
-                                    <h5>Lecturer</h5>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn"> 
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
+                        {{/each}}
 
                     </div>
                 </div>
 
                 <ul class="pagination">
                     <li class="disabled"><a href="#">&laquo;</a></li>
-                    <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>
+                    {{#each pageNumbers}}
+                    {{#if this.isActive}}
+                    <li class="active"><a href="?page={{this.value}}">{{this.value}} <span class="sr-only">(current)</span></a></li>
+                    {{else}}
+                    <li><a href="?page={{this.value}}">{{this.value}}</a></li>
+                    {{/if}}
+                    {{/each}}
                     <li><a href="#">&raquo;</a></li>
+                    <!--<li><a href="#">3</a></li>
+                    <li><a href="#">4</a></li>
+                    <li><a href="#">5</a></li>-->
+
                 </ul>
 
             </div>
