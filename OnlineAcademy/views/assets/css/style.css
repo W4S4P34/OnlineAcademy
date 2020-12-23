@@ -1416,15 +1416,15 @@ nav#filter a.current {
 
 #cat-courses .thumbnail img {
 	max-height: 100%;
-    max-width: 100%;
-    width: auto;
-    height: auto;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    margin: auto;
+	max-width: 100%;
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
 }
 
 #cat-transaction-btn {
@@ -1434,11 +1434,46 @@ nav#filter a.current {
 }
 
 #cat-course-caption {
-	display: flex;
-	justify-content: space-between;
+	margin-top: 30px;
+}
+
+#cat-course-caption p {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+
+	min-height: 2.35em;
+
+	overflow: hidden;
+
+	font-family: 'Oswald', sans-serif;
+	font-size: 24px;
+}
+
+#cat-course-price p {
+	font-family: 'Oswald', sans-serif;
+	font-size: 20px;
+}
+
+#cat-course-field p {
+	font-size: 13px;
+}
+
+#cat-course-lecturer p {
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+
+	min-height: 1.2em;
+
+	overflow: hidden;
+
+	font-size: 13px;
 }
 
 #cat-course-review {
 	display: flex;
 	justify-content: flex-end;
+
+	color: #3d84e6;
 }
