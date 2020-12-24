@@ -8,9 +8,7 @@
     </div>
 </header>
 <!-- ./Header -->
-
 <!-- Main -->
-
 <!-- Main panel -->
 <div class="container-fluid">
     <div class="row">
@@ -23,33 +21,13 @@
                     {{#each listCourseFields}}
                     {{#if this.isActive}}
                     <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item active">
-                    {{else}}
-                    <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item">
-                    {{/if}}
-                    <span class="badge">{{this.courseNumber}}</span>
-                    {{this.name}}
-                    </a>
-                    {{/each}}
-                    <!--<a href="#" class="list-group-item active">
-                        <span class="badge">0</span>
-                        Cras justo odio
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <span class="badge">0</span>
-                        Dapibus ac facilisis in
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <span class="badge">0</span>
-                        Morbi leo risus
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <span class="badge">0</span>
-                        Porta ac consectetur ac
-                    </a>
-                    <a href="#" class="list-group-item">
-                        <span class="badge">0</span>
-                        Vestibulum at eros
-                    </a>-->
+                        {{else}}
+                        <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item">
+                            {{/if}}
+                            <span class="badge">{{this.courseNumber}}</span>
+                            {{this.name}}
+                        </a>
+                        {{/each}}
                 </div>
             </div>
         </div>
@@ -68,40 +46,36 @@
                         <li data-target="#carousel-simple" data-slide-to={{this.rowNumber}}></li>
                         {{/if}}
                         {{/each}}
-                        <!--<li data-target="#carousel-simple" data-slide-to="0" class="active"></li>
-                        <li data-target="#carousel-simple" data-slide-to="1"></li>
-                        <li data-target="#carousel-simple" data-slide-to="2"></li>
-                        <li data-target="#carousel-simple" data-slide-to="3"></li>-->
                     </ol>
 
                     <!-- Wrapper for slides -->
                     <div class="carousel-inner" role="listbox">
                         {{#each listHighlightCourse}}
-                            {{#if @first}}
-                            <a href="/course/detail/{{this.id}}" class="item active">
+                        {{#if @first}}
+                        <a href="/course/detail/{{this.id}}" class="item active">
                             {{else}}
                             <a href="/course/detail/{{this.id}}" class="item">
-                            {{/if}}
-                            <div class="cat-bg">
-                                <div class="cat-title noselect">
-                                    {{this.title}}
+                                {{/if}}
+                                <div class="cat-bg">
+                                    <div class="cat-title noselect">
+                                        {{this.title}}
+                                    </div>
+                                    <div class="cat-field noselect">
+                                        {{this.fieldName}}
+                                    </div>
+                                    <div class="cat-lecturer noselect">
+                                        {{this.lecturerName}}
+                                    </div>
+                                    <div class="cat-price noselect">
+                                        $ {{this.price}}
+                                    </div>
                                 </div>
-                                <div class="cat-field noselect">
-                                    {{this.fieldName}}
-                                </div>
-                                <div class="cat-lecturer noselect">
-                                    {{this.lecturerName}}
-                                </div>
-                                <div class="cat-price noselect">
-                                    $ {{this.price}}
-                                </div>
-                            </div>
 
-                            <div class="container">
-                                <img class="img-responsive center-block" src="/resource/public/course/{{this.id}}/photo.png">
-                            </div>
+                                <div class="container">
+                                    <img class="img-responsive center-block" src="/resource/public/course/{{this.id}}/photo.png">
+                                </div>
                             </a>
-                        {{/each}}
+                            {{/each}}
                     </div>
 
                     <!-- Controls -->
@@ -168,7 +142,7 @@
 
                                 <div class="caption">
                                     <div id="cat-course-caption">
-                                        <p>Course Name Too Long Too Long</p>
+                                        <p>Course Name Too Long Too Long  Too Long Too Long  Too Long Too Long  Too Long Too Long </p>
                                     </div>
                                     <div id="cat-course-price">
                                         <p>$ 0.00</p>
@@ -177,121 +151,7 @@
                                         <p>Field</p>
                                     </div>
                                     <div id="cat-course-lecturer">
-                                        <p>Lecturer</p>
-                                    </div>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div id="course" class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block"
-                                        src="/views/assets/images/portfolio/img2.jpg" alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <p>Course Name Too Long Too Long Too Long Too Long Too Long Too Long</p>
-                                    </div>
-                                    <div id="cat-course-price">
-                                        <p>$ 0.00</p>
-                                    </div>
-                                    <div id="cat-course-field">
-                                        <p>Field</p>
-                                    </div>
-                                    <div id="cat-course-lecturer">
-                                        <p>Lecturer</p>
-                                    </div>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div id="course" class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/photo-1.jpg"
-                                        alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <p>Course Name Too Long Too Long</p>
-                                    </div>
-                                    <div id="cat-course-price">
-                                        <p>$ 0.00</p>
-                                    </div>
-                                    <div id="cat-course-field">
-                                        <p>Field</p>
-                                    </div>
-                                    <div id="cat-course-lecturer">
-                                        <p>Lecturer</p>
-                                    </div>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-
-                        <div id="course" class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/photo-1.jpg"
-                                        alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <p>Course Name Too Long Too Long</p>
-                                    </div>
-                                    <div id="cat-course-price">
-                                        <p>$ 0.00</p>
-                                    </div>
-                                    <div id="cat-course-field">
-                                        <p>Field</p>
-                                    </div>
-                                    <div id="cat-course-lecturer">
-                                        <p>Lecturer</p>
+                                        <p>Lecturer Lecturer Lecturer Lecturer Lecturer</p>
                                     </div>
                                     <div id="cat-course-review">
                                         <p>
@@ -314,7 +174,8 @@
                 </div>
 
                 <ul class="pagination">
-                    <li class="disabled"><a href="#">&laquo;</a></li>
+                    <!--class="disabled"-->
+                    <li id="previousPage" ><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
                     {{#each pageNumbers}}
                     {{#if this.isActive}}
                     <li class="active"><a href="?page={{this.value}}">{{this.value}} <span class="sr-only">(current)</span></a></li>
@@ -327,7 +188,7 @@
                     <li><a href="#">3</a></li>
                     <li><a href="#">4</a></li>
                     <li><a href="#">5</a></li>-->
-                    <li><a href="#">&raquo;</a></li>
+                    <li id="nextPage" onload="javascript: alert('hi');"><a href="javascript:NextPage();">&raquo;</a></li>
                 </ul>
 
             </div>
@@ -336,6 +197,34 @@
     </div>
 
 </div>
-<!-- /.Main panel -->
-
-<!-- /.Main -->
+{{#section 'js'}}
+<script>
+    function NextPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) + 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive - 1 >= maxPage)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+        
+    }
+    function PreviousPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive + 1 <= 1)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+    }
+    jQuery(function () {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent);
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive <= 1) {
+            jQuery(".pagination")[0].querySelector("#previousPage").className += "disabled";
+        }
+        if (pageActive >= maxPage) {
+            jQuery(".pagination")[0].querySelector("#nextPage").className += "disabled";
+        }
+    });
+</script>
+{{/section}}

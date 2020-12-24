@@ -92,15 +92,12 @@
         </div>
     </div>
     <!-- /.navbar -->
-
     <!-- Main body -->
     {{{body}}}
     <!-- /.Main body -->
-
     <!-- Footer -->
     {{> footer}}
     <!-- /.Footer -->
-
     <!-- Optional JavaScript -->
     <script src="/views/assets/js/modernizr-latest.js"></script>
     <script type="text/javascript" src="/views/assets/js/jquery.min.js"></script>
@@ -120,7 +117,8 @@
             jQuery(currentView).addClass("active");
         });
     </script>
-
+    <!-- DEFINE A 'js' SECTION -->
+    {{{_sections.js}}}
 </body>
 
 </html>
