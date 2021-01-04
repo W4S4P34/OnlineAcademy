@@ -45,8 +45,16 @@ router.get('/byTheme/:theme', async (req, res) => {
 })
 router.get('/detail/:id', async (req, res) => {
     res.locals.currentView = '#categories';
-    const result = await model.GetDetailCourseById(req.params.id);
-    res.json(result);
+    const field = await model.GetFieldByTheme(req.params.theme);
+    res.locals.listCourseFields = await model.GetAllFieldsAndTheme(field);
+
+    // const result = await model.GetDetailCourseById(req.params.id);
+    // res.json(result);
+
+    res.render('vwCategories/details');
+})
+router.post('/detail/:id', function(req, res) {
+    console.log(req.body.userfeedback);
 })
 module.exports = router;
 

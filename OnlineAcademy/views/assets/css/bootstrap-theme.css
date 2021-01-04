@@ -5,7 +5,7 @@
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0%;
-	z-index: 99999;
+	z-index: 300;
 	border-radius: 0;
 	background: rgba(0, 0, 0, .8);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.15);

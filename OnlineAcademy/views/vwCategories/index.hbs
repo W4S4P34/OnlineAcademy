@@ -1,3 +1,36 @@
+{{#section 'js'}}
+<script>
+    function NextPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) + 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive - 1 >= maxPage)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+
+    }
+
+    function PreviousPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive + 1 <= 1)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+    }
+    jQuery(function () {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent);
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive <= 1) {
+            jQuery(".pagination")[0].querySelector("#previousPage").className += "disabled";
+        }
+        if (pageActive >= maxPage) {
+            jQuery(".pagination")[0].querySelector("#nextPage").className += "disabled";
+        }
+    });
+</script>
+{{/section}}
+
 <!-- Header -->
 <header id="head" class="secondary">
     <div class="container">
@@ -72,7 +105,8 @@
                                 </div>
 
                                 <div class="container">
-                                    <img class="img-responsive center-block" src="/resource/public/course/{{this.id}}/photo.png">
+                                    <img class="img-responsive center-block"
+                                        src="/resource/public/course/{{this.id}}/photo.png">
                                 </div>
                             </a>
                             {{/each}}
@@ -99,7 +133,8 @@
 
                             <div class="thumbnail">
                                 <div class="container">
-                                    <img class="img-responsive center-block" src="/resource/public/course/{{this.id}}/photo.png" alt="Course Image">
+                                    <img class="img-responsive center-block"
+                                        src="/resource/public/course/{{this.id}}/photo.png" alt="Course Image">
                                 </div>
 
                                 <div class="caption">
@@ -175,10 +210,11 @@
 
                 <ul class="pagination">
                     <!--class="disabled"-->
-                    <li id="previousPage" ><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
+                    <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
                     {{#each pageNumbers}}
                     {{#if this.isActive}}
-                    <li class="active"><a href="?page={{this.value}}">{{this.value}} <span class="sr-only">(current)</span></a></li>
+                    <li class="active"><a href="?page={{this.value}}">{{this.value}} <span
+                                class="sr-only">(current)</span></a></li>
                     {{else}}
                     <li><a href="?page={{this.value}}">{{this.value}}</a></li>
                     {{/if}}
@@ -188,7 +224,8 @@
                     <li><a href="#">3</a></li>
                     <li><a href="#">4</a></li>
                     <li><a href="#">5</a></li>-->
-                    <li id="nextPage" onload="javascript: alert('hi');"><a href="javascript:NextPage();">&raquo;</a></li>
+                    <li id="nextPage" onload="javascript: alert('hi');"><a href="javascript:NextPage();">&raquo;</a>
+                    </li>
                 </ul>
 
             </div>
@@ -197,34 +234,3 @@
     </div>
 
 </div>
-{{#section 'js'}}
-<script>
-    function NextPage() {
-        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) + 1;
-        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
-        if (pageActive - 1 >= maxPage)
-            return;
-        const url = `?page=${pageActive}`;
-        location.replace(url);
-        
-    }
-    function PreviousPage() {
-        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
-        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
-        if (pageActive + 1 <= 1)
-            return;
-        const url = `?page=${pageActive}`;
-        location.replace(url);
-    }
-    jQuery(function () {
-        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent);
-        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
-        if (pageActive <= 1) {
-            jQuery(".pagination")[0].querySelector("#previousPage").className += "disabled";
-        }
-        if (pageActive >= maxPage) {
-            jQuery(".pagination")[0].querySelector("#nextPage").className += "disabled";
-        }
-    });
-</script>
-{{/section}}

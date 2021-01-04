@@ -225,10 +225,10 @@ label {
 	border: 0 none;
 }
 
-.btn-action:hover,
+/* .btn-action:hover,
 .btn-primary:hover {
 	background: #04a0b7;
-}
+} */
 
 .btn:hover,
 .btn:active {
@@ -1442,7 +1442,7 @@ nav#filter a.current {
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 
-	min-height: 2.35em;
+	min-height: 3.2em;
 
 	overflow: hidden;
 
@@ -1476,4 +1476,275 @@ nav#filter a.current {
 	justify-content: flex-end;
 
 	color: #3d84e6;
+}
+
+/* **************************************** */
+/* Details */
+#cover-image-detail .container {
+	position: relative;
+	width: 100%;
+	height: 500px;
+	max-height: 500px;
+	overflow: hidden;
+
+	background-color: rgba(0, 0, 0, .5);
+
+	/* border: 1px solid black; */
+}
+
+#cover-image-detail .container img {
+	/* max-height: 100%; */
+	max-width: 100%;
+	width: auto;
+	height: auto;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto;
+
+	/* border: 1px solid black; */
+}
+
+#cover-image-detail .container #btn-list-detail {
+	position: relative;
+	top: 87%;
+	z-index: 100;
+	display: flex;
+	justify-content: space-between;
+}
+
+#cover-image-detail .container #buy-now-btn-detail {
+	background-color: darkred;
+}
+
+#cover-image-detail .container #buy-now-btn-detail:hover {
+	background-color: firebrick;
+}
+
+#course-info-detail {
+	padding: 10px 20px 10px 20px;
+	font-family: 'Oswald', sans-serif;
+	font-size: 15px;
+}
+
+#course-info-detail h1 {
+	margin-top: 15px;
+	margin-bottom: 15px;
+}
+
+#course-info-detail h2 {
+	margin: 10px 0px 10px 0px;
+	font-size: 25px;
+	color: rgb(145, 145, 145);
+}
+
+#course-info-detail #details #title {
+	font-size: 35px;
+	font-weight: bold;
+}
+
+#course-info-detail #details #tuition-fee {
+	font-size: 35px;
+	text-align: right;
+}
+
+#course-info-detail #details #field,
+#course-info-detail #details #lecturer {
+	font-size: 20px;
+}
+
+#course-info-detail #content #list-btn {
+	display: block;
+	margin: 10px 0;
+	padding: 10px;
+	width: 100%;
+
+	text-align: left;
+}
+
+#course-info-detail #content button:active,
+#course-info-detail #content button:focus,
+#course-info-detail #content button:hover {
+	background-color: #3d84e6;
+	color: #fff;
+}
+
+#course-info-detail #content .showContent {
+	margin: 10px 10px 10px 10px;
+	padding: 0;
+}
+
+#course-info-detail #content .showContent li {
+	display: none;
+	list-style: none;
+	font-size: 20px;
+	padding: 10px 0px 10px 0px;
+}
+
+#course-info-detail #content .popupVideo {
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	background: rgba(0, 0, 0, 0.75);
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+	visibility: hidden;
+	opacity: 0;
+}
+
+#course-info-detail #content .popupVideo.active {
+	visibility: visible;
+	opacity: 1;
+}
+
+#course-info-detail #content .popupVideo video {
+	position: relative;
+	max-width: 900px;
+	outline: none;
+}
+
+#course-info-detail #content .popupVideo .close-btn {
+	position: absolute;
+	top: 30px;
+	right: 30px;
+
+	max-width: 32px;
+
+	cursor: pointer;
+}
+
+@media (max-width: 991px) {
+	#course-info-detail #content .popupVideo video {
+		max-width: 90%;
+	}
+}
+
+#course-info-detail #related-courses img {
+	width: 256px;
+	height: 128px;
+	object-fit: cover;
+
+	opacity: .45;
+}
+
+#course-info-detail #related-courses #related-course {
+	margin: 10px 10px 10px 10px;
+}
+
+#course-info-detail #related-courses #related-course #related-course-img {
+	position: relative;
+}
+
+#course-info-detail #related-courses #related-course #related-course-img #related-course-transaction-btn {
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	-ms-transform: translate(-50%, -50%);
+}
+
+#course-info-detail #related-courses #related-course .media-heading {
+	display: -webkit-box;
+	-webkit-line-clamp: 1;
+	-webkit-box-orient: vertical;
+
+	min-height: 21px;
+
+	overflow: hidden;
+}
+
+#course-info-detail #related-courses #related-course #description {
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+
+	min-height: 21px;
+	height: 42px;
+
+	overflow: hidden;
+}
+
+#course-info-detail #lecturers #lecturer {
+	margin: 15px 0px 15px 0px;
+}
+
+#course-info-detail #lecturers #lecturer-img {
+	position: relative;
+	max-height: 128px;
+	max-width: 128px;
+	height: 128px;
+	width: 128px;
+}
+
+#course-info-detail #lecturers img {
+	width: auto;
+	height: auto;
+	object-fit: cover;
+}
+
+#course-info-detail #feedbacks #feedback-form {
+	margin: 15px 0px 15px 0px;
+}
+
+#course-info-detail #feedbacks #feedback-form #user-name h3 {
+	margin: 15px 15px 15px 15px;
+}
+
+#course-info-detail #feedbacks #feedback-form #feedback-section {
+	margin: 5px 0px 5px 0px;
+}
+
+#course-info-detail #feedbacks #feedback-form #feedback-section textarea {
+	resize: none;
+}
+
+#course-info-detail #feedbacks #feedback-form #feedback-section textarea::placeholder {
+	color: rgb(214, 214, 214);  
+}
+
+#course-info-detail #feedbacks #feedback-form #feedback-section #char-number {
+	text-align: right;
+}
+
+#course-info-detail #feedbacks #feedback-form #form-submit-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#course-info-detail #feedbacks #feedback-form #form-submit-btn button {
+	width: 100%;
+	margin: 0px 15px 0px 15px;
+}
+
+#course-info-detail #feedbacks #feedback-list h3 {
+	margin-top: 5px;
+}
+
+#course-info-detail #feedbacks #showmore-btn,
+#course-info-detail #feedbacks #showless-btn {
+	margin: 10px 0px 10px 0px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	cursor: pointer;
+}
+
+#course-info-detail #feedbacks #feedback-list li {
+	display: none;
+}
+
+
+.fa.pull-right,
+.fa.fa-pull-right,
+[class*=" fa-"].pull-right,
+[class*=" fa-"].fa-pull-right {
+	line-height: inherit;
 }
