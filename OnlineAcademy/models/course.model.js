@@ -11,7 +11,7 @@ module.exports = {
         return rows;
     },
     async GetTopNewCourses(limit) {
-        const sql = 'select (@cnt := @cnt + 1) as rowNumber, course.*,fields.name as fieldName,lecturer.name as lecturerName from course  cross join (SELECT @cnt := 0) AS dummy join fields on fields.id = course.fieldsId join lecturer on course.lecturerId = lecturer.id order by `date` desc limit ?';
+        const sql = 'select (@cnt := @cnt + 1) as rowNumber, course.*,fields.name as fieldName,lecturer.name as lecturerName from course  cross join (SELECT @cnt := -1) AS dummy join fields on fields.id = course.fieldsId join lecturer on course.lecturerId = lecturer.id order by date desc limit ?';
         const condition = [limit];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)

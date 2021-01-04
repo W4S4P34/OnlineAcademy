@@ -1,0 +1,675 @@
+{{#section 'css'}}
+
+{{!-- ----------- --}}
+{{!-- Import ZONE --}}
+{{!-- ----------- --}}
+
+{{/section}}
+
+{{#section 'js'}}
+
+{{!-- ----------- --}}
+{{!-- Import ZONE --}}
+{{!-- ----------- --}}
+
+<script>
+    jQuery(document).ready(function () {
+        (function () {
+            var showChar = 400;
+            var ellipsesText = "...";
+
+            jQuery(".truncate").each(function () {
+                var content = jQuery(this);
+                var contentHTML = content.html();
+                if (contentHTML.length > showChar) {
+                    var truncateText = contentHTML.substr(0, showChar);
+                    var fullText = contentHTML;
+                    var html =
+                        '<div class="truncate-text" style="display:block">' + truncateText +
+                        ellipsesText +
+                        '<div class="container-fluid" style="display: flex; justify-content: center;">' +
+                        '<button type="button" class="btn btn-primary moreless more">Show More</a>' +
+                        '</div>' +
+                        '</div>' +
+                        '<div class="truncate-text" style="display:none">' + fullText +
+                        '<div class="container-fluid" style="display: flex; justify-content: center;">' +
+                        '<button type="button" class="btn btn-primary moreless less">Show Less</a>' +
+                        '</div>' +
+                        '</div>';
+
+                    content.html(html);
+                }
+            });
+
+            jQuery(".moreless").click(function () {
+                var thisEl = jQuery(this);
+                var tX = ".truncate-text";
+                var cT = thisEl.closest(tX);
+
+                if (thisEl.hasClass("less")) {
+                    console.log("Less");
+                    cT.toggle();
+                    cT.prev(tX).fadeToggle();
+                } else {
+                    console.log("More");
+                    cT.toggle();
+                    cT.next(tX).fadeToggle();
+                }
+                return false;
+            });
+            /* end iffe */
+
+            jQuery('.content-btn').on('click', function () {
+                jQuery(this).next('.showContent').find('li').toggle();
+            });
+
+            size_li = jQuery("#feedback-list li").size();
+            cur_show = 3;
+            jQuery('#showless-btn').hide();
+            jQuery('#feedback-list li:lt(' + cur_show + ')').show();
+
+            jQuery('#showmore-btn').click(function () {
+                cur_show = (cur_show + 5 <= size_li) ? cur_show + 5 : size_li;
+                jQuery('#feedback-list li:lt(' + cur_show + ')').show();
+                jQuery('#showless-btn').show();
+                if (cur_show == size_li) {
+                    jQuery('#showmore-btn').hide();
+                }
+            });
+
+            jQuery('#showless-btn').click(function () {
+                cur_show = (cur_show - 5 < 0) ? 3 : cur_show - 5;
+                jQuery('#feedback-list li').not(':lt(' + cur_show + ')').hide();
+                jQuery('#showmore-btn').show();
+                jQuery('#showless-btn').show();
+                if (cur_show == 3) {
+                    jQuery('#showless-btn').hide();
+                }
+            });
+
+        })();
+        /* end ready */
+    });
+</script>
+
+<script>
+    function stopVideo(element) {
+        var iframe = element.querySelector('iframe');
+        var video = element.querySelector('video');
+        if (iframe) {
+            var iframeSrc = iframe.src;
+            iframe.src = iframeSrc;
+        }
+        if (video) {
+            video.pause();
+        }
+    }
+
+    function togglePopupVideo(video, activeState) {
+        jQuery(video).toggleClass("active", activeState);
+        if (!activeState) {
+            stopVideo(video);
+        }
+    }
+
+    function countChar(val) {
+        var len = val.value.length;
+        jQuery('#char-number').text(1024 - len);
+    }
+</script>
+
+{{/section}}
+
+<!-- Header -->
+<header id="head" class="secondary">
+    <div class="container">
+
+        <h1>Courses</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eliras scele!</p>
+
+    </div>
+</header>
+<!-- ./Header -->
+<!-- Main -->
+<!-- Main panel -->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div class="panel panel-default sidebar-categories">
+                <div class="panel-heading">Categories</div>
+
+                <div class="list-group">
+                    {{#each listCourseFields}}
+                    {{#if this.isActive}}
+                    <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item active">
+                        {{else}}
+                        <a href="/course/byField/{{this.name}}/?page=1" class="list-group-item">
+                            {{/if}}
+                            <span class="badge">{{this.courseNumber}}</span>
+                            {{this.name}}
+                        </a>
+                        {{/each}}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div class="panel panel-default main-categories">
+                <div class="panel-heading">Course Details</div>
+
+                <div class="container-fluid">
+                    <!-- Cover image -->
+                    <div id="cover-image-detail" class="row">
+                        <div class="container">
+                            {{!-- <img class="img-responsive center-block" src="/resource/public/lecturer/1.png"
+                                alt="Cover Image"> --}}
+                            <img class="img-responsive center-block" src="/resource/public/course/2/photo.png"
+                                alt="Cover Image">
+
+                            <div id="btn-list-detail" class="container-fluid">
+                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary">
+                                    Add to favorite&nbsp;
+                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                </button>
+
+                                <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary">
+                                    Add to cart&nbsp;
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </button>
+
+                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary">
+                                    Buy now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="course-info-detail" class="row">
+                        <div class="container-fluid" id="details">
+                            <h1>
+                                Details
+                            </h1>
+
+                            <h2>
+                                Information
+                            </h2>
+                            <div id="title">
+                                This is the placeholder for the long title of this course, it should be long
+                            </div>
+                            <div id="tuition-fee">
+                                $ 100.00
+                            </div>
+                            <div id="short-description">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores consequatur qui, quia
+                                esse odit vero sint unde cumque hic dolore iusto sit modi culpa maxime distinctio
+                                consequuntur dicta. Dolorum, recusandae?
+                            </div>
+                            <div id="field">
+                                Field
+                            </div>
+                            <div id="lecturer">
+                                Created by
+                                <a href="#">Lecturer A</a>,
+                                <a href="#">Lecturer B</a>,
+                                <a href="#">Lecturer C</a>,
+                                <a href="#">Lecturer D</a>
+                            </div>
+                            <div id="review">
+                                <i class="fa fa-eye" aria-hidden="true"></i> Views 100,&nbsp;
+                                <i class="fa fa-heart-o" aria-hidden="true"></i> Likes 25,&nbsp;
+                                <i class="fa fa-user" aria-hidden="true"></i> Students 10
+                            </div>
+                            <div id="last-update">
+                                Last updated 12/2020
+                            </div>
+
+                            <h2>
+                                Description
+                            </h2>
+                            <div id="description" class="truncate">
+                                <p>
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id delectus quia labore
+                                    exercitationem
+                                    incidunt, unde quaerat dolorum enim voluptates, rerum dolor aut, perspiciatis nemo
+                                    natus
+                                    voluptatem ipsum expedita tempora ut.
+                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique vero beatae
+                                    dolorum
+                                    eaque
+                                    rerum iusto nemo ullam reiciendis iste nihil cupiditate rem, corporis commodi? Neque
+                                    sint
+                                    explicabo earum impedit libero.
+                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Numquam quae voluptatum
+                                    illum
+                                    a
+                                    quod
+                                    aliquam ullam, non alias commodi, possimus sunt tenetur distinctio iure explicabo
+                                    inventore
+                                    qui
+                                    molestias quis officia!
+                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid expedita,
+                                    cupiditate
+                                    velit
+                                    nam
+                                    culpa necessitatibus incidunt ea ullam quae recusandae repellendus magni quos
+                                    nostrum
+                                    hic
+                                    mollitia et harum omnis at.
+                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam harum saepe odio
+                                    magnam
+                                    unde
+                                    voluptatum deserunt sapiente? Odio quas voluptate aliquid asperiores laboriosam
+                                    quibusdam
+                                    sed
+                                    mollitia laborum. Praesentium, amet necessitatibus.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" id="content">
+                            <h1>
+                                Content
+                            </h1>
+
+                            <h2>
+                                Sumamry
+                            </h2>
+
+                            <p>
+                                <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                1 hour
+                                <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                26 lectures
+                                <i class="fa fa-circle-o" aria-hidden="true"></i>
+                                4 sections
+                            </p>
+
+                            <div class="list-group">
+                                <div class="list-item">
+                                    <button type="button" id="list-btn" class="btn btn-primary content-btn">
+                                        <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
+                                        Section 1
+                                    </button>
+                                    <ul class="showContent">
+                                        <li>
+                                            <div id="duration" class="pull-right">02:02</div>
+                                            <a href="#currentvideo" onclick="togglePopupVideo(video1, true);">
+                                                Active Preview Section
+                                            </a>
+                                            <div class="popupVideo" id="video1">
+                                                <video src="/resource/private/1_Trim.mp4" type="video/mp4"
+                                                    controls="true"></video>
+                                                <img src="/views/assets/images/closebutton.png" class="close-btn"
+                                                    onclick="togglePopupVideo(video1, false);">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div id="duration" class="pull-right">02:02</div>
+                                            Disabled Section
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <div class="list-item">
+                                    <button type="button" id="list-btn" class="btn btn-primary content-btn">
+                                        <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
+                                        Section 2
+                                    </button>
+                                    <ul class="showContent">
+                                        <li>
+                                            <div id="duration" class="pull-right">02:02</div>
+                                            <a href="#currentvideo" onclick="togglePopupVideo(video2, true);">
+                                                Active Preview Section
+                                            </a>
+                                            <div class="popupVideo" id="video2">
+                                                <video src="/resource/private/1_Trim.mp4" type="video/mp4"
+                                                    controls="true"></video>
+                                                <img src="/views/assets/images/closebutton.png" class="close-btn"
+                                                    onclick="togglePopupVideo(video2, false);">
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div id="duration" class="pull-right">02:02</div>
+                                            Disabled Section
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="container-fluid" id="related-courses">
+                            <h1>
+                                Related Courses
+                            </h1>
+
+                            <div id="related-course" class="media">
+                                <div id="related-course-img" class="pull-left">
+                                    <img class="media-object" src="/resource/public/course/6/photo.png" alt="Hello">
+                                    <a id="related-course-transaction-btn" href="#" class="btn btn-primary"
+                                        role="button">
+                                        Details
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <div id="fee-related-course" class="pull-right">$ 400.00</div>
+                                        Media heading Media heading Media heading Media heading Media heading Media
+                                        heading Media heading Media heading Media heading Media heading Media heading
+                                        Media heading Media heading Media heading Media heading Media heading Media
+                                        heading Media heading Media heading Media heading Media heading Media heading
+                                        Media heading Media heading
+                                    </h4>
+                                    <div id="description">
+                                        Short Description Short Description Short Description Short Description Short
+                                        Description Short Description Short Description Short Description Short
+                                        Description Short Description Short Description Short Description Short
+                                        Description Short Description Short Description Short Description Short
+                                        Description
+                                    </div>
+                                    <div id="field">
+                                        Field
+                                    </div>
+                                    <div id="lecturers">
+                                        Lecturers
+                                    </div>
+                                    <div id="reviews">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Views 100,&nbsp;
+                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes 25,&nbsp;
+                                        <i class="fa fa-user" aria-hidden="true"></i> Students 10
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="related-course" class="media">
+                                <div id="related-course-img" class="pull-left">
+                                    <img class="media-object" src="/resource/public/course/7/photo.png" alt="Hello">
+                                    <a id="related-course-transaction-btn" href="#" class="btn btn-primary"
+                                        role="button">
+                                        Details
+                                    </a>
+                                </div>
+                                <div class="media-body">
+                                    <h4 class="media-heading">
+                                        <div id="fee-related-course" class="pull-right">$ 400.00</div>
+                                        Media heading
+                                    </h4>
+                                    <div id="description">
+                                        Short Description
+                                    </div>
+                                    <div id="field">
+                                        Field
+                                    </div>
+                                    <div id="lecturers">
+                                        Lecturers
+                                    </div>
+                                    <div id="reviews">
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Views 100,&nbsp;
+                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes 25,&nbsp;
+                                        <i class="fa fa-user" aria-hidden="true"></i> Students 10
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="container-fluid" id="lecturers">
+                            <h1>
+                                Lecturers
+                            </h1>
+
+                            <div id="lecturer" class="media">
+                                <div id="lecturer-img" class="pull-left">
+                                    <img class="media-object" src="/views/assets/images/photo-1.jpg" alt="portfolio">
+                                </div>
+                                <div class="media-body">
+                                    <h4 id="lecturer-name" class="media-heading">
+                                        Lecturer's Name
+                                    </h4>
+                                    <div id="lecturer-mail">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        Email@gmail.com
+                                    </div>
+                                    <div id="lecturer-phone">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        Phone Number
+                                    </div>
+                                    <div id="lecturer-universe">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        University
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="lecturer" class="media">
+                                <div id="lecturer-img" class="pull-left">
+                                    <img class="media-object" src="/views/assets/images/photo-2.jpg" alt="portfolio">
+                                </div>
+                                <div class="media-body">
+                                    <h4 id="lecturer-name" class="media-heading">
+                                        Lecturer's Name
+                                    </h4>
+                                    <div id="lecturer-mail">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        Email@gmail.com
+                                    </div>
+                                    <div id="lecturer-phone">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        Phone Number
+                                    </div>
+                                    <div id="lecturer-universe">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        University
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="lecturer" class="media">
+                                <div id="lecturer-img" class="pull-left">
+                                    <img class="media-object" src="/views/assets/images/photo-3.jpg" alt="portfolio">
+                                </div>
+                                <div class="media-body">
+                                    <h4 id="lecturer-name" class="media-heading">
+                                        Lecturer's Name
+                                    </h4>
+                                    <div id="lecturer-mail">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        Email@gmail.com
+                                    </div>
+                                    <div id="lecturer-phone">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        Phone Number
+                                    </div>
+                                    <div id="lecturer-universe">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        University
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="lecturer" class="media">
+                                <div id="lecturer-img" class="pull-left">
+                                    <img class="media-object" src="/views/assets/images/photo-4.jpg" alt="portfolio">
+                                </div>
+                                <div class="media-body">
+                                    <h4 id="lecturer-name" class="media-heading">
+                                        Lecturer's Name
+                                    </h4>
+                                    <div id="lecturer-mail">
+                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                        Email@gmail.com
+                                    </div>
+                                    <div id="lecturer-phone">
+                                        <i class="fa fa-phone" aria-hidden="true"></i>
+                                        Phone Number
+                                    </div>
+                                    <div id="lecturer-universe">
+                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                                        University
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="container-fluid" id="feedbacks">
+                            <h1>
+                                Feedbacks
+                            </h1>
+
+                            <div class="container-fluid" id="feedback-form">
+                                <div class="row" id="user-name">
+                                    <h3>
+                                        Username
+                                    </h3>
+                                </div>
+
+                                <form role="form" method="POST">
+                                    <div class="row" id="feedback-section">
+                                        <textarea name="userfeedback" class="form-control" rows="3" maxlength="1024"
+                                            placeholder="Your feedback..." onkeyup="countChar(this)"></textarea>
+                                        <div id="char-number">1024</div>
+                                    </div>
+
+                                    <div class="row" id="form-submit-btn">
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                            <div class="container-fluid" id="feedbacks">
+                                <ul class="list-group" id="feedback-list">
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <h3>Name</h3>
+                                        <h4>23:59 19/05/2000</h4>
+                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
+                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
+                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
+                                            perspiciatis suscipit.</p>
+                                    </li>
+                                </ul>
+
+                                <div id="showmore-btn" class="container-fluid">
+                                    <button class="btn btn-primary">
+                                        Show More
+                                    </button>
+                                </div>
+
+
+                                <div id="showless-btn" class="container-fluid">
+                                    <button class="btn btn-primary">
+                                        Show Less
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
