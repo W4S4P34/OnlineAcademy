@@ -1751,8 +1751,46 @@ nav#filter a.current {
 /* **************************************** */
 /* Login::Main-layouts */
 
+#navi-bar .container {
+	margin-left: 60px;
+	margin-right: 50px;
+}
+
 #navi-bar #navi-selections .fa {
 	transform: translate(0px, -1px);
+}
+
+#navi-bar #navi-selections #user-preferences #profile,
+#navi-bar #navi-selections #user-preferences #signout {
+	display: flex;
+	justify-content: space-between;
+}
+
+#navi-bar #navi-selections #user-preferences li a#profile::before {
+	display: inline-block;
+	content: '\f007  \2003';
+	font-family: fontAwesome;
+	vertical-align: middle;
+}
+
+#navi-bar #navi-selections #user-preferences li a#signout::before {
+	display: inline-block;
+	content: '\f08b \2003';
+	font-family: fontAwesome;
+	vertical-align: middle;
+}
+
+#navi-bar #navi-selections #user-preferences li a#favorite::before {
+	display: inline-block;
+	content: '\f004 \2003';
+	font-family: fontAwesome;
+	vertical-align: middle;
+}
+#navi-bar #navi-selections #user-preferences li a#lectures::before {
+	display: inline-block;
+	content: '\f02d \2003';
+	font-family: fontAwesome;
+	vertical-align: middle;
 }
 
 #login-form,
