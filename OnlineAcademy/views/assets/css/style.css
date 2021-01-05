@@ -1892,13 +1892,21 @@ nav#filter a.current {
 	margin-right: 10px;
 }
 
-#heading-information-container-row-profile #heading-information-btn-group a#heading-information-save-btn {
+#heading-information-btn-group a#heading-information-save-btn {
 	display: none;
 	background-color: forestgreen;
 }
 
-#heading-information-container-row-profile #heading-information-btn-group a#heading-information-save-btn:hover {
+#heading-information-btn-group a#heading-information-save-password-btn {
+	background-color: forestgreen;
+}
+
+#heading-information-btn-group a#heading-information-save-btn:hover {
 	background-color: darkgreen;
+}
+
+#heading-information-btn-group a#heading-information-save-password-btn:hover {
+	background-color: forestgreen;
 }
 
 #main-information-container {
