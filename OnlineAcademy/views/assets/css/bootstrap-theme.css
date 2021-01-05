@@ -85,13 +85,20 @@
 	min-width: auto;
 }
 
-.navbar-nav .dropdown-menu>li>a {
+.navbar-nav .dropdown-menu>li>a,
+.navbar-nav .dropdown-menu>li>form>a {
 	color: rgba(255, 255, 255, .7);
 	padding: 7px 20px;
 }
 
+.navbar-nav .dropdown-menu>li>form>a {
+	text-decoration: none;
+}
+
 .navbar-nav .dropdown-menu>li>a:hover,
 .navbar-nav .dropdown-menu>li>a:focus,
+.navbar-nav .dropdown-menu>li>form>a:hover,
+.navbar-nav .dropdown-menu>li>form>a:focus,
 .navbar-nav .dropdown-menu>.active>a:hover {
 	background: rgba(255, 255, 255, .1);
 	color: white;

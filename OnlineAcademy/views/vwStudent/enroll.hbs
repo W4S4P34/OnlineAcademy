@@ -1,0 +1,203 @@
+<!-- Header -->
+<header id="head" class="secondary">
+    <div class="container">
+
+        <h1>Profile</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eliras scele!</p>
+
+    </div>
+</header>
+<!-- ./Header -->
+<!-- Main -->
+<!-- Main panel -->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div id="user-sidebar" class="panel panel-default sidebar-categories">
+                <div class="panel-heading">My account</div>
+
+                <div class="list-group">
+                    <a href="/student/info" class="list-group-item">
+                        Profile
+                    </a>
+
+                    <a href="/student/myWatchList" class="list-group-item">
+                        Favorite
+                        <span class="badge">2</span>
+                    </a>
+
+                    <a href="#currentpage" class="list-group-item active">
+                        Enrollment
+                        <span class="badge">2</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div id="user-information" class="panel panel-default main-categories">
+
+                <div class="panel-heading">
+                    <div id="heading-information-container" class="container-fluid">
+
+                        <div id="heading-information-container-row-enrolled-courses" class="row">
+                            <div id="heading-information-enrolled-courses" class="col-md-3">
+                                Enrolled Courses
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="cat-courses" class="container-fluid">
+                    <div class="row">
+                        <!--{{#each listCourse}}
+                        <div id="course" class="col-md-4">
+
+                            <div class="thumbnail">
+                                <div class="container">
+                                    <img class="img-responsive center-block"
+                                        src="/resource/public/course/{{this.id}}/photo.png" alt="Course Image">
+                                </div>
+
+                                <div class="caption">
+                                    <div id="cat-course-caption">
+                                        <p>{{this.title}}</p>
+                                    </div>
+                                    <div id="cat-course-price">
+                                        <p>$ {{this.price}}</p>
+                                    </div>
+                                    <div id="cat-course-field">
+                                        <p>{{this.fieldName}}</p>
+                                    </div>
+                                    <div id="cat-course-lecturer">
+                                        <p>{{this.lecturerName}}</p>
+                                    </div>
+                                    <div id="cat-course-review">
+                                        <p>
+                                            {{this.rateNumber}} likes &nbsp;
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </p>
+                                    </div>
+
+                                    <p id="cat-transaction-btn">
+                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary" role="button">
+                                            Details
+                                        </a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        {{/each}}-->
+                        <div id="course" class="col-md-4">
+
+                            <div class="thumbnail">
+                                <div class="container">
+                                    <img class="img-responsive center-block" src="/views/assets/images/test-1.jpg"
+                                        alt="...">
+                                </div>
+
+                                <div class="caption">
+                                    <div id="cat-course-caption">
+                                        <p>Course Name Too Long Too Long Too Long Too Long Too Long Too Long</p>
+                                    </div>
+                                    <div id="cat-course-price">
+                                        <p>$ 0.00</p>
+                                    </div>
+                                    <div id="cat-course-field">
+                                        <p>Field</p>
+                                    </div>
+                                    <div id="cat-course-lecturer">
+                                        <p>Too Many Lecturers, Too Many Lecturers, Too Many Lecturers</p>
+                                    </div>
+                                    <div id="cat-course-review">
+                                        <p>
+                                            1000 likes &nbsp;
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </p>
+                                    </div>
+
+                                    <p id="cat-transaction-btn">
+                                        <a id="user-details-btn" href="#" class="btn btn-primary" role="button">
+                                            Details
+                                        </a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div id="course" class="col-md-4">
+
+                            <div class="thumbnail">
+                                <div class="container">
+                                    <img class="img-responsive center-block" src="/views/assets/images/test-1.jpg"
+                                        alt="...">
+                                </div>
+
+                                <div class="caption">
+                                    <div id="cat-course-caption">
+                                        <p>Course Name Too Long Too Long Too Long Too Long Too Long Too Long</p>
+                                    </div>
+                                    <div id="cat-course-price">
+                                        <p>$ 0.00</p>
+                                    </div>
+                                    <div id="cat-course-field">
+                                        <p>Field</p>
+                                    </div>
+                                    <div id="cat-course-lecturer">
+                                        <p>Too Many Lecturers, Too Many Lecturers, Too Many Lecturers</p>
+                                    </div>
+                                    <div id="cat-course-review">
+                                        <p>
+                                            1000 likes &nbsp;
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </p>
+                                    </div>
+
+                                    <div id="cat-transaction-btn">
+                                        <a id="user-details-btn" href="#" class="btn btn-primary" role="button">
+                                            Details
+                                        </a>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="user-pagination">
+                    <ul class="pagination">
+                        <!--class="disabled"-->
+                        <!-- <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
+                        {{#each pageNumbers}}
+                        {{#if this.isActive}}
+                        <li class="active"><a href="?page={{this.value}}">{{this.value}} <span
+                                    class="sr-only">(current)</span></a></li>
+                        {{else}}
+                        <li><a href="?page={{this.value}}">{{this.value}}</a></li>
+                        {{/if}}
+                        {{/each}} -->
+                        <li class="disabled"><a href="#">&laquo;</a></li>
+                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                        <li><a href="#">2</a></li>
+                        <li><a href="#">3</a></li>
+                        <li><a href="#">4</a></li>
+                        <li><a href="#">5</a></li>
+                        <li><a href="#">&raquo;</a></li>
+                        {{!-- <li id="nextPage" onload="javascript: alert('hi');"><a href="javascript:NextPage();">&raquo;</a> --}}
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

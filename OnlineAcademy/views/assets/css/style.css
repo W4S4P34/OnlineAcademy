@@ -1401,7 +1401,8 @@ nav#filter a.current {
 /* **************************************** */
 /* Courses */
 
-#cat-all .pagination {
+#cat-all .pagination,
+#user-pagination {
 	display: flex;
 	justify-content: center;
 }
@@ -1431,6 +1432,26 @@ nav#filter a.current {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+#cat-transaction-btn {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#cat-transaction-btn #user-remove-btn,
+#cat-transaction-btn #user-details-btn {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#cat-transaction-btn #user-remove-btn {
+	background-color: firebrick;
+}
+
+#cat-transaction-btn #user-remove-btn:hover {
+	background-color: darkred;
 }
 
 #cat-course-caption {
@@ -1706,7 +1727,7 @@ nav#filter a.current {
 }
 
 #course-info-detail #feedbacks #feedback-form #feedback-section textarea::placeholder {
-	color: rgb(214, 214, 214);  
+	color: rgb(214, 214, 214);
 }
 
 #course-info-detail #feedbacks #feedback-form #feedback-section #char-number {
@@ -1761,7 +1782,9 @@ nav#filter a.current {
 }
 
 #navi-bar #navi-selections #user-preferences #profile,
-#navi-bar #navi-selections #user-preferences #signout {
+#navi-bar #navi-selections #user-preferences #signout,
+#navi-bar #navi-selections #user-preferences #favorite,
+#navi-bar #navi-selections #user-preferences #lectures {
 	display: flex;
 	justify-content: space-between;
 }
@@ -1786,6 +1809,7 @@ nav#filter a.current {
 	font-family: fontAwesome;
 	vertical-align: middle;
 }
+
 #navi-bar #navi-selections #user-preferences li a#lectures::before {
 	display: inline-block;
 	content: '\f02d \2003';
@@ -1806,7 +1830,11 @@ nav#filter a.current {
 #login-form #form-username,
 #login-form #form-password,
 #register-form #form-username,
-#register-form #form-password {
+#register-form #form-password,
+#register-form #form-confirm-password,
+#register-form #form-name,
+#register-form #form-email,
+#register-form #form-phone-number {
 	width: auto;
 }
 
@@ -1826,4 +1854,66 @@ nav#filter a.current {
 
 	margin-left: 15px;
 	margin-right: 15px;
+}
+
+/* **************************************** */
+/* Account */
+#heading-information-container {
+	height: 50px;
+}
+
+#heading-information-container-row-profile,
+#heading-information-container-row-favorite,
+#heading-information-container-row-enrolled-courses {
+	height: 50px;
+}
+
+#heading-information-container-row-profile {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+#heading-information-container-row-favorite,
+#heading-information-container-row-enrolled-courses {
+	display: flex;
+	align-items: center;
+	justify-content: flex-start;
+}
+
+#heading-information-container-row-profile #heading-information-btn-group {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+}
+
+#heading-information-container-row-profile #heading-information-btn-group a {
+	margin-left: 10px;
+	margin-right: 10px;
+}
+
+#heading-information-container-row-profile #heading-information-btn-group a#heading-information-save-btn {
+	display: none;
+	background-color: forestgreen;
+}
+
+#heading-information-container-row-profile #heading-information-btn-group a#heading-information-save-btn:hover {
+	background-color: darkgreen;
+}
+
+#main-information-container {
+	margin: 15px 25px 15px 25px;
+}
+
+#main-information-container #main-information-input-group {
+	width: 100%;
+}
+
+#main-information-container .input-group input {
+	margin-bottom: 10px;
+	border-radius: 10px;
+}
+
+#main-information-container .input-group input[disabled] {
+	cursor: default;
 }

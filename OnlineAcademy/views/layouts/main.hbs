@@ -95,7 +95,7 @@
                         </a>
                     </li>
 
-                    {{#unless isAuthorized}}
+                    {{#if isAuthorized}}
                     <li id="cart">
                         <a href="#">
                             Cart
@@ -111,13 +111,13 @@
 
                         <ul class="dropdown-menu">
                             <li>
-                                <a class="dropdown-item" id="profile" href="#">
+                                <a class="dropdown-item" id="profile" href="/student/info">
                                     Profile 
                                 </a>
                             </li>
                             {{!-- Student --}}
                             <li>
-                                <a class="dropdown-item" id="favorite" href="#">
+                                <a class="dropdown-item" id="favorite" href="/student/myWatchList">
                                     Favorite 
                                 </a>
                             </li>
@@ -128,9 +128,11 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" id="signout" href="#">
-                                    Sign out                                   
-                                </a>
+                                <form id="signout-form" method="POST">
+                                    <a class="dropdown-item" id="signout" href="javascript:jQuery('signout-form').submit()">
+                                        Sign out                                   
+                                    </a>
+                                </form>
                             </li>
                         </ul>
                     </li>
@@ -149,7 +151,7 @@
                             <i class="fa fa-sign-in" aria-hidden="true"></i>
                         </a>
                     </li>
-                    {{/unless}}
+                    {{/if}}
 
                 </ul>
 
