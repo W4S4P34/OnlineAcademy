@@ -2,6 +2,7 @@
 const express = require('express');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
+const session = require('express-session');
 const exphbs = require('express-handlebars');
 const express_handlebars_sections = require('express-handlebars-sections');
 const ip = require("ip");
@@ -14,6 +15,12 @@ const app = express();
 require('dotenv').config();
 
 app.use(cookieParser());
+app.set('trust proxy', 1) // trust first proxy
+app.use(session({
+    secret: 'PRIVATE_KEY',
+    resave: false,
+    saveUninitialized: true
+}))
 app.use(morgan('dev'));
 app.use(express.urlencoded({
     extended: true
@@ -29,21 +36,27 @@ app.engine('hbs', exphbs({
     }
 }));
 
+// Middleware
+app.use(middleware.CheckAuthorized);
+app.use(middleware.InitCart);
 // Static declaration
-app.use('/resource', express.static('resource'));
-app.use('/views/assets', express.static('views/assets'));
+app.use('/resource/public', express.static('resource/public'));
+app.use('/resource/private', middleware.AccessPrivateResource ,express.static('resource/private'));
+app.use('/views/assets',express.static('views/assets'));
 // Program configurations
 app.set('view engine', 'hbs');
-app.use(middleware.CheckAuthorized);
+
 
 // Controllers declaration
 try {
     app.use('/', require('./controllers/homepage.route'));
+    app.use('/student', require('./controllers/student.route'));
     app.use('/course', require('./controllers/course.route'));
     app.use('/user', require('./controllers/user.route'));
 } catch (e) {
     console.log(e);
 }
+
 
 // App start listening
 app.listen(process.env.PORT, ip.address(), function () {

@@ -1,10 +1,11 @@
+const { ROLES } = require('../utils/enum');
 const jwt = require('jsonwebtoken');
+const studentModel = require('../models/student.model');
 
 module.exports = {
     CheckAuthorized(req, res, next) {
-        console.log("middleware call");
+        console.log("middleware check auth call");
         var isAuthorized = false;
-        console.log(req.cookies);
         if (req.cookies.tokenAuthorized != undefined) {
             try {
                 jwt.verify(req.cookies.tokenAuthorized, process.env.PRIVATE_KEY, (err, authData) => {
@@ -18,5 +19,30 @@ module.exports = {
         }
         res.locals.isAuthorized = isAuthorized;
         return next();
+    },
+    async AccessPrivateResource(req, res, next) {
+        console.log("Params: " + req.params.id);
+        if (res.locals.isAuthorized) {
+            // check student permission
+            console.log("login already");
+            return next();
+            if (res.locals.user.role === ROLES.STUDENT && await studentModel.IsEnrolled(res.locals.user.username, req.params.id)) {
+                console.log("Has permission");
+                return next();
+            }
+            // check lecturer permission
+            if (res.locals.user.role === ROLES.LECTURER) {
+                return next();
+            }
+            // check admin permission(if need)
+        }
+        res.status(500).send("No Permission");
+    },
+    InitCart(req, res, next) {
+        if (!res.locals.isAuthorized && req.session.cart === undefined) {
+            req.session.cart = [];
+            console.log(req.session.cart);
+        }
+        next();
     }
 }

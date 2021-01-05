@@ -22,22 +22,22 @@
                 var content = jQuery(this);
                 var contentHTML = content.html();
                 if (contentHTML.length > showChar) {
-                    var truncateText = contentHTML.substr(0, showChar);
-                    var fullText = contentHTML;
-                    var html =
-                        '<div class="truncate-text" style="display:block">' + truncateText +
-                        ellipsesText +
-                        '<div class="container-fluid" style="display: flex; justify-content: center;">' +
-                        '<button type="button" class="btn btn-primary moreless more">Show More</a>' +
-                        '</div>' +
-                        '</div>' +
-                        '<div class="truncate-text" style="display:none">' + fullText +
-                        '<div class="container-fluid" style="display: flex; justify-content: center;">' +
-                        '<button type="button" class="btn btn-primary moreless less">Show Less</a>' +
-                        '</div>' +
-                        '</div>';
+                    //var truncateText = contentHTML.substr(0, showChar);
+                    //var fullText = contentHTML;
+                    //var html =
+                    //    '<div class="truncate-text" style="display:block">' + truncateText +
+                    //    ellipsesText +
+                    //    '<div class="container-fluid" style="display: flex; justify-content: center;">' +
+                    //    '<button type="button" class="btn btn-primary moreless more">Show More</a>' +
+                    //    '</div>' +
+                    //    '</div>' +
+                    //    '<div class="truncate-text" style="display:none">' + fullText +
+                    //    '<div class="container-fluid" style="display: flex; justify-content: center;">' +
+                    //    '<button type="button" class="btn btn-primary moreless less">Show Less</a>' +
+                    //    '</div>' +
+                    //    '</div>';
 
-                    content.html(html);
+                    //content.html(html);
                 }
             });
 
@@ -106,9 +106,11 @@
     }
 
     function togglePopupVideo(video, activeState) {
-        jQuery(video).toggleClass("active", activeState);
+        
+        video = jQuery(`#${video}`);
+        video.toggleClass("active", activeState);
         if (!activeState) {
-            stopVideo(video);
+            stopVideo(document);
         }
     }
 
@@ -164,29 +166,36 @@
                         <div class="container">
                             {{!-- <img class="img-responsive center-block" src="/resource/public/lecturer/1.png"
                                 alt="Cover Image"> --}}
-                            <img class="img-responsive center-block" src="/resource/public/course/2/photo.png"
+                            <img class="img-responsive center-block" src="{{detailCourse.imagePath}}"
                                 alt="Cover Image">
 
                             <div id="btn-list-detail" class="container-fluid">
+                                {{#if isAuthorized}}
+                                {{#unless isInWatchList}}
                                 <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary">
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
-
+                                {{/unless}}
+                                {{#unless isInCart}}
                                 <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary">
                                     Add to cart&nbsp;
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </button>
-
+                                {{/unless}}
+                                {{#unless isEnrolled}}
                                 <button id="buy-now-btn-detail" type="button" class="btn btn-primary">
                                     Buy now
                                 </button>
+                                {{/unless}}
+                                {{/if}}
                             </div>
                         </div>
                     </div>
 
                     <div id="course-info-detail" class="row">
                         <div class="container-fluid" id="details">
+                            
                             <h1>
                                 Details
                             </h1>
@@ -195,75 +204,35 @@
                                 Information
                             </h2>
                             <div id="title">
-                                This is the placeholder for the long title of this course, it should be long
+                                {{detailCourse.title}}
                             </div>
                             <div id="tuition-fee">
-                                $ 100.00
+                                $ {{detailCourse.price}}
                             </div>
                             <div id="short-description">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Maiores consequatur qui, quia
-                                esse odit vero sint unde cumque hic dolore iusto sit modi culpa maxime distinctio
-                                consequuntur dicta. Dolorum, recusandae?
+                                {{detailCourse.briefDescription}}
                             </div>
                             <div id="field">
-                                Field
+                                {{detailCourse.fieldName}}
                             </div>
                             <div id="lecturer">
                                 Created by
-                                <a href="#">Lecturer A</a>,
-                                <a href="#">Lecturer B</a>,
-                                <a href="#">Lecturer C</a>,
-                                <a href="#">Lecturer D</a>
+                                <a href="#lecturerInfo">{{lecturer.name}}</a>
                             </div>
                             <div id="review">
-                                <i class="fa fa-eye" aria-hidden="true"></i> Views 100,&nbsp;
-                                <i class="fa fa-heart-o" aria-hidden="true"></i> Likes 25,&nbsp;
-                                <i class="fa fa-user" aria-hidden="true"></i> Students 10
+                                <i class="fa fa-eye" aria-hidden="true"></i> Views {{detailCourse.view}},&nbsp;
+                                <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{detailCourse.like}},&nbsp;
+                                <i class="fa fa-user" aria-hidden="true"></i> Students {{detailCourse.enrollNumber}}
                             </div>
                             <div id="last-update">
-                                Last updated 12/2020
+                                Last updated {{detailCourse.lastUpdate}}
                             </div>
 
                             <h2>
                                 Description
                             </h2>
                             <div id="description" class="truncate">
-                                <p>
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Id delectus quia labore
-                                    exercitationem
-                                    incidunt, unde quaerat dolorum enim voluptates, rerum dolor aut, perspiciatis nemo
-                                    natus
-                                    voluptatem ipsum expedita tempora ut.
-                                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Similique vero beatae
-                                    dolorum
-                                    eaque
-                                    rerum iusto nemo ullam reiciendis iste nihil cupiditate rem, corporis commodi? Neque
-                                    sint
-                                    explicabo earum impedit libero.
-                                    Lorem, ipsum dolor sit amet consectetur adipisicing elit. Numquam quae voluptatum
-                                    illum
-                                    a
-                                    quod
-                                    aliquam ullam, non alias commodi, possimus sunt tenetur distinctio iure explicabo
-                                    inventore
-                                    qui
-                                    molestias quis officia!
-                                    Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquid expedita,
-                                    cupiditate
-                                    velit
-                                    nam
-                                    culpa necessitatibus incidunt ea ullam quae recusandae repellendus magni quos
-                                    nostrum
-                                    hic
-                                    mollitia et harum omnis at.
-                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Aliquam harum saepe odio
-                                    magnam
-                                    unde
-                                    voluptatum deserunt sapiente? Odio quas voluptate aliquid asperiores laboriosam
-                                    quibusdam
-                                    sed
-                                    mollitia laborum. Praesentium, amet necessitatibus.
-                                </p>
+                                {{{detailCourse.description}}}
                             </div>
                         </div>
 
@@ -273,68 +242,45 @@
                             </h1>
 
                             <h2>
-                                Sumamry
+                                {{detailCourse.briefDescription}}
                             </h2>
 
                             <p>
                                 <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                1 hour
+                                {{detailCourse.totalHours}} hours
                                 <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                26 lectures
-                                <i class="fa fa-circle-o" aria-hidden="true"></i>
-                                4 sections
+                                {{numberOfSection}} sections
                             </p>
 
                             <div class="list-group">
+                                {{#each listSections}}
                                 <div class="list-item">
                                     <button type="button" id="list-btn" class="btn btn-primary content-btn">
                                         <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
-                                        Section 1
+                                        Section {{this.id}}
                                     </button>
                                     <ul class="showContent">
                                         <li>
+                                            {{#with this.preview}}
                                             <div id="duration" class="pull-right">02:02</div>
-                                            <a href="#currentvideo" onclick="togglePopupVideo(video1, true);">
-                                                Active Preview Section
+                                            <a href="#currentvideo" onclick="togglePopupVideo({{../id}}, true);">
+                                                Preview
                                             </a>
-                                            <div class="popupVideo" id="video1">
-                                                <video src="/resource/private/1_Trim.mp4" type="video/mp4"
-                                                    controls="true"></video>
+                                            <div class="popupVideo" id="{{../id}}">
+                                                <video src="{{../preview}}" type="video/mp4"
+                                                       controls="true"></video>
                                                 <img src="/views/assets/images/closebutton.png" class="close-btn"
-                                                    onclick="togglePopupVideo(video1, false);">
+                                                     onclick="togglePopupVideo({{../id}}, false);">
                                             </div>
+                                            {{/with}}
                                         </li>
                                         <li>
                                             <div id="duration" class="pull-right">02:02</div>
-                                            Disabled Section
+                                            {{this.title}}
                                         </li>
                                     </ul>
                                 </div>
-
-                                <div class="list-item">
-                                    <button type="button" id="list-btn" class="btn btn-primary content-btn">
-                                        <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
-                                        Section 2
-                                    </button>
-                                    <ul class="showContent">
-                                        <li>
-                                            <div id="duration" class="pull-right">02:02</div>
-                                            <a href="#currentvideo" onclick="togglePopupVideo(video2, true);">
-                                                Active Preview Section
-                                            </a>
-                                            <div class="popupVideo" id="video2">
-                                                <video src="/resource/private/1_Trim.mp4" type="video/mp4"
-                                                    controls="true"></video>
-                                                <img src="/views/assets/images/closebutton.png" class="close-btn"
-                                                    onclick="togglePopupVideo(video2, false);">
-                                            </div>
-                                        </li>
-                                        <li>
-                                            <div id="duration" class="pull-right">02:02</div>
-                                            Disabled Section
-                                        </li>
-                                    </ul>
-                                </div>
+                                {{/each}}
 
                             </div>
                         </div>
@@ -343,174 +289,67 @@
                             <h1>
                                 Related Courses
                             </h1>
-
+                            {{#each relatedCourses}}
                             <div id="related-course" class="media">
                                 <div id="related-course-img" class="pull-left">
-                                    <img class="media-object" src="/resource/public/course/6/photo.png" alt="Hello">
-                                    <a id="related-course-transaction-btn" href="#" class="btn btn-primary"
+                                    <img class="media-object" src="{{imagePath}}" alt="Hello">
+                                    <a id="related-course-transaction-btn" href="/course/detail/{{id}}" class="btn btn-primary"
                                         role="button">
                                         Details
                                     </a>
                                 </div>
                                 <div class="media-body">
                                     <h4 class="media-heading">
-                                        <div id="fee-related-course" class="pull-right">$ 400.00</div>
-                                        Media heading Media heading Media heading Media heading Media heading Media
-                                        heading Media heading Media heading Media heading Media heading Media heading
-                                        Media heading Media heading Media heading Media heading Media heading Media
-                                        heading Media heading Media heading Media heading Media heading Media heading
-                                        Media heading Media heading
+                                        <div id="fee-related-course" class="pull-right">$ {{price}}</div>
+                                        {{title}}
                                     </h4>
                                     <div id="description">
-                                        Short Description Short Description Short Description Short Description Short
-                                        Description Short Description Short Description Short Description Short
-                                        Description Short Description Short Description Short Description Short
-                                        Description Short Description Short Description Short Description Short
-                                        Description
+                                        {{briefDescription}}
                                     </div>
                                     <div id="field">
-                                        Field
+                                        {{fieldName}}
                                     </div>
                                     <div id="lecturers">
-                                        Lecturers
+                                        {{lecturerName}}
                                     </div>
                                     <div id="reviews">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Views 100,&nbsp;
-                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes 25,&nbsp;
-                                        <i class="fa fa-user" aria-hidden="true"></i> Students 10
+                                        <i class="fa fa-eye" aria-hidden="true"></i> Views {{view}},&nbsp;
+                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{like}},&nbsp;
+                                        <i class="fa fa-user" aria-hidden="true"></i> Students {{enrollNumber}}
                                     </div>
                                 </div>
                             </div>
-
-                            <div id="related-course" class="media">
-                                <div id="related-course-img" class="pull-left">
-                                    <img class="media-object" src="/resource/public/course/7/photo.png" alt="Hello">
-                                    <a id="related-course-transaction-btn" href="#" class="btn btn-primary"
-                                        role="button">
-                                        Details
-                                    </a>
-                                </div>
-                                <div class="media-body">
-                                    <h4 class="media-heading">
-                                        <div id="fee-related-course" class="pull-right">$ 400.00</div>
-                                        Media heading
-                                    </h4>
-                                    <div id="description">
-                                        Short Description
-                                    </div>
-                                    <div id="field">
-                                        Field
-                                    </div>
-                                    <div id="lecturers">
-                                        Lecturers
-                                    </div>
-                                    <div id="reviews">
-                                        <i class="fa fa-eye" aria-hidden="true"></i> Views 100,&nbsp;
-                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes 25,&nbsp;
-                                        <i class="fa fa-user" aria-hidden="true"></i> Students 10
-                                    </div>
-                                </div>
-                            </div>
-
+                            {{/each}}
                         </div>
 
                         <div class="container-fluid" id="lecturers">
-                            <h1>
+                            <h1 id="lecturerInfo">
                                 Lecturers
                             </h1>
-
+                            {{#with lecturer}}
                             <div id="lecturer" class="media">
                                 <div id="lecturer-img" class="pull-left">
-                                    <img class="media-object" src="/views/assets/images/photo-1.jpg" alt="portfolio">
+                                    <img class="media-object" src="/resource/public/lecturer/{{id}}.png" alt="portfolio">
                                 </div>
                                 <div class="media-body">
                                     <h4 id="lecturer-name" class="media-heading">
-                                        Lecturer's Name
+                                        {{name}}
                                     </h4>
                                     <div id="lecturer-mail">
                                         <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        Email@gmail.com
+                                        {{email}}
                                     </div>
                                     <div id="lecturer-phone">
                                         <i class="fa fa-phone" aria-hidden="true"></i>
-                                        Phone Number
+                                        {{phone_number}}
                                     </div>
                                     <div id="lecturer-universe">
                                         <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        University
+                                        {{university}}
                                     </div>
                                 </div>
                             </div>
-
-                            <div id="lecturer" class="media">
-                                <div id="lecturer-img" class="pull-left">
-                                    <img class="media-object" src="/views/assets/images/photo-2.jpg" alt="portfolio">
-                                </div>
-                                <div class="media-body">
-                                    <h4 id="lecturer-name" class="media-heading">
-                                        Lecturer's Name
-                                    </h4>
-                                    <div id="lecturer-mail">
-                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        Email@gmail.com
-                                    </div>
-                                    <div id="lecturer-phone">
-                                        <i class="fa fa-phone" aria-hidden="true"></i>
-                                        Phone Number
-                                    </div>
-                                    <div id="lecturer-universe">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        University
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="lecturer" class="media">
-                                <div id="lecturer-img" class="pull-left">
-                                    <img class="media-object" src="/views/assets/images/photo-3.jpg" alt="portfolio">
-                                </div>
-                                <div class="media-body">
-                                    <h4 id="lecturer-name" class="media-heading">
-                                        Lecturer's Name
-                                    </h4>
-                                    <div id="lecturer-mail">
-                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        Email@gmail.com
-                                    </div>
-                                    <div id="lecturer-phone">
-                                        <i class="fa fa-phone" aria-hidden="true"></i>
-                                        Phone Number
-                                    </div>
-                                    <div id="lecturer-universe">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        University
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="lecturer" class="media">
-                                <div id="lecturer-img" class="pull-left">
-                                    <img class="media-object" src="/views/assets/images/photo-4.jpg" alt="portfolio">
-                                </div>
-                                <div class="media-body">
-                                    <h4 id="lecturer-name" class="media-heading">
-                                        Lecturer's Name
-                                    </h4>
-                                    <div id="lecturer-mail">
-                                        <i class="fa fa-envelope-o" aria-hidden="true"></i>
-                                        Email@gmail.com
-                                    </div>
-                                    <div id="lecturer-phone">
-                                        <i class="fa fa-phone" aria-hidden="true"></i>
-                                        Phone Number
-                                    </div>
-                                    <div id="lecturer-universe">
-                                        <i class="fa fa-map-marker" aria-hidden="true"></i>
-                                        University
-                                    </div>
-                                </div>
-                            </div>
-
+                            {{/with}}
                         </div>
 
                         <div class="container-fluid" id="feedbacks">
@@ -518,17 +357,18 @@
                                 Feedbacks
                             </h1>
 
+                            {{#if isAuthorized}}
                             <div class="container-fluid" id="feedback-form">
                                 <div class="row" id="user-name">
                                     <h3>
-                                        Username
+                                        {{user.name}}
                                     </h3>
                                 </div>
 
                                 <form role="form" method="POST">
                                     <div class="row" id="feedback-section">
                                         <textarea name="userfeedback" class="form-control" rows="3" maxlength="1024"
-                                            placeholder="Your feedback..." onkeyup="countChar(this)"></textarea>
+                                                  placeholder="Your feedback..." onkeyup="countChar(this)"></textarea>
                                         <div id="char-number">1024</div>
                                     </div>
 
@@ -538,113 +378,17 @@
                                 </form>
 
                             </div>
+                            {{/if}}
 
                             <div class="container-fluid" id="feedbacks">
                                 <ul class="list-group" id="feedback-list">
+                                    {{#each listFeedbacks}}
                                     <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
+                                        <h3>{{this.name}}</h3>
+                                        <h4>{{this.date}}</h4>
+                                        {{{this.comment}}}
                                     </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
-                                    <li class="list-group-item">
-                                        <h3>Name</h3>
-                                        <h4>23:59 19/05/2000</h4>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Numquam impedit,
-                                            praesentium doloribus sed eum, rem veritatis soluta, molestias nesciunt
-                                            perspiciatis enim deleniti? A quia neque obcaecati nemo molestias
-                                            perspiciatis suscipit.</p>
-                                    </li>
+                                    {{/each}}
                                 </ul>
 
                                 <div id="showmore-btn" class="container-fluid">
@@ -659,7 +403,7 @@
                                         Show Less
                                     </button>
                                 </div>
-
+                                
                             </div>
                         </div>
                     </div>

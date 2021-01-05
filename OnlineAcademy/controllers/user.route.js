@@ -6,7 +6,6 @@ const jwt = require('jsonwebtoken');
 const moment = require('moment');
 
 
-
 const router = express.Router();
 
 router.get('/login' ,async (req, res) => {
@@ -49,7 +48,7 @@ router.post('/logout', function (req, res) {
     if (res.locals.isAuthorized) {
         res.clearCookie('tokenAuthorized');
     }
-    const url = req.headers.referer;
+    const url = req.headers.referer || '/';
     res.redirect(url);
 })
 
@@ -114,20 +113,4 @@ router.get('/confirmation/:token', function (req, res) {
     }
 })
 
-router.get('/myWatchList', function (req, res) {
-    if (res.locals.isAuthorized) {
-        res.send("My Watch List");
-    }
-    else {
-        res.redirect('/user/login');
-    }
-})
-router.get('/info', function (req, res) {
-    if (res.locals.isAuthorized) {
-        res.send("My Information");
-    }
-    else {
-        res.redirect('/user/login');
-    }
-})
 module.exports = router;

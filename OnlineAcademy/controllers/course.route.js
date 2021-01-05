@@ -1,6 +1,7 @@
 const express = require('express');
-const model = require('../models/course.model');
-
+const courseModel = require('../models/course.model');
+const studentModel = require('../models/student.model');
+const { IsEnrolled } = require('../models/student.model');
 const router = express.Router();
 
 function CreatePageNumber(nPages,curPage = 1) {
@@ -15,12 +16,12 @@ function CreatePageNumber(nPages,curPage = 1) {
 }
 router.get('/byField/:field',async (req, res) => {
     res.locals.currentView = '#categories';
-    res.locals.listCourseFields = await model.GetAllFieldsAndTheme(req.params.field);
-    res.locals.listHighlightCourse = await model.GetTopNewCourses(5);
-    const total = await model.CountCourseByField(req.params.field);
+    res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(req.params.field);
+    res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
+    const total = await courseModel.CountCourseByField(req.params.field);
     const nPages = Math.ceil(total / process.env.PAGINATE);
     const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
-    res.locals.listCourse = await model.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
+    res.locals.listCourse = await courseModel.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
     res.locals.pageNumbers = CreatePageNumber(nPages, page);
     
     // console.log(req.params.field);
@@ -28,16 +29,16 @@ router.get('/byField/:field',async (req, res) => {
 })
 router.get('/byTheme/:theme', async (req, res) => {
     res.locals.currentView = '#categories';
-    const field = await model.GetFieldByTheme(req.params.theme);
-    if (field != null) {
-        const total = await model.CountCourseByTheme(req.params.theme);
+    const field = await courseModel.GetFieldByTheme(req.params.theme);
+    if (field !== null) {
+        const total = await courseModel.CountCourseByTheme(req.params.theme);
         const nPages = Math.ceil(total / process.env.PAGINATE);
         const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
-        res.locals.listCourse = await model.GetCourseByTheme(req.params.theme, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
+        res.locals.listCourse = await courseModel.GetCourseByTheme(req.params.theme, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
         res.locals.pageNumbers = CreatePageNumber(nPages, page);
     }
-    res.locals.listCourseFields = await model.GetAllFieldsAndTheme(field);
-    res.locals.listHighlightCourse = await model.GetTopNewCourses(5);
+    res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(field);
+    res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
 
     // console.log(req.params.theme);
     res.render('vwCategories/index');
@@ -45,16 +46,23 @@ router.get('/byTheme/:theme', async (req, res) => {
 })
 router.get('/detail/:id', async (req, res) => {
     res.locals.currentView = '#categories';
-    const field = await model.GetFieldByTheme(req.params.theme);
-    res.locals.listCourseFields = await model.GetAllFieldsAndTheme(field);
-
-    // const result = await model.GetDetailCourseById(req.params.id);
-    // res.json(result);
-
+    res.locals.detailCourse = await courseModel.GetDetailCourseById(req.params.id);
+    if (res.locals.detailCourse === null) {
+        res.status(500).send("Not found");
+        return;
+    }
+    res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(res.locals.detailCourse.fieldName);
+    res.locals.lecturer = await courseModel.GetLecturer(req.params.id);
+    res.locals.relatedCourses = await courseModel.GetRelatedCourses(req.params.id, 3);
+    res.locals.listSections = await courseModel.GetSections(req.params.id);
+    res.locals.numberOfSection = res.locals.listSections === null ? 0 : res.locals.listSections.length;
+    res.locals.listFeedbacks = await courseModel.GetFeedbacks(req.params.id);
+    if (res.locals.isAuthorized) {
+        res.locals.isInCart = studentModel.IsInCart(req.session.cart, req.params.id) || await studentModel.IsEnrolled(res.locals.user.username, req.params.id);
+        res.locals.isInWatchList = await studentModel.IsInWatchList(res.locals.user.username, req.params.id);
+        res.locals.isEnrolled = await IsEnrolled(res.locals.user.username, req.params.id);
+    }
     res.render('vwCategories/details');
-})
-router.post('/detail/:id', function(req, res) {
-    console.log(req.body.userfeedback);
 })
 module.exports = router;
 

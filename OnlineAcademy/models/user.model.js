@@ -1,9 +1,4 @@
-﻿var ROLE = {
-    GUEST: 'guest',
-    STUDENT: 'student',
-    LECTURER: 'lecturer'
-}
-
+﻿const { ROLES } = require('../utils/enum');
 const db = require('../utils/database');
 
 
@@ -32,18 +27,33 @@ module.exports = {
 
     async GetByID(account) {
         console.log(account.username);
-        const sql = `select * from student where id = ?`;
+        var sql = `select * from student where id = ?`;
         const condition = [account.username];
-        const [rows, fields] = await db.load(sql, condition);
-        if (rows.length === 0)
+        var [rows, fields] = await db.load(sql, condition);
+        if (rows.length !== 0)
+            return {
+                username: rows[0].id,
+                password: rows[0].password,
+                email: rows[0].email,
+                name: rows[0].name,
+                phoneNumber: rows[0].phone_number,
+                role: ROLES.STUDENT
+            };
+        sql = `select * from lecturer where id = ?`;
+        [rows, fields] = await db.load(sql, condition);
+        if (rows.length === 0) {
             return null;
+        }
         return {
             username: rows[0].id,
             password: rows[0].password,
             email: rows[0].email,
             name: rows[0].name,
-            phoneNumber: rows[0].phone_number
-        };
+            phoneNumber: rows[0].phone_number,
+            university: rows[0].university,
+            gender: rows[0].gender,
+            role: ROLES.LECTURER
+        }
     },
 
     async IsExist(account) {
