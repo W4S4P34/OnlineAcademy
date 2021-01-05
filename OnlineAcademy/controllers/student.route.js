@@ -68,4 +68,12 @@ router.get('/enrolledCourses', async (req, res) => {
         layout: 'main.hbs'
     });
 })
+router.get('/edit/password', async (req, res) => {
+    res.render('vwStudent/changepassword', {
+        layout: 'main.hbs'
+    });
+})
+router.post('/edit/password', function (req, res) {
+    console.log('Changed!')
+})
 module.exports = router;
