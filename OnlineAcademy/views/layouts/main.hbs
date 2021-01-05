@@ -95,7 +95,45 @@
                         </a>
                     </li>
 
-                    {{#if auth}}
+                    {{#unless isAuthorized}}
+                    <li id="cart">
+                        <a href="#">
+                            Cart
+                            <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                        </a>
+                    </li>
+
+                    <li class="dropdown" id="user-preferences">
+                        <a class="dropdown-toggle noselect disabled" role="button" data-toggle="dropdown">
+                            Hi, <b>Name</b>
+                            <b class="caret"></b>
+                        </a>
+
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" id="profile" href="#">
+                                    Profile 
+                                </a>
+                            </li>
+                            {{!-- Student --}}
+                            <li>
+                                <a class="dropdown-item" id="favorite" href="#">
+                                    Favorite 
+                                </a>
+                            </li>
+                            {{!-- Lecturer --}}
+                            <li>
+                                <a class="dropdown-item" id="lectures" href="#">
+                                    Lectures 
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" id="signout" href="#">
+                                    Sign out                                   
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
 
                     {{else}}
                     <li id="register">
@@ -111,7 +149,7 @@
                             <i class="fa fa-sign-in" aria-hidden="true"></i>
                         </a>
                     </li>
-                    {{/if}}
+                    {{/unless}}
 
                 </ul>
 
