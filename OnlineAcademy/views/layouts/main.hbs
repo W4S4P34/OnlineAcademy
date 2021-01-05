@@ -28,8 +28,8 @@
 </head>
 
 <body>
-    <!-- Fixed navbar -->
-    <div class="navbar navbar-inverse">
+    <!-- Fixe"d navbar -->
+    <div id="navi-bar" class="navbar navbar-inverse">
         <div class="container">
             <div class="navbar-header">
                 <!-- Button for smallest screens -->
@@ -44,7 +44,7 @@
             </div>
 
             <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav pull-right mainNav">
+                <ul id="navi-selections" class="nav navbar-nav pull-right mainNav">
 
                     <li id="home">
                         <a href="/">Home</a>
@@ -64,14 +64,15 @@
                             </li>
                             {{else}}
                             <li class="subdropdown">
-                                <a href="/course/byField/{{this.name}}/?page=1" class="dropdown-toggle noselect disabled" role="button"
-                                   data-toggle="subdropdown">
+                                <a href="/course/byField/{{this.name}}/?page=1"
+                                    class="dropdown-toggle noselect disabled" role="button" data-toggle="subdropdown">
                                     {{this.name}}
                                 </a>
                                 <ul class="dropdown-submenu">
                                     {{#each this.listTheme}}
                                     <li>
-                                        <a class="dropdown-item" href='/course/byTheme/{{this.theme}}/?page=1'>{{this.theme}}</a>
+                                        <a class="dropdown-item"
+                                            href='/course/byTheme/{{this.theme}}/?page=1'>{{this.theme}}</a>
                                     </li>
                                     {{/each}}
                                 </ul>
@@ -83,10 +84,34 @@
                     </li>
 
                     <li id="about">
-                        <a href="/about">About</a>
+                        <a href="/about">
+                            About
+                        </a>
                     </li>
 
-                    <li id="contact"><a href="/contact">Contact</a></li>
+                    <li id="contact">
+                        <a href="/contact">
+                            Contact
+                        </a>
+                    </li>
+
+                    {{#if auth}}
+
+                    {{else}}
+                    <li id="register">
+                        <a href="/user/register">
+                            Register
+                            <i class="fa fa-user" aria-hidden="true"></i>
+                        </a>
+                    </li>
+
+                    <li id="login">
+                        <a href="/user/login">
+                            Login
+                            <i class="fa fa-sign-in" aria-hidden="true"></i>
+                        </a>
+                    </li>
+                    {{/if}}
 
                 </ul>
 
@@ -112,8 +137,7 @@
     <script src="/views/assets/js/custom.js"></script>
 
     <script>
-
-        {{{_sections.camera_wrap}}}
+        {{{ _sections.camera_wrap }}}
 
         jQuery(() => {
             const currentView = '{{currentView}}';

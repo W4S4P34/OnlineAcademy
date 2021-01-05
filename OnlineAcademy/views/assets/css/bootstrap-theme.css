@@ -5,7 +5,7 @@
 	position: sticky;
 	position: -webkit-sticky;
 	top: 0%;
-	z-index: 300;
+	z-index: 1000;
 	border-radius: 0;
 	background: rgba(0, 0, 0, .8);
 	border-bottom: 1px solid rgba(255, 255, 255, 0.15);
@@ -325,4 +325,9 @@ li.subdropdown a.dropdown-toggle.noselect.disabled {
 .navbar-nav .dropdown-menu .dropdown-submenu>.active>a:focus {
 	background: none;
 	color: #fff;
+}
+
+.input-group-addon {
+	min-width: 64px;
+	text-align: center;
 }
