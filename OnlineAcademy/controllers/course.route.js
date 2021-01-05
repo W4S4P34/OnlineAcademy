@@ -62,6 +62,7 @@ router.get('/detail/:id', async (req, res) => {
         res.locals.isInWatchList = await studentModel.IsInWatchList(res.locals.user.username, req.params.id);
         res.locals.isEnrolled = await IsEnrolled(res.locals.user.username, req.params.id);
     }
+    console.log("Is Enrolled:" + res.locals.isEnrolled);
     res.render('vwCategories/details');
 })
 module.exports = router;

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -25,20 +25,21 @@
 
     <!-- DEFINE A 'css' SECTION -->
     {{{_sections.css}}}
+
 </head>
 
 <body>
 
     <div id="register-form" class="container-fluid">
         <div class="row">
-            <form method="POST">
+            <form id="formSignUp" method="POST" action="">
 
                 <div id="form-username" class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="Username" autofocus>
+                        <input type="text" class="form-control" placeholder="Username" autofocus id="username" name="username" onkeypress="KeyPressSubmit();" maxlength="50">
                     </div>
                 </div>
 
@@ -47,7 +48,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-key" aria-hidden="true"></i>
                         </span>
-                        <input type="password" class="form-control" placeholder="Password">
+                        <input type="password" class="form-control" placeholder="Password" id="password" name="password" onkeypress="KeyPressSubmit();" maxlength="50">
                     </div>
                 </div>
 
@@ -56,7 +57,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-unlock-alt" aria-hidden="true"></i>
                         </span>
-                        <input type="password" class="form-control" placeholder="Confirm Password">
+                        <input type="password" class="form-control" placeholder="Confirm Password" id="confirmPassword" name="confirmPassword" onkeypress="KeyPressSubmit();" maxlength="50">
                     </div>
                 </div>
 
@@ -65,7 +66,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-smile-o" aria-hidden="true"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="Name">
+                        <input type="text" class="form-control" placeholder="Name" id="name" name="name" onkeypress="KeyPressSubmit(); return /[a-z\s]/i.test(event.key)" maxlength="50">
                     </div>
                 </div>
 
@@ -74,7 +75,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-envelope-o" aria-hidden="true"></i>
                         </span>
-                        <input type="email" class="form-control" placeholder="Email">
+                        <input type="email" class="form-control" placeholder="Email" id="email" name="email" onkeypress="KeyPressSubmit();" maxlength="50">
                     </div>
                 </div>
 
@@ -83,7 +84,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-phone" aria-hidden="true"></i>
                         </span>
-                        <input type="tel" class="form-control" placeholder="Phone Number">
+                        <input type="tel" class="form-control" placeholder="Phone Number" id="phoneNumber" name="phoneNumber" onkeypress="KeyPressSubmit(); return /[0-9]/i.test(event.key)" maxlength="16">
                     </div>
                 </div>
 
@@ -93,7 +94,7 @@
                             <i class="fa fa-home" aria-hidden="true"></i>
                             Home
                         </a>
-                        <a class="btn btn-primary"  role="button" type="submit">
+                        <a class="btn btn-primary" role="button" type="submit" href="javascript:SignUp();">
                             <i class="fa fa-sign-in" aria-hidden="true"></i>
                             Register
                         </a>
@@ -115,6 +116,77 @@
     <script src="/views/assets/js/custom.js"></script>
     <!-- DEFINE A 'js' SECTION -->
     {{{_sections.js}}}
+
+
+    <!-- DEFINE SCRIPTS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        function ErrorMessage(message) {
+            alert(message);
+        }
+
+        function CheckValidInput(username, password, confirmPassword, name, email, phoneNumber) {
+            if (username.length === 0) {
+                ErrorMessage("INVALID INPUT: username is empty");
+                return false;
+            }
+            if (password.length === 0) {
+                ErrorMessage("INVALID INPUT: password is empty");
+                return false;
+            }
+            if (password !== confirmPassword) {
+                ErrorMessage("INVALID INPUT: password and confirm password does not match");
+                return false;
+            }
+            if (name.length === 0) {
+                ErrorMessage("INVALID INPUT: name is empty");
+                return false;
+            }
+            if (email.length === 0) {
+                ErrorMessage("INVALID INPUT: email is empty");
+                return false;
+            }
+            if (phoneNumber.length === 0) {
+                ErrorMessage("INVALID INPUT: phone number is empty");
+                return false;
+            }
+            if (!phoneNumber.match(/^[0-9]+$/)) {
+                ErrorMessage("INVALID INPUT: phone number can contain number only");
+                return false;
+            }
+            if (!name.match(/^[A-Za-z\s]+$/)) {
+                ErrorMessage("INVALID INPUT: name can contain alphabet characters only");
+                return false;
+            }
+            return true;
+        }
+        function SignUp() {
+            const username = jQuery("#username").val();
+            const password = jQuery("#password").val();
+            const confirmPassord = jQuery("#confirmPassword").val();
+            const name = jQuery("#name").val();
+            const email = jQuery("#email").val();
+            const phoneNumber = jQuery("#phoneNumber").val();
+            jQuery(this).off("SubmitEvent");
+            if (CheckValidInput(username, password, confirmPassord, name, email, phoneNumber)) {
+                $.getJSON(`/user/register/isAvailable?username=${username}&email=${email}`, function (data) {
+                    if (data === true) {
+                        submitSuccess = true;
+                        $("#formSignUp").submit();
+                    } else {
+                        alert('username or email is already existed');
+                    }
+                })
+            }
+        }
+        var submitSuccess = false;
+        function KeyPressSubmit() {
+            if (event.key === "Enter" && !submitSuccess) {
+                console.log("Once");
+                SignUp();
+            }
+        }
+    </script>
 </body>
 
 </html>
