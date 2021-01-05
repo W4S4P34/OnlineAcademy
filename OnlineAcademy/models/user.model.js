@@ -12,14 +12,13 @@ module.exports = {
 
     async Add(user) {
         console.log("ADD USER");
-        console.log("ID: " + user.username);
-        console.log("Password: " + user.password);
-        console.log("Email: " + user.email);
+        console.log(user);
         const student = {
             id: user.username,
             password: user.password,
             email: user.email,
-            name: "Student"
+            name: user.name,
+            phone_number: user.phoneNumber
         }
         const result = await db.add(student, 'student');
         console.log(result);

@@ -18,28 +18,28 @@
             var showChar = 400;
             var ellipsesText = "...";
 
-            jQuery(".truncate").each(function () {
-                var content = jQuery(this);
-                var contentHTML = content.html();
-                if (contentHTML.length > showChar) {
-                    //var truncateText = contentHTML.substr(0, showChar);
-                    //var fullText = contentHTML;
-                    //var html =
-                    //    '<div class="truncate-text" style="display:block">' + truncateText +
-                    //    ellipsesText +
-                    //    '<div class="container-fluid" style="display: flex; justify-content: center;">' +
-                    //    '<button type="button" class="btn btn-primary moreless more">Show More</a>' +
-                    //    '</div>' +
-                    //    '</div>' +
-                    //    '<div class="truncate-text" style="display:none">' + fullText +
-                    //    '<div class="container-fluid" style="display: flex; justify-content: center;">' +
-                    //    '<button type="button" class="btn btn-primary moreless less">Show Less</a>' +
-                    //    '</div>' +
-                    //    '</div>';
+            //jQuery(".truncate").each(function () {
+            //    var content = jQuery(this);
+            //    var contentHTML = content.html();
+            //    if (contentHTML.length > showChar) {
+            //        var truncateText = contentHTML.substr(0, showChar);
+            //        var fullText = contentHTML;
+            //        var html =
+            //            '<div class="truncate-text" style="display:block">' + truncateText +
+            //            ellipsesText +
+            //            '<div class="container-fluid" style="display: flex; justify-content: center;">' +
+            //            '<button type="button" class="btn btn-primary moreless more">Show More</a>' +
+            //            '</div>' +
+            //            '</div>' +
+            //            '<div class="truncate-text" style="display:none">' + fullText +
+            //            '<div class="container-fluid" style="display: flex; justify-content: center;">' +
+            //            '<button type="button" class="btn btn-primary moreless less">Show Less</a>' +
+            //            '</div>' +
+            //            '</div>';
 
-                    //content.html(html);
-                }
-            });
+            //        content.html(html);
+            //    }
+            //});
 
             jQuery(".moreless").click(function () {
                 var thisEl = jQuery(this);
@@ -88,14 +88,17 @@
             });
 
         })();
+
         /* end ready */
     });
 </script>
 
 <script>
     function stopVideo(element) {
-        var iframe = element.querySelector('iframe');
-        var video = element.querySelector('video');
+
+        var iframe = element.find('iframe')[0];
+        var video = element.find('video')[0];
+        
         if (iframe) {
             var iframeSrc = iframe.src;
             iframe.src = iframeSrc;
@@ -103,14 +106,15 @@
         if (video) {
             video.pause();
         }
+
     }
 
     function togglePopupVideo(video, activeState) {
-        
-        video = jQuery(`#${video}`);
+
+        video = jQuery(video);
         video.toggleClass("active", activeState);
         if (!activeState) {
-            stopVideo(document);
+            stopVideo(video);
         }
     }
 
@@ -118,6 +122,8 @@
         var len = val.value.length;
         jQuery('#char-number').text(1024 - len);
     }
+
+    
 </script>
 
 {{/section}}
@@ -170,25 +176,23 @@
                                 alt="Cover Image">
 
                             <div id="btn-list-detail" class="container-fluid">
-                                {{#if isAuthorized}}
                                 {{#unless isInWatchList}}
                                 <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary">
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
                                 {{/unless}}
+                                {{#unless isEnrolled}}
                                 {{#unless isInCart}}
                                 <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary">
                                     Add to cart&nbsp;
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </button>
                                 {{/unless}}
-                                {{#unless isEnrolled}}
                                 <button id="buy-now-btn-detail" type="button" class="btn btn-primary">
                                     Buy now
                                 </button>
                                 {{/unless}}
-                                {{/if}}
                             </div>
                         </div>
                     </div>
@@ -262,21 +266,65 @@
                                     <ul class="showContent">
                                         <li>
                                             {{#with this.preview}}
-                                            <div id="duration" class="pull-right">02:02</div>
-                                            <a href="#currentvideo" onclick="togglePopupVideo({{../id}}, true);">
+                                            <div id="preview-duration{{../id}}" class="pull-right"></div>
+                                            <a href="#currentvideo" onclick="togglePopupVideo(preview{{../id}}, true);">
                                                 Preview
                                             </a>
-                                            <div class="popupVideo" id="{{../id}}">
+                                            <div class="popupVideo" id="preview{{../id}}">
                                                 <video src="{{../preview}}" type="video/mp4"
                                                        controls="true"></video>
                                                 <img src="/views/assets/images/closebutton.png" class="close-btn"
-                                                     onclick="togglePopupVideo({{../id}}, false);">
+                                                     onclick="togglePopupVideo(preview{{../id}}, false);">
                                             </div>
+                                            <script type="text/javascript">
+                                                function RenderDuration(videoId, durationId) {
+                                                    document.getElementById(`${videoId}`).children[0].onloadedmetadata = function () {
+                                                        console.log("Load success");
+                                                        console.log(this);
+                                                        const duration_s = this.duration;
+                                                        const min = Math.floor(duration_s / 60);
+                                                        const sec = Math.ceil(duration_s % 60);
+                                                        const duration = min.toString().padStart(2, 0) + ':' + sec.toString().padStart(2, 0);
+                                                        document.getElementById(durationId).textContent = duration;
+                                                    };
+                                                }
+                                                RenderDuration("preview{{../id}}", "preview-duration{{../id}}");
+                                                
+                                            </script>
                                             {{/with}}
+
                                         </li>
                                         <li>
+
+                                            {{#if ../isEnrolled}}
+                                            <div id="lecture-duration{{this.id}}" class="pull-right"></div>
+                                            <a href="#currentvideo" onclick="togglePopupVideo(lecture{{this.id}}, true);">
+                                                {{this.title}}
+                                            </a>
+                                            <div class="popupVideo" id="lecture{{this.id}}">
+                                                <video src="/resource/private/course/{{../detailCourse.id}}/{{this.id}}.mp4" type="video/mp4" controls="true"></video>
+                                                <img src="/views/assets/images/closebutton.png" class="close-btn"
+                                                     onclick="togglePopupVideo(lecture{{this.id}}, false);">
+                                            </div>
+
+                                            {{else}}
                                             <div id="duration" class="pull-right">02:02</div>
                                             {{this.title}}
+                                            {{/if}}
+                                            <script type="text/javascript">
+                                                function RenderDuration(videoId, durationId) {
+                                                    document.getElementById(`${videoId}`).children[0].onloadedmetadata = function () {
+                                                        console.log("Load success");
+                                                        console.log(this);
+                                                        const duration_s = this.duration;
+                                                        const min = Math.floor(duration_s / 60);
+                                                        const sec = Math.ceil(duration_s % 60);
+                                                        const duration = min.toString().padStart(2, 0) + ':' + sec.toString().padStart(2, 0);
+                                                        document.getElementById(durationId).textContent = duration;
+                                                    };
+                                                }
+                                                RenderDuration("lecture{{this.id}}", "lecture-duration{{this.id}}");
+                                            </script>
                                         </li>
                                     </ul>
                                 </div>
@@ -357,7 +405,7 @@
                                 Feedbacks
                             </h1>
 
-                            {{#if isAuthorized}}
+                            {{#if isEnrolled}}
                             <div class="container-fluid" id="feedback-form">
                                 <div class="row" id="user-name">
                                     <h3>
@@ -403,7 +451,7 @@
                                         Show Less
                                     </button>
                                 </div>
-                                
+
                             </div>
                         </div>
                     </div>

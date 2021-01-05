@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -25,20 +25,22 @@
 
     <!-- DEFINE A 'css' SECTION -->
     {{{_sections.css}}}
+
+
 </head>
 
 <body>
 
     <div id="login-form" class="container-fluid">
         <div class="row">
-            <form method="POST">
+            <form id="formSignIn" method="POST" action="">
 
                 <div id="form-username" class="form-group">
                     <div class="input-group">
                         <span class="input-group-addon">
                             <i class="fa fa-user" aria-hidden="true"></i>
                         </span>
-                        <input type="text" class="form-control" placeholder="Username" size="256" autofocus>
+                        <input type="text" class="form-control" placeholder="Username" size="256" autofocus id="username" name="username" onkeypress="KeyPressSubmit()" maxlength="50">
                     </div>
                 </div>
 
@@ -47,7 +49,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-key" aria-hidden="true"></i>
                         </span>
-                        <input type="password" class="form-control" size="256" placeholder="Password">
+                        <input type="password" class="form-control" size="256" placeholder="Password" id="password" name="password" onkeypress="KeyPressSubmit()" maxlength="50">
                     </div>
                 </div>
 
@@ -57,7 +59,7 @@
                             <i class="fa fa-home" aria-hidden="true"></i>
                             Home
                         </a>
-                        <a class="btn btn-primary"  role="button" type="submit">
+                        <a class="btn btn-primary" role="button" type="submit" href="javascript:SignIn();">
                             <i class="fa fa-sign-in" aria-hidden="true"></i>
                             Sign In
                         </a>
@@ -77,8 +79,28 @@
     <script type="text/javascript" src="/views/assets/js/camera.min.js"></script>
     <script src="/views/assets/js/bootstrap.min.js"></script>
     <script src="/views/assets/js/custom.js"></script>
+
     <!-- DEFINE A 'js' SECTION -->
     {{{_sections.js}}}
+
+    <!-- DEFINE SCRIPTS -->
+    <script>
+        function SignIn() {
+            if (jQuery("#username").val().length === 0 || jQuery("#password").val().length === 0) {
+                alert("INVALID INPUT: username or password is empty");
+                return;
+            }
+            jQuery("#formSignIn").submit();
+            submitSuccess = true;
+        }
+        var submitSuccess = false;
+        function KeyPressSubmit() {
+            if (event.key === "Enter" && !submitSuccess) {
+                console.log("Once");
+                SignIn();
+            }
+        }
+    </script>
 </body>
 
 </html>

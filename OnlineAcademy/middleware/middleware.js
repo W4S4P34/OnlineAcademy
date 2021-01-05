@@ -24,7 +24,6 @@ module.exports = {
         console.log("Params: " + req.params.id);
         if (res.locals.isAuthorized) {
             // check student permission
-            console.log("login already");
             return next();
             if (res.locals.user.role === ROLES.STUDENT && await studentModel.IsEnrolled(res.locals.user.username, req.params.id)) {
                 console.log("Has permission");
@@ -39,9 +38,8 @@ module.exports = {
         res.status(500).send("No Permission");
     },
     InitCart(req, res, next) {
-        if (!res.locals.isAuthorized && req.session.cart === undefined) {
+        if (req.session.cart === undefined) {
             req.session.cart = [];
-            console.log(req.session.cart);
         }
         next();
     }

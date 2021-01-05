@@ -38,7 +38,7 @@ module.exports = {
             }
             else {
                 console.log("Email send!!!");
-                console.log(data);
+                console.log("Data" + data);
             }
             callback(err, data);
         });
