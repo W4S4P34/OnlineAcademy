@@ -105,25 +105,35 @@
 
                     <li class="dropdown" id="user-preferences">
                         <a class="dropdown-toggle noselect disabled" role="button" data-toggle="dropdown">
-                            Hi, <b>Name</b>
+                            Hi, <b>{{user.name}}</b>
                             <b class="caret"></b>
                         </a>
 
                         <ul class="dropdown-menu">
+                            
+
+                            {{#if (eq user.role 'student')}}
+                            {{!-- Student --}}
                             <li>
                                 <a class="dropdown-item" id="profile" href="/student/info">
                                     Profile 
                                 </a>
                             </li>
-                            {{!-- Student --}}
                             <li>
                                 <a class="dropdown-item" id="favorite" href="/student/myWatchList">
                                     Favorite 
                                 </a>
                             </li>
+                            {{/if}}
+                            {{#if (eq user.role 'lecturer')}}
                             {{!-- Lecturer --}}
                             <li>
-                                <a class="dropdown-item" id="lectures" href="#">
+                                <a class="dropdown-item" id="profile" href="/lecturer/info">
+                                    Profile 
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" id="lectures" href="/lecturer/myLectures">
                                     Lectures 
                                 </a>
                             </li>
@@ -132,9 +142,10 @@
                                     Add new course 
                                 </a>
                             </li>
+                            {{/if}}
                             <li>
                                 <form id="signout-form" method="POST">
-                                    <a class="dropdown-item" id="signout" href="javascript:jQuery('signout-form').submit()">
+                                    <a class="dropdown-item" id="signout" href="javascript:jQuery('#signout-form').submit()">
                                         Sign out                                   
                                     </a>
                                 </form>

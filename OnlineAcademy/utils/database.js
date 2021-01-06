@@ -17,7 +17,7 @@ module.exports = {
     delete(condition, tableName) {
         console.log("delete condition: " + condition);
         const sql = `delete from ${tableName} where ?`;
-        return promisePool.query(sql, condition);
+        return promisePool.execute(sql, condition);
     },
     update(newData, condition, tableName) {
         const sql = `update ${tableName} set ? where ?`;

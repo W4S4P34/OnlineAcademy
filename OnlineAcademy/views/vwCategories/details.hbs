@@ -12,6 +12,8 @@
 {{!-- Import ZONE --}}
 {{!-- ----------- --}}
 
+
+
 <script>
     jQuery(document).ready(function () {
         (function () {
@@ -63,7 +65,7 @@
                 jQuery(this).next('.showContent').find('li').toggle();
             });
 
-            size_li = jQuery("#feedback-list li").size();
+            size_li = jQuery("#feedback-list li").length;
             cur_show = 3;
             jQuery('#showless-btn').hide();
             jQuery('#feedback-list li:lt(' + cur_show + ')').show();
@@ -91,9 +93,55 @@
 
         /* end ready */
     });
-</script>
 
+
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
+    function AddToWatchList() {
+        const id = "{{detailCourse.id}}";
+        $.post('/student/addToWatchList', { id: id }, function (data, status) {
+            if (data) {
+                swal("Add to watch list successfully!", {
+                    icon: "success",
+                    buttons: false,
+                });
+                setTimeout(() => { location.reload(); }, 1000);
+            } else {
+                swal("Something is wrong, please try again!", {
+                    icon: "error",
+                    buttons: false,
+                });
+            }
+        });
+    }
+    function BuyNow() {
+        swal({
+            title: "Are you sure?",
+            text: "Please confirm your choice!",
+            icon: "info",
+            buttons: true,
+        }).then((value) => {
+            if (value) {
+                const id = "{{detailCourse.id}}";
+                $.post('/student/buyNow', { id: id }, function (err, status) {
+                    if (!err) {
+                        swal("Buy successfully!", {
+                            icon: "success",
+                        });
+                        setTimeout(() => { location.reload(); }, 1000);
+                    } else {
+                        swal("Something is wrong, please try again!", {
+                            icon: "error",
+                        });
+                    }
+                });
+            }
+
+        });
+       
+    }
     function stopVideo(element) {
 
         var iframe = element.find('iframe')[0];
@@ -177,7 +225,7 @@
 
                             <div id="btn-list-detail" class="container-fluid">
                                 {{#unless isInWatchList}}
-                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary">
+                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary" onclick="AddToWatchList()">
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
@@ -189,7 +237,7 @@
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </button>
                                 {{/unless}}
-                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary">
+                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary" onclick="BuyNow()">
                                     Buy now
                                 </button>
                                 {{/unless}}
@@ -225,7 +273,7 @@
                             </div>
                             <div id="review">
                                 <i class="fa fa-eye" aria-hidden="true"></i> Views {{detailCourse.view}},&nbsp;
-                                <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{detailCourse.like}},&nbsp;
+                                <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{detailCourse.likes}},&nbsp;
                                 <i class="fa fa-user" aria-hidden="true"></i> Students {{detailCourse.enrollNumber}}
                             </div>
                             <div id="last-update">
@@ -279,8 +327,6 @@
                                             <script type="text/javascript">
                                                 function RenderDuration(videoId, durationId) {
                                                     document.getElementById(`${videoId}`).children[0].onloadedmetadata = function () {
-                                                        console.log("Load success");
-                                                        console.log(this);
                                                         const duration_s = this.duration;
                                                         const min = Math.floor(duration_s / 60);
                                                         const sec = Math.ceil(duration_s % 60);
@@ -295,27 +341,25 @@
 
                                         </li>
                                         <li>
-
                                             {{#if ../isEnrolled}}
                                             <div id="lecture-duration{{this.id}}" class="pull-right"></div>
                                             <a href="#currentvideo" onclick="togglePopupVideo(lecture{{this.id}}, true);">
                                                 {{this.title}}
                                             </a>
+                                            {{else}}
+                                            <div id="lecture-duration{{this.id}}" class="pull-right"></div>
+                                            {{this.title}}
+                                            {{/if}}
+
                                             <div class="popupVideo" id="lecture{{this.id}}">
                                                 <video src="/resource/private/course/{{../detailCourse.id}}/{{this.id}}.mp4" type="video/mp4" controls="true"></video>
                                                 <img src="/views/assets/images/closebutton.png" class="close-btn"
                                                      onclick="togglePopupVideo(lecture{{this.id}}, false);">
                                             </div>
 
-                                            {{else}}
-                                            <div id="duration" class="pull-right">02:02</div>
-                                            {{this.title}}
-                                            {{/if}}
                                             <script type="text/javascript">
                                                 function RenderDuration(videoId, durationId) {
                                                     document.getElementById(`${videoId}`).children[0].onloadedmetadata = function () {
-                                                        console.log("Load success");
-                                                        console.log(this);
                                                         const duration_s = this.duration;
                                                         const min = Math.floor(duration_s / 60);
                                                         const sec = Math.ceil(duration_s % 60);
@@ -362,7 +406,7 @@
                                     </div>
                                     <div id="reviews">
                                         <i class="fa fa-eye" aria-hidden="true"></i> Views {{view}},&nbsp;
-                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{like}},&nbsp;
+                                        <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{likes}},&nbsp;
                                         <i class="fa fa-user" aria-hidden="true"></i> Students {{enrollNumber}}
                                     </div>
                                 </div>

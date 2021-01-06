@@ -14,16 +14,17 @@ function CreatePageNumber(nPages,curPage = 1) {
     }
     return list;
 }
-router.get('/byField/:field',async (req, res) => {
+router.get('/byField/:field', async (req, res) => {
     res.locals.currentView = '#categories';
     res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(req.params.field);
+    if (res.locals.listCourseFields !== null) {
+        const total = await courseModel.CountCourseByField(req.params.field);
+        const nPages = Math.ceil(total / process.env.PAGINATE);
+        const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
+        res.locals.pageNumbers = CreatePageNumber(nPages, page);
+        res.locals.listCourse = await courseModel.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
+    }
     res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
-    const total = await courseModel.CountCourseByField(req.params.field);
-    const nPages = Math.ceil(total / process.env.PAGINATE);
-    const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
-    res.locals.listCourse = await courseModel.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
-    res.locals.pageNumbers = CreatePageNumber(nPages, page);
-    
     // console.log(req.params.field);
     res.render('vwCategories/index');
 })
@@ -34,12 +35,11 @@ router.get('/byTheme/:theme', async (req, res) => {
         const total = await courseModel.CountCourseByTheme(req.params.theme);
         const nPages = Math.ceil(total / process.env.PAGINATE);
         const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
-        res.locals.listCourse = await courseModel.GetCourseByTheme(req.params.theme, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
         res.locals.pageNumbers = CreatePageNumber(nPages, page);
+        res.locals.listCourse = await courseModel.GetCourseByTheme(req.params.theme, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
+        res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(field);
     }
-    res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(field);
     res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
-
     // console.log(req.params.theme);
     res.render('vwCategories/index');
 

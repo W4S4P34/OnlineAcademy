@@ -12,20 +12,23 @@
 
     function PreviousPage() {
         const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
-        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
         if (pageActive + 1 <= 1)
             return;
         const url = `?page=${pageActive}`;
         location.replace(url);
     }
     jQuery(function () {
-        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent);
-        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        const pagination = jQuery(".pagination")[0];
+        if (pagination === null || pagination === undefined) {
+            return;
+        }
+        const pageActive = parseInt(pagination.querySelector(".active").textContent);
+        const maxPage = pagination.querySelectorAll("li").length - 2;
         if (pageActive <= 1) {
-            jQuery(".pagination")[0].querySelector("#previousPage").className += "disabled";
+            pagination.querySelector("#previousPage").className += "disabled";
         }
         if (pageActive >= maxPage) {
-            jQuery(".pagination")[0].querySelector("#nextPage").className += "disabled";
+            pagination.querySelector("#nextPage").className += "disabled";
         }
     });
 </script>
@@ -152,7 +155,7 @@
                                     </div>
                                     <div id="cat-course-review">
                                         <p>
-                                            {{this.rateNumber}} likes &nbsp;
+                                            {{this.likes}} likes &nbsp;
                                             <i class="fa fa-thumbs-up"></i>
                                         </p>
                                     </div>
@@ -207,11 +210,10 @@
 
                     </div>
                 </div>
-
+                {{#with pageNumbers}}
                 <ul class="pagination">
-                    <!--class="disabled"-->
                     <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
-                    {{#each pageNumbers}}
+                    {{#each this}}
                     {{#if this.isActive}}
                     <li class="active"><a href="?page={{this.value}}">{{this.value}} <span
                                 class="sr-only">(current)</span></a></li>
@@ -219,15 +221,9 @@
                     <li><a href="?page={{this.value}}">{{this.value}}</a></li>
                     {{/if}}
                     {{/each}}
-                    <!--<li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li><a href="#">5</a></li>-->
-                    <li id="nextPage"><a href="javascript:NextPage();">&raquo;</a>
-                    </li>
+                    <li id="nextPage"><a href="javascript:NextPage();">&raquo;</a> </li>
                 </ul>
-
+                {{/with}}
             </div>
         </div>
 

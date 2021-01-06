@@ -84,7 +84,7 @@
                         <span class="input-group-addon">
                             <i class="fa fa-phone" aria-hidden="true"></i>
                         </span>
-                        <input type="tel" class="form-control" placeholder="Phone Number" id="phoneNumber" name="phoneNumber" onkeypress="KeyPressSubmit(); return /[0-9]/i.test(event.key)" maxlength="16">
+                        <input type="tel" class="form-control" placeholder="Phone Number" id="phoneNumber" name="phoneNumber" onkeypress="KeyPressSubmit(); return /[0-9\s]/i.test(event.key)" maxlength="16">
                     </div>
                 </div>
 
@@ -150,8 +150,8 @@
                 ErrorMessage("INVALID INPUT: phone number is empty");
                 return false;
             }
-            if (!phoneNumber.match(/^[0-9]+$/)) {
-                ErrorMessage("INVALID INPUT: phone number can contain number only");
+            if (!phoneNumber.match(/^[0-9\s]+$/)) {
+                ErrorMessage("INVALID INPUT: phone number can contain number and space only");
                 return false;
             }
             if (!name.match(/^[A-Za-z\s]+$/)) {
