@@ -59,6 +59,6 @@ module.exports = {
         const sql = `select * from student where id = ? or email = ?`;
         const condition = [account.username,account.email];
         const [rows, fields] = await db.load(sql, condition);
-        return rows.length != 0;
+        return rows.length !== 0;
     },
 };

@@ -32,7 +32,8 @@ app.engine('hbs', exphbs({
     layoutsDir: __dirname + '/views/layouts/',
     partialsDir: __dirname + '/views/partials/',
     helpers: {
-        section: express_handlebars_sections()
+        section: express_handlebars_sections(),
+        eq: require('./utils/hbsHelpers').eq
     }
 }));
 
@@ -41,7 +42,7 @@ app.use(middleware.CheckAuthorized);
 app.use(middleware.InitCart);
 // Static declaration
 app.use('/resource/public', express.static('resource/public'));
-app.use('/resource/private', middleware.AccessPrivateResource ,express.static('resource/private'));
+app.use('/resource/private', express.static('resource/private'));
 app.use('/views/assets',express.static('views/assets'));
 // Program configurations
 app.set('view engine', 'hbs');

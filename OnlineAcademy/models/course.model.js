@@ -71,7 +71,7 @@ module.exports = {
         return rows[0].name;
     },
     async GetCourseByField(fieldName, limit, offset) {
-        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,round(avg(feedback.star),1) as star,count(feedback.star) as rateNumber,course.imagePath,course.price from fields join course on course.fieldsId = fields.Id and fields.name = ? join lecturer on course.lecturerId = lecturer.Id join feedback on feedback.courseId = course.Id group by course.title order by course.view desc limit ? offset ?';
+        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,course.likes,course.imagePath,course.price from fields join course on course.fieldsId = fields.Id and fields.name = ? join lecturer on course.lecturerId = lecturer.Id group by course.title order by course.view desc limit ? offset ?';
         const condition = [fieldName, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -79,7 +79,7 @@ module.exports = {
         return rows;
     },
     async GetCourseByTheme(theme,limit,offset) {
-        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,round(avg(feedback.star),1) as star,count(feedback.star) as rateNumber,course.imagePath,course.price from fields join course on course.fieldsId = fields.Id and fields.theme = ? join lecturer on course.lecturerId = lecturer.Id join feedback on feedback.courseId = course.Id group by course.title order by course.view desc limit ? offset ?';
+        const sql = 'select course.id,course.title,fields.name as fieldName,lecturer.name as lecturerName,course.likes,course.imagePath,course.price from fields join course on course.fieldsId = fields.Id and fields.theme = ? join lecturer on course.lecturerId = lecturer.Id group by course.title order by course.view desc limit ? offset ?';
         const condition = [theme, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -97,7 +97,7 @@ module.exports = {
     async GetRelatedCourses(courseId, limit) {
         const fieldName = await this.GetFieldByCourse(courseId);
         console.log(fieldName);
-        const sql = 'select course.view,course.id,course.title,fields.name as fieldName,course.imagePath,course.price,course.briefDescription,count(feedback.studentId) as `like`,count(enroll.studentId) as enrollNumber,lecturer.name as lecturerName from course join lecturer on lecturerId = lecturer.id join fields on fields.id = course.fieldsId join enroll on enroll.courseId = course.id left join feedback on enroll.studentId = feedback.studentId and feedback.courseId = enroll.courseId where `fields`.name = ? and course.id != ? group by course.id order by enrollNumber limit ?';
+        const sql = 'select course.view,course.id,course.title,fields.name as fieldName,course.imagePath,course.price,course.briefDescription,course.likes,count(enroll.studentId) as enrollNumber,lecturer.name as lecturerName from course join lecturer on lecturerId = lecturer.id join fields on fields.id = course.fieldsId join enroll on enroll.courseId = course.id where `fields`.name = ? and course.id != ? group by course.id order by enrollNumber limit ?';
         const condition = [fieldName.name,courseId,limit];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -105,7 +105,7 @@ module.exports = {
         return rows;
     },
     async GetDetailCourseById(courseId) {
-        const sql = 'select course.view,course.id,course.title,fields.name as fieldName,course.imagePath,course.price,DATE_FORMAT(course.date, "%m/%d/%Y") as lastUpdate,course.description,course.briefDescription,count(feedback.studentId) as `like`,count(enroll.studentId) as enrollNumber,course.totalHours from course join fields on fields.id = course.fieldsId join enroll on enroll.courseId = course.id left join feedback on enroll.studentId = feedback.studentId and feedback.courseId = enroll.courseId where course.id = ? group by course.id';
+        const sql = 'select course.view,course.id,course.title,fields.name as fieldName,course.imagePath,course.price,DATE_FORMAT(course.date, "%m/%d/%Y") as lastUpdate,course.description,course.briefDescription,course.likes,count(enroll.studentId) as enrollNumber,course.totalHours from course join fields on fields.id = course.fieldsId join enroll on enroll.courseId = course.id left join feedback on enroll.studentId = feedback.studentId and feedback.courseId = enroll.courseId where course.id = ? group by course.id';
         const condition = [courseId];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
