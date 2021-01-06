@@ -1434,26 +1434,6 @@ nav#filter a.current {
 	align-items: center;
 }
 
-#cat-transaction-btn {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
-
-#cat-transaction-btn #user-remove-btn,
-#cat-transaction-btn #user-details-btn {
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
-#cat-transaction-btn #user-remove-btn {
-	background-color: firebrick;
-}
-
-#cat-transaction-btn #user-remove-btn:hover {
-	background-color: darkred;
-}
-
 #cat-course-caption {
 	margin-top: 30px;
 }
@@ -1463,7 +1443,7 @@ nav#filter a.current {
 	-webkit-line-clamp: 2;
 	-webkit-box-orient: vertical;
 
-	min-height: 3.2em;
+	min-height: 3.1em;
 
 	overflow: hidden;
 
@@ -1817,6 +1797,13 @@ nav#filter a.current {
 	vertical-align: middle;
 }
 
+#navi-bar #navi-selections #user-preferences li a#add-course::before {
+	display: inline-block;
+	content: '\f067 \2003';
+	font-family: fontAwesome;
+	vertical-align: middle;
+}
+
 #login-form,
 #register-form {
 	position: absolute;
@@ -1881,7 +1868,7 @@ nav#filter a.current {
 	justify-content: flex-start;
 }
 
-#heading-information-container-row-profile #heading-information-btn-group {
+#heading-information-btn-group {
 	display: flex;
 	align-items: center;
 	justify-content: flex-end;
@@ -1892,20 +1879,19 @@ nav#filter a.current {
 	margin-right: 10px;
 }
 
-#heading-information-btn-group a#heading-information-save-btn {
+a#heading-information-save-btn {
 	display: none;
 	background-color: forestgreen;
 }
 
-#heading-information-btn-group a#heading-information-save-password-btn {
+a#heading-information-save-password-btn,
+a#heading-information-add-lecture-btn {
 	background-color: forestgreen;
 }
 
-#heading-information-btn-group a#heading-information-save-btn:hover {
-	background-color: darkgreen;
-}
-
-#heading-information-btn-group a#heading-information-save-password-btn:hover {
+a#heading-information-save-btn:hover,
+a#heading-information-save-password-btn:hover,
+a#heading-information-add-lecture-btn:hover {
 	background-color: forestgreen;
 }
 
@@ -1924,4 +1910,43 @@ nav#filter a.current {
 
 #main-information-container .input-group input[disabled] {
 	cursor: default;
+}
+
+/* **************************************** */
+/* Student */
+#cat-transaction-btn #user-remove-btn,
+#cat-transaction-btn #user-details-btn {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+#cat-transaction-btn #user-remove-btn {
+	background-color: firebrick;
+}
+
+#cat-transaction-btn #user-remove-btn:hover {
+	background-color: darkred;
+}
+
+/* **************************************** */
+/* Lecturer */
+#cat-courses #cat-transaction-btn.container {
+	height: 50px;
+}
+
+#cat-transaction-btn #lecturer-remove-btn,
+#cat-transaction-btn #lecturer-edit-btn,
+#cat-transaction-btn #lecturer-details-btn {
+	margin-left: 5px;
+	margin-right: 5px;
+
+	padding: 10px 20px;
+}
+
+#cat-transaction-btn #lecturer-remove-btn {
+	background-color: firebrick;
+}
+
+#cat-transaction-btn #lecturer-remove-btn:hover {
+	background-color: darkred;
 }

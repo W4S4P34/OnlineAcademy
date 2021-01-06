@@ -53,6 +53,7 @@ try {
     app.use('/student', require('./controllers/student.route'));
     app.use('/course', require('./controllers/course.route'));
     app.use('/user', require('./controllers/user.route'));
+    app.use('/lecturer', require('./controllers/lecturer.route'));
 } catch (e) {
     console.log(e);
 }
