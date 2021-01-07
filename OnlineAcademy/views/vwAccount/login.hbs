@@ -33,7 +33,7 @@
 
     <div id="login-form" class="container-fluid">
         <div class="row">
-            <form id="formSignIn" method="POST" action="">
+            <form id="formSignIn">
 
                 <div id="form-username" class="form-group">
                     <div class="input-group">
@@ -83,14 +83,32 @@
     <!-- DEFINE A 'js' SECTION -->
     {{{_sections.js}}}
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
     <!-- DEFINE SCRIPTS -->
     <script>
+        function DisplayError(message) {
+            swal(message, {
+                icon: "error",
+                buttons: "OK",
+            });
+        }
         function SignIn() {
             if (jQuery("#username").val().length === 0 || jQuery("#password").val().length === 0) {
-                alert("INVALID INPUT: username or password is empty");
-                return;
+                return DisplayError("username or password is empty!");
             }
-            jQuery("#formSignIn").submit();
+            const username = jQuery("#username").val();
+            const password = jQuery("#password").val();
+            $.post('/user/login', { username: username,password: password }, function (err, data) {
+                if (err) {
+                    DisplayError(err);
+                    submitSuccess = false;
+                } else {
+                    var url = "{{previousLink}}";
+                    location.replace(url);
+                }
+            });
             submitSuccess = true;
         }
         var submitSuccess = false;

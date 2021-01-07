@@ -129,8 +129,9 @@
                     if (!err) {
                         swal("Buy successfully!", {
                             icon: "success",
+                        }).then((value) => {
+                            location.reload();
                         });
-                        setTimeout(() => { location.reload(); }, 1000);
                     } else {
                         swal("Something is wrong, please try again!", {
                             icon: "error",
@@ -222,7 +223,8 @@
                                 alt="Cover Image"> --}}
                             <img class="img-responsive center-block" src="{{detailCourse.imagePath}}"
                                 alt="Cover Image">
-
+                            {{#if isAuthorized}}
+                            {{#if (eq user.role 'student')}}
                             <div id="btn-list-detail" class="container-fluid">
                                 {{#unless isInWatchList}}
                                 <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary" onclick="AddToWatchList()">
@@ -242,6 +244,22 @@
                                 </button>
                                 {{/unless}}
                             </div>
+                            {{/if}}
+                            {{else}}
+                            <div id="btn-list-detail" class="container-fluid">
+                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary" onclick="location.replace('/user/login')">
+                                    Add to favorite&nbsp;
+                                    <i class="fa fa-heart-o" aria-hidden="true"></i>
+                                </button>
+                                <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary" onclick="location.replace('/user/login')">
+                                    Add to cart&nbsp;
+                                    <i class="fa fa-shopping-cart" aria-hidden="true"></i>
+                                </button>
+                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary" onclick="location.replace('/user/login')">
+                                    Buy now
+                                </button>
+                            </div>
+                            {{/if}}
                         </div>
                     </div>
 

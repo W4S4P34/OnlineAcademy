@@ -5,7 +5,6 @@ const studentModel = require('../models/student.model');
 const authModel = require('../models/user.model');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const { json } = require('express');
 const router = express.Router();
 
 function CreatePageNumber(nPages, curPage = 1) {
@@ -21,8 +20,10 @@ function CreatePageNumber(nPages, curPage = 1) {
 router.use(async (req, res, next) => {
     // Middleware check auth protect this route
     if (!res.locals.isAuthorized) {
-        res.redirect('/user/login');
-        return;
+        return res.redirect('/user/login');
+    }
+    if (res.locals.user.role !== ROLES.STUDENT) {
+        return res.redirect('/');
     }
     console.log("STUDENT MIDDLEWARE ROUTE");
     res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(req.params.field);
@@ -68,7 +69,6 @@ router.post('/buyNow',async (req, res) => {
     res.json(err);
 })
 router.post('/addToWatchList', async (req, res) => {
-    console.log(req.body.id);
     await studentModel.AddToWatchList(res.locals.user.username, req.body.id);
     res.json(true);
 })
@@ -118,7 +118,6 @@ router.get('/editProfile/password', (req, res) => {
     });
 })
 router.post('/editProfile/password', async (req, res) => {
-    res.locals.currentView = '#user-preferences';
     if (req.body.oldPassword && req.body.newPassword === undefined) {
         return res.json("Invalid input!");
     }
@@ -127,26 +126,39 @@ router.post('/editProfile/password', async (req, res) => {
     }
     const hashedPassword = await bcrypt.hash(req.body.newPassword, 10);
     const err = await studentModel.UpdatePassword(res.locals.user.username, hashedPassword);
-    res.json(err);
-})
-router.post('/editProfile/communication', async (req, res) => {
-    res.locals.currentView = '#user-preferences';
-    if (req.body.name && req.body.phoneNumber && req.body.email === undefined) {
-        return res.json("Invalid input!");
-    }
-    if (await authModel.IsExist({ username: '', email: req.body.email }))
-        return res.json("Email is exist already!");
-    err = await studentModel.UpdateProfile(res.locals.user.username,req.body.name,req.body.phoneNumber,req.body.email);
-    if (err === null) {
+    if (!err) {
         const newUser = {
             username: res.locals.user.username,
-            password: res.locals.user.password,
+            password: hashedPassword,
             name: req.body.name,
             phoneNumber: req.body.phoneNumber,
             email: req.body.email,
             role: ROLES.STUDENT
         }
-        console.log(newUser);
+        res.clearCookie('tokenAuthorized');
+        res.cookie('tokenAuthorized', jwt.sign(newUser, process.env.PRIVATE_KEY), {
+            maxAge: (2 * 60 * 60 * 1000),
+            httpOnly: true
+        });
+    }
+    res.json(err);
+})
+router.post('/editProfile/communication', async (req, res) => {
+    res.locals.currentView = '#user-preferences';
+    if (req.body.name && req.body.phoneNumber && req.body.email === undefined)
+        return res.json("Invalid input!");
+    if (await studentModel.IsExist(req.body.email, res.locals.user.username))
+        return res.json("Email is exist already!");
+    const newUser = {
+        username: res.locals.user.username,
+        password: res.locals.user.password,
+        name: req.body.name,
+        phoneNumber: req.body.phoneNumber,
+        email: req.body.email,
+        role: ROLES.STUDENT
+    }
+    const err = await studentModel.UpdateProfile(newUser.username, newUser.name, newUser.phoneNumber, newUser.email);
+    if (!err) {
         res.clearCookie('tokenAuthorized');
         res.cookie('tokenAuthorized', jwt.sign(newUser, process.env.PRIVATE_KEY), {
             maxAge: (2 * 60 * 60 * 1000),

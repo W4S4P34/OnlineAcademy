@@ -1,3 +1,70 @@
+{{#section 'js'}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    function EditProfile() {
+        jQuery(":input:disabled").each(function(index) {
+            this.removeAttribute("disabled");
+        });
+        jQuery("#edit-profile-btn").css("display", "none");
+        jQuery("#heading-information-save-btn").css("display", "inherit");
+    }
+    function DisplayError(message) {
+        swal(message, {
+            icon: "error",
+            buttons: "OK",
+        });
+    }
+    function IsValidInput(name,phoneNumber,email,university) {
+        if (name.length === 0) {
+            DisplayError("Name is empty!");
+            return false;
+        }
+        if (phoneNumber.length === 0) {
+            DisplayError("Phone number is empty!");
+            return false;
+        }
+        if (email.length === 0) {
+            DisplayError("Email is empty!");
+            return false;
+        }
+        if (university.length === 0) {
+            DisplayError("University is empty!");
+            return false;
+        }
+        if (!name.match(/^[A-Za-z\s]+$/)) {
+            DisplayError("Name can contain alphabet characters only");
+            return false;
+        }
+        if (!phoneNumber.match(/^[0-9\s]+$/)) {
+            DisplayError("Phone number can contain number and space only");
+            return false;
+        }
+        return true;
+    }
+    function SaveProfile(){
+        const name = jQuery("#main-information-name").val();
+        const phoneNumber = jQuery("#main-information-phone-number").val();
+        const email = jQuery("#main-information-email").val();
+        const university = jQuery("#main-information-university").val();
+        if (IsValidInput(name,phoneNumber,email,university)) {
+            $.post('/lecturer/editProfile/communication', { name: name, phoneNumber: phoneNumber, email: email,university: university }, function (err, status) {
+                if (err === null) {
+                    swal("Change profile successfully", {
+                        icon: "success",
+                        buttons: false,
+                    });
+                    setTimeout(() => { location.reload(); }, 1000);
+                }
+                else {
+                    DisplayError(err);
+                }
+            });
+        }
+    }
+</script>
+{{/section}}
+
 <!-- Header -->
 <header id="head" class="secondary">
     <div class="container">
@@ -18,17 +85,13 @@
                 <div class="panel-heading">My account</div>
 
                 <div class="list-group">
-                    <a href="#currentpage" class="list-group-item active">
+                    <a href="/lecturer/info" class="list-group-item active">
                         Profile
                     </a>
 
                     <a href="/lecturer/lectures" class="list-group-item">
                         My Courses
-                        <span class="badge">2</span>
-                    </a>
-
-                    <a href="/lecturer/add/course" class="list-group-item">
-                        Add New Course
+                        <span class="badge">{{lecturesSize}}</span>
                     </a>
 
                 </div>
@@ -46,14 +109,14 @@
                                 My information
                             </div>
                             <div id="heading-information-btn-group" class="col-md-9">
-                                <a class="btn btn-primary" href="/lecturer/edit/password" type="button">
+                                <a class="btn btn-primary" href="/lecturer/editProfile/password" type="button">
                                     Change Password
                                 </a>
-                                <a class="btn btn-primary" href="#" type="button">
+                                <a id="edit-profile-btn" class="btn btn-primary" href="javascript:EditProfile()" type="button">
                                     Edit
                                     <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                 </a>
-                                <a id="heading-information-save-btn" class="btn btn-success" href="#" type="button">
+                                <a id="heading-information-save-btn" class="btn btn-success" href="javascript:SaveProfile()" type="button">
                                     Save
                                 </a>
                             </div>
@@ -65,27 +128,27 @@
                 <div id="main-information-container" class="container-fluid">
                     <div class="row">
                         <div id="main-information-input-group" class="input-group">
-                            <label id="main-label" for="main-information-name">Name</label>
-                            <input id="main-information-name" type="text" class="form-control" value="Somebody"
-                                disabled>
+                            <label for="main-information-name">Name</label>
+                            <input id="main-information-name" type="text" class="form-control" value="{{user.name}}"
+                                   onkeypress="return /[a-z\s]/i.test(event.key);" maxlength="50" disabled>
                         </div>
 
                         <div id="main-information-input-group" class="input-group">
-                            <label id="main-label" for="main-information-email">Email</label>
+                            <label for="main-information-email">Email</label>
                             <input id="main-information-email" type="email" class="form-control"
-                                value="google@gmail.com" disabled>
+                                   value="{{user.email}}" maxlength="50" disabled>
                         </div>
 
                         <div id="main-information-input-group" class="input-group">
-                            <label id="main-label" for="main-information-phone-number">Phone Number</label>
-                            <input id="main-information-phone-number" type="tel" class="form-control" value="0903999999"
-                                disabled>
+                            <label for="main-information-phone-number">Phone Number</label>
+                            <input id="main-information-phone-number" type="tel" class="form-control" value="{{user.phoneNumber}}"
+                                   onkeypress="return /[0-9\s]/i.test(event.key)" maxlength="16" disabled>
                         </div>
 
                         <div id="main-information-input-group" class="input-group">
-                            <label id="main-label" for="main-information-university">University</label>
-                            <input id="main-information-university" type="text" class="form-control" value="VinUni"
-                                disabled>
+                            <label for="main-information-university">University</label>
+                            <input id="main-information-university" type="text" class="form-control" value="{{user.university}}"
+                                   maxlength="50" disabled>
                         </div>
                     </div>
                 </div>

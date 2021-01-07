@@ -1,3 +1,38 @@
+{{#section 'js'}}
+<script>
+    function NextPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) + 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive - 1 >= maxPage)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+
+    }
+    function PreviousPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
+        if (pageActive + 1 <= 1)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+    }
+    jQuery(function () {
+        const pagination = jQuery(".pagination")[0];
+        if (pagination === null || pagination === undefined) {
+            return;
+        }
+        const pageActive = parseInt(pagination.querySelector(".active").textContent);
+        const maxPage = pagination.querySelectorAll("li").length - 2;
+        if (pageActive <= 1) {
+            pagination.querySelector("#previousPage").className += "disabled";
+        }
+        if (pageActive >= maxPage) {
+            pagination.querySelector("#nextPage").className += "disabled";
+        }
+    });
+</script>
+{{/section}}
+
 <!-- Header -->
 <header id="head" class="secondary">
     <div class="container">
@@ -24,13 +59,8 @@
 
                     <a href="#currentpage" class="list-group-item active">
                         My Courses
-                        <span class="badge">2</span>
+                        <span class="badge">{{lecturesSize}}</span>
                     </a>
-
-                    <a href="/lecturer/add/course" class="list-group-item">
-                        Add New Course
-                    </a>
-
                 </div>
             </div>
         </div>
@@ -46,7 +76,7 @@
                                 My Courses
                             </div>
                             <div id="heading-information-btn-group" class="col-md-9">
-                                <a id="heading-information-add-lecture-btn" class="btn btn-success" href="/lecturer/add/course" type="button">
+                                <a id="heading-information-add-lecture-btn" class="btn btn-success" href="#" type="button">
                                     Add course
                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                 </a>
@@ -58,82 +88,45 @@
 
                 <div id="cat-courses" class="container-fluid">
                     <div class="row">
-                        <!--{{#each listCourse}}
+
+                        {{#each lectures}}
                         <div id="course" class="col-md-4">
 
                             <div class="thumbnail">
                                 <div class="container">
-                                    <img class="img-responsive center-block"
-                                        src="/resource/public/course/{{this.id}}/photo.png" alt="Course Image">
+                                    <img class="img-responsive center-block" src="{{imagePath}}"
+                                         alt="...">
                                 </div>
 
                                 <div class="caption">
                                     <div id="cat-course-caption">
-                                        <p>{{this.title}}</p>
+                                        <p>{{title}}</p>
                                     </div>
                                     <div id="cat-course-price">
-                                        <p>$ {{this.price}}</p>
+                                        <p>$ {{price}}</p>
                                     </div>
                                     <div id="cat-course-field">
-                                        <p>{{this.fieldName}}</p>
+                                        <p>{{fieldName}}</p>
                                     </div>
                                     <div id="cat-course-lecturer">
-                                        <p>{{this.lecturerName}}</p>
+                                        <p>{{lecturerName}}</p>
                                     </div>
                                     <div id="cat-course-review">
                                         <p>
-                                            {{this.rateNumber}} likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <p id="cat-transaction-btn">
-                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </p>
-                                </div>
-
-                            </div>
-                        </div>
-                        {{/each}}-->
-                        <div id="course" class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/test-1.jpg"
-                                        alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <p>Course Name Too Long Too Long Too Long Too Long Too Long Too Long</p>
-                                    </div>
-                                    <div id="cat-course-price">
-                                        <p>$ 0.00</p>
-                                    </div>
-                                    <div id="cat-course-field">
-                                        <p>Field</p>
-                                    </div>
-                                    <div id="cat-course-lecturer">
-                                        <p>Too Many Lecturers, Too Many Lecturers, Too Many Lecturers</p>
-                                    </div>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
+                                            {{likes}} likes &nbsp;
                                             <i class="fa fa-thumbs-up"></i>
                                         </p>
                                     </div>
 
                                     <p id="cat-transaction-btn" class="container">
-                                        <a id="lecturer-remove-btn" href="#" class="btn btn-danger" role="button">
+                                        <!--<a id="lecturer-remove-btn" href="#" class="btn btn-danger" role="button">
                                             Remove
-                                        </a>
-                                        <a id="lecturer-edit-btn" href="#" class="btn btn-primary" role="button">
+                                        </a>-->
+                                        <a id="lecturer-edit-btn" href="/editCourse" class="btn btn-primary" role="button">
                                             Edit
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
-                                        <a id="lecturer-details-btn" href="#" class="btn btn-primary" role="button">
+                                        <a id="lecturer-details-btn" href="/course/detail/{{id}}" class="btn btn-primary" role="button">
                                             Details
                                         </a>
                                     </p>
@@ -141,83 +134,33 @@
 
                             </div>
                         </div>
-
-                        <div id="course" class="col-md-4">
-
-                            <div class="thumbnail">
-                                <div class="container">
-                                    <img class="img-responsive center-block" src="/views/assets/images/test-1.jpg"
-                                        alt="...">
-                                </div>
-
-                                <div class="caption">
-                                    <div id="cat-course-caption">
-                                        <p>Course Name Too Long Too Long Too Long Too Long Too Long Too Long</p>
-                                    </div>
-                                    <div id="cat-course-price">
-                                        <p>$ 0.00</p>
-                                    </div>
-                                    <div id="cat-course-field">
-                                        <p>Field</p>
-                                    </div>
-                                    <div id="cat-course-lecturer">
-                                        <p>Too Many Lecturers, Too Many Lecturers, Too Many Lecturers</p>
-                                    </div>
-                                    <div id="cat-course-review">
-                                        <p>
-                                            1000 likes &nbsp;
-                                            <i class="fa fa-thumbs-up"></i>
-                                        </p>
-                                    </div>
-
-                                    <div id="cat-transaction-btn" class="container">
-                                        <a id="lecturer-remove-btn" href="#" class="btn btn-danger" role="button">
-                                            Remove
-                                        </a>
-                                        <a id="lecturer-edit-btn" href="#" class="btn btn-primary" role="button">
-                                            Edit
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        </a>
-                                        <a id="lecturer-details-btn" href="#" class="btn btn-primary" role="button">
-                                            Details
-                                        </a>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
+                        {{/each}}
                     </div>
                 </div>
 
+                {{#with pageNumbers}}
                 <div id="user-pagination">
                     <ul class="pagination">
-                        <!--class="disabled"-->
-                        <!-- <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
-                        {{#each pageNumbers}}
+                        <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
+                        {{#each this}}
                         {{#if this.isActive}}
-                        <li class="active"><a href="?page={{this.value}}">{{this.value}} <span
-                                    class="sr-only">(current)</span></a></li>
+                        <li class="active">
+                            <a href="?page={{this.value}}">
+                                {{this.value}} <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
                         {{else}}
                         <li><a href="?page={{this.value}}">{{this.value}}</a></li>
                         {{/if}}
-                        {{/each}} -->
-                        <li class="disabled"><a href="#">&laquo;</a></li>
-                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
-                        <li><a href="#">2</a></li>
-                        <li><a href="#">3</a></li>
-                        <li><a href="#">4</a></li>
-                        <li><a href="#">5</a></li>
-                        <li><a href="#">&raquo;</a></li>
-                        {{!-- <li id="nextPage" onload="javascript: alert('hi');"><a href="javascript:NextPage();">&raquo;</a> --}}
-                        </li>
+                        {{/each}}
+                        <li id="nextPage"><a href="javascript:NextPage();">&raquo;</a> </li>
                     </ul>
                 </div>
+                {{/with}}
 
             </div>
 
         </div>
 
     </div>
-
 </div>

@@ -15,6 +15,7 @@ router.get('/login', async (req, res) => {
     if (res.locals.isAuthorized) {
         res.redirect('/');
     } else {
+        res.locals.previousLink = req.headers.referer;
         res.render('vwAccount/login', {
             layout: false
         });
@@ -26,12 +27,11 @@ router.post('/login', async (req, res) => {
     console.log(req.body);
     console.log(user);
     if (user == null) {
-        return res.status(400).send("Your ID or password is not valid");
+        return res.json("Your username or password is not valid");
     }
     try {
         if (activeAccount.findIndex(value => value === user.username) !== -1) {
-            res.send("This account is used in somewhere!");
-            return;
+            return res.json("This account is used in somewhere!");
         }
         if (await bcrypt.compare(req.body.password, user.password)) {
             // Can't not sign this user -> Change object
@@ -40,14 +40,12 @@ router.post('/login', async (req, res) => {
                 maxAge: (2 * 60 * 60 * 1000),
                 httpOnly: true
             });
-            res.redirect('/');
         } else {
-            res.status(400).send("Your ID or password is not valid");
+            return res.json("Your username or password is not valid");
         }
-
+        return res.json(null);
     } catch (e) {
-        console.log("Failed");
-        res.status(500).send("Catch Error: " + e);
+        return res.json("Catch Error: " + e);
     }
 })
 
@@ -78,7 +76,7 @@ router.get('/register', function (req, res) {
 router.post('/register', async (req, res) => {
     try {
         if (await authModel.IsExist(req.body)) {
-            return res.status(404).send("Account is existed");
+            return res.json("Account is existed already");
         }
         //#region Fields
         const hashedPassword = await bcrypt.hash(req.body.password, 10);
@@ -94,26 +92,16 @@ router.post('/register', async (req, res) => {
         });
         //#endregion
 
-        //const dob = moment(req.body.dob, 'DD/MM/YYYY', 'YYYY-MM-DD');
-
-        //#region Log
-        console.log(req.body);
-        console.log(user);
-        //#endregion
-
-        emailService.sendConfirmationEmail(req.body, token, (err, data) => {
-            if (err) {
+        emailService.sendConfirmationEmail(req.body, token, (error, data) => {
+            let err = null;
+            if (error) {
                 // Send OTP failed
-                res.send("Failed to send mail verification. " + err);
-                
-            } else {
-                // Send OTP successfully
-                res.send("Please check your email to activate account!");
+                err = "Failed to send mail verification: " + error;
             }
-
+            return res.json(err);
         });
     } catch (e) {
-        res.status(500).send("Catch Error: " + e);
+        return res.json(e);
     }
 })
 router.get('/register/isAvailable', async (req, res) => {
@@ -121,7 +109,7 @@ router.get('/register/isAvailable', async (req, res) => {
     console.log("Email: " + req.query.email);
     return res.json(!await authModel.IsExist(req.query));
 })
-router.get('/confirmation/:token', function (req, res) {
+router.get('/confirmation/:token', async (req, res) => {
     try {
         jwt.verify(req.params.token, process.env.PRIVATE_KEY, async (err, authData) => {
             if (err) {
