@@ -1581,7 +1581,6 @@ nav#filter a.current {
 	display: none;
 	list-style: none;
 	font-size: 20px;
-	padding: 10px 0px 10px 0px;
 }
 
 #course-info-detail #content .popupVideo {
@@ -1892,7 +1891,7 @@ a#heading-information-add-lecture-btn {
 a#heading-information-save-btn:hover,
 a#heading-information-save-password-btn:hover,
 a#heading-information-add-lecture-btn:hover {
-	background-color: forestgreen;
+	background-color: darkgreen;
 }
 
 #main-information-container {
@@ -1949,4 +1948,133 @@ a#heading-information-add-lecture-btn:hover {
 
 #cat-transaction-btn #lecturer-remove-btn:hover {
 	background-color: darkred;
+}
+
+/* **************************************** */
+/* Add course */
+#main-information-container #main-information-content.list-group {
+	padding: 0;
+}
+
+#main-information-section-list {
+	position: relative;
+}
+
+#main-information-container .row #main-information-input-group label#main-label {
+	margin-top: 30px;
+	margin-bottom: 10px;
+}
+
+#main-information-container .row #main-information-input-group #main-information-content label#main-label {
+	margin-top: 5px;
+}
+
+#main-information-container #main-information-content #list-btn,
+#main-information-container #main-information-content #list-btn:hover,
+#main-information-container #main-information-content #list-btn:active,
+#main-information-container #main-information-content #list-btn:focus {
+	background: #3d84e6;
+	color: #fff;
+	border: none;
+	outline: none;
+
+	margin: 5px 0;
+	padding: 10px;
+
+	width: 100%;
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	text-align: left;
+	border-radius: 4px;
+}
+
+#main-information-container #main-information-content #delete-list-btn,
+#main-information-container #main-information-content #delete-list-btn:hover,
+#main-information-container #main-information-content #delete-list-btn:active,
+#main-information-container #main-information-content #delete-list-btn:focus {
+	position: absolute;
+
+	width: 20%;
+
+	right: 0%;
+	background-color: firebrick;
+
+	margin: 5px 0;
+	padding: 10px;
+
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+#main-information-container #main-information-content #delete-content-btn-container {
+	display: flex;
+	justify-content: center;
+
+	margin: 10px 10px;
+}
+
+#main-information-container #main-information-content #delete-content-btn,
+#main-information-container #main-information-content #delete-content-btn:hover,
+#main-information-container #main-information-content #delete-content-btn:active,
+#main-information-container #main-information-content #delete-content-btn:focus {
+	width: 20%;
+
+	background-color: firebrick;
+
+	padding: 10px;
+	width: 30%;
+
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	text-align: center;
+	border-radius: 4px;
+}
+
+#main-information-container #main-information-content #add-list-btn-container {
+	display: flex;
+	justify-content: center;
+
+	margin: 10px 10px;
+}
+
+#main-information-container #main-information-content #add-list-btn {
+	background-color: forestgreen;
+
+	padding: 10px;
+	width: 30%;
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	border-radius: 4px;
+	text-align: center;
+}
+
+#main-information-container #main-information-content #add-list-btn:hover {
+	background-color: darkgreen;
+}
+
+#main-information-container #main-information-input-group #add-course-btn-container {
+	display: flex;
+	justify-content: center;
+}
+
+#main-information-container #main-information-input-group #add-course-btn {
+	background-color: forestgreen;
+
+	padding: 10px;
+	width: 50%;
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	border-radius: 4px;
+	text-align: center;
+}
+
+#main-information-container #main-information-input-group #add-course-btn:hover {
+	background-color: darkgreen;
 }

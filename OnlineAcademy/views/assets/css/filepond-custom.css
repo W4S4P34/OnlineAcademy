@@ -1,0 +1,10 @@
+.filepond--root {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.75em;
+}
+
+.filepond--root#main-information-course-video,
+.filepond--root#main-information-preview-video {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1em;
+}
