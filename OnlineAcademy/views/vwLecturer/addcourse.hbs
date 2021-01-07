@@ -203,7 +203,7 @@
                 <div id="main-information-container" class="container-fluid">
                     <form id="add-new-course" method="POST">
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-cover-img">Cover image (Image type; 600x400
                                     above; &leq;10MB)</label>
                                 <input name="coverImage" type="file" id="main-information-cover-img">
@@ -211,21 +211,26 @@
                         </div>
 
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-name">Course name</label>
                                 <input name="courseName" id="main-information-name" type="text" class="form-control">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-field">Field</label>
-                                <input name="field" id="main-information-field" type="text" class="form-control">
+                                <div id="main-information-field-container" class="container-fluid">
+                                    <select id="main-information-field" name="status" class="form-control">
+                                        <option value="complete">Field 1</option>
+                                        <option value="incomplete">Field 2</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-sdesc">Short description</label>
                                 <input name="shortDescription" id="main-information-sdesc" type="text"
                                     class="form-control">
@@ -233,7 +238,7 @@
                         </div>
 
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-desc">Description</label>
                                 <div id="editor"></div>
 
@@ -241,14 +246,14 @@
                         </div>
 
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-fee">Tuition Fee</label>
                                 <input name="fee" id="main-information-fee" type="text" class="form-control">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div id="main-information-input-group" class="input-group">
+                            <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-content">Syllabus/Content</label>
 
                                 <div id="main-information-content" class="list-group container-fluid">
@@ -279,48 +284,20 @@
                                                     id="main-information-preview-video">
                                             </li>
 
-                                            <div id="delete-content-btn-container" class="container-fluid">
+                                            {{!-- <div id="delete-content-btn-container" class="container-fluid">
                                                 <button type="button" id="delete-content-btn"
                                                     class="btn btn-danger content-btn">
                                                     Delete lecture
                                                 </button>
-                                            </div>
+                                            </div> --}}
 
                                         </ul>
 
-                                        <ul id="mainContent" class="showContent container-fluid">
-                                            <li>
-                                                <label id="main-label" for="main-information-lecture">Lecture
-                                                    Name</label>
-                                                <input name="lecture" id="main-information-lecture" type="text"
-                                                    class="form-control">
-                                            </li>
-                                            <li>
-                                                <label id="main-label" for="main-information-lecture-video">Lecture
-                                                    video</label>
-                                                <input name="mainVideo" type="file" id="main-information-course-video">
-                                            </li>
-                                            <li>
-                                                <label id="main-label" for="main-information-lecture-preview">Lecture
-                                                    preview</label>
-                                                <input name="previewVideo" type="file"
-                                                    id="main-information-preview-video">
-                                            </li>
-
-                                            <div id="delete-content-btn-container" class="container-fluid">
-                                                <button type="button" id="delete-content-btn"
-                                                    class="btn btn-danger content-btn">
-                                                    Delete lecture
-                                                </button>
-                                            </div>
-
-                                        </ul>
-
-                                        <div id="add-list-btn-container" class="container-fluid">
+                                        {{!-- <div id="add-list-btn-container" class="container-fluid">
                                             <button type="button" id="add-list-btn" class="btn btn-success content-btn">
                                                 Add new lecture
                                             </button>
-                                        </div>
+                                        </div> --}}
 
                                     </div>
 
@@ -351,20 +328,20 @@
                                                     id="main-information-preview-video">
                                             </li>
 
-                                            <div id="delete-content-btn-container" class="container-fluid">
+                                            {{!-- <div id="delete-content-btn-container" class="container-fluid">
                                                 <button type="button" id="delete-content-btn"
                                                     class="btn btn-danger content-btn">
                                                     Delete lecture
                                                 </button>
-                                            </div>
+                                            </div> --}}
 
                                         </ul>
 
-                                        <div id="add-list-btn-container" class="container-fluid">
+                                        {{!-- <div id="add-list-btn-container" class="container-fluid">
                                             <button type="button" id="add-list-btn" class="btn btn-success content-btn">
                                                 Add new lecture
                                             </button>
-                                        </div>
+                                        </div> --}}
 
                                     </div>
                                 </div>
@@ -373,6 +350,20 @@
                                     <button type="button" id="add-course-btn" class="btn btn-success">
                                         Add new section
                                     </button>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group form-group">
+                                <label id="main-label" for="main-information-status">Status</label>
+
+                                <div id="main-information-status-container" class="container-fluid">
+                                    <select id="main-information-status" name="status" class="form-control">
+                                        <option value="complete">Complete</option>
+                                        <option value="incomplete">Incomplete</option>
+                                    </select>
                                 </div>
 
                             </div>
