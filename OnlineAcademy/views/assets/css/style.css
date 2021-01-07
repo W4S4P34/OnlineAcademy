@@ -1460,6 +1460,10 @@ nav#filter a.current {
 	font-size: 13px;
 }
 
+#cat-course-status p {
+	font-size: 13px;
+}
+
 #cat-course-lecturer p {
 	display: -webkit-box;
 	-webkit-line-clamp: 1;
@@ -1902,9 +1906,14 @@ a#heading-information-add-lecture-btn:hover {
 	width: 100%;
 }
 
-#main-information-container .input-group input {
+#main-information-container .input-group input,
+#main-information-container .input-group select {
 	margin-bottom: 10px;
 	border-radius: 10px;
+}
+
+#main-information-container .input-group #editor.ql-container {
+	margin-bottom: 10px;
 }
 
 #main-information-container .input-group input[disabled] {
@@ -2098,4 +2107,117 @@ a#heading-information-add-lecture-btn:hover {
 #main-information-container #main-information-input-group #main-information-status option,
 #main-information-container #main-information-input-group #main-information-field option {
 	padding: 0px 5px;
+}
+
+/* **************************************** */
+/* Edit course */
+#cover-image-edit-btn {
+	position: absolute;
+	top: 5%;
+	right: 5%;
+}
+
+#details-edit-btn {
+	position: absolute;
+	top: .6%;
+	right: 3%;
+}
+
+#content-edit-btn {
+	position: absolute;
+	z-index: 100;
+
+	top: 0%;
+	right: 3%;
+
+	background-color: forestgreen;
+}
+
+#content-list-item #list-btn:focus {
+	outline: none;
+	outline-offset: -2px;
+}
+
+#content-edit-btn:hover
+#content-edit-btn:focus {
+	color: #fff;
+	background-color: darkgreen;
+}
+
+#cover-image-detail #edit-cover-image #main-information-input-group.form-group {
+	margin-bottom: 0px;
+}
+
+#cover-image-detail #edit-cover-image #main-label {
+	font-family: 'Oswald', sans-serif;
+	font-size: 15px;
+}
+
+#edit-btn-container {
+	display: flex;
+	justify-content: center;
+}
+
+#edit-btn-container #save-change-btn {
+	background-color: forestgreen;
+
+	margin: 0px 10px;
+	padding: 10px;
+	width: 10%;
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	border-radius: 4px;
+	text-align: center;
+}
+
+#edit-btn-container #save-change-btn:hover {
+	background-color: darkgreen;
+}
+
+#edit-btn-container #cancel-change-btn {
+	margin: 0px 10px;
+	padding: 10px;
+	width: 10%;
+	font-weight: bold;
+	font-family: 'Oswald', sans-serif;
+	font-size: 14px;
+	border-radius: 4px;
+	text-align: center;
+}
+
+#course-info-detail,
+#content-list-item {
+	position: relative;
+}
+
+#course-info-detail #main-information-container {
+	margin: 0px;
+}
+
+#content #main-information-container {
+	margin: 0;
+	padding: 0;
+}
+
+#content #main-information-container #main-information-input-group {
+	margin-bottom: 0px;
+}
+
+#content #main-information-container #main-information-input-group #main-information-content.list-group {
+	margin-bottom: 0px;
+}
+
+#content #main-information-container #main-information-content #main-information-section-list li{
+	display: inherit;
+    list-style: none;
+}
+
+#content #main-information-container #main-information-content #main-information-section-list li #main-label {
+    font-family: 'Oswald', sans-serif;
+	font-size: 15px;
+}
+
+#content #edit-btn-container {
+	margin-bottom: 15px;
 }

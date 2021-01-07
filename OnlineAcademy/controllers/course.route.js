@@ -1,10 +1,16 @@
 const express = require('express');
 const courseModel = require('../models/course.model');
 const studentModel = require('../models/student.model');
-const { IsEnrolled } = require('../models/student.model');
+const lecturerModel = require('../models/lecturer.model');
+const {
+    IsEnrolled
+} = require('../models/student.model');
+const {
+    ROLES
+} = require('../utils/enum');
 const router = express.Router();
 
-function CreatePageNumber(nPages,curPage = 1) {
+function CreatePageNumber(nPages, curPage = 1) {
     let list = [];
     for (var i = 1; i <= nPages; i++) {
         list.push({
@@ -62,8 +68,10 @@ router.get('/detail/:id', async (req, res) => {
         res.locals.isInWatchList = await studentModel.IsInWatchList(res.locals.user.username, req.params.id);
         res.locals.isEnrolled = await IsEnrolled(res.locals.user.username, req.params.id);
     }
-    console.log("Is Enrolled:" + res.locals.isEnrolled);
-    res.render('vwCategories/details');
+    if (res.locals.user.role === ROLES.LECTURER && await lecturerModel.IsMyLecture(res.locals.user.username, req.params.id)) {
+        console.log("Edit course");
+        return res.render('vwLecturer/editcourse');
+    }
+    return res.render('vwCategories/details');
 })
 module.exports = router;
-

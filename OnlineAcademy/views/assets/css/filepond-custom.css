@@ -8,3 +8,11 @@
     font-family: 'Oswald', sans-serif;
     font-size: 1.25em;
 }
+
+#content .filepond--root#main-information-course-video,
+#content .filepond--root#main-information-preview-video {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1em;
+
+    margin: 10px;
+}

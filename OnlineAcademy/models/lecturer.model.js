@@ -1,6 +1,12 @@
 const db = require('../utils/database');
 
 module.exports = {
+    async IsMyLecture(lecturerId,courseId){
+        const sql = 'select id from course where id = ? and lecturerId = ?';
+        const condition = [courseId,lecturerId];
+        const [rows, field] = await db.load(sql, condition);
+        return rows.length !== 0;
+    },
     async GetLectures(lecturerId, limit, offset) {
         const sql = 'select course.*,fields.name as fieldName,lecturer.name as lecturerName from course join fields on fieldsId = fields.id join lecturer on lecturer.id = lecturerId where lecturerId = ? limit ? offset ?';
         const condition = [lecturerId, parseInt(limit), offset];

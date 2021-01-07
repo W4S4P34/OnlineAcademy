@@ -112,6 +112,6 @@ router.post('/editProfile/communication', async (req, res) => {
     res.json(err);
 })
 router.get('/editCourse', (req, res) => {
-    res.send("EDIT COURSE VIEW");
+    
 })
 module.exports = router;
