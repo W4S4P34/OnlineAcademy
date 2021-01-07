@@ -119,10 +119,15 @@
 
 
     <!-- DEFINE SCRIPTS -->
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script>
         function ErrorMessage(message) {
-            alert(message);
+            swal(message, {
+                icon: "error",
+                buttons: "OK",
+            });
         }
 
         function CheckValidInput(username, password, confirmPassword, name, email, phoneNumber) {
@@ -170,11 +175,31 @@
             jQuery(this).off("SubmitEvent");
             if (CheckValidInput(username, password, confirmPassord, name, email, phoneNumber)) {
                 $.getJSON(`/user/register/isAvailable?username=${username}&email=${email}`, function (data) {
+                    submitSuccess = data === true;
                     if (data === true) {
-                        submitSuccess = true;
-                        $("#formSignUp").submit();
+                        const account = {
+                            username: username,
+                            password: password,
+                            name: name,
+                            email: email,
+                            phoneNumber: phoneNumber
+                        }
+                        $.post('/user/register', account , function (err,status) {
+                            if (err) {
+                                submitSuccess = false;
+                                ErrorMessage(err);
+                            } else {
+                                submitSuccess = true;
+                                swal("Change profile successfully", {
+                                    icon: "success",
+                                    text: "Register success! Please check your email to activate account!"
+                                }).then((value) => {
+                                    location.reload();
+                                });
+                            }
+                        });
                     } else {
-                        alert('username or email is already existed');
+                        ErrorMessage('username or email is already existed');
                     }
                 })
             }

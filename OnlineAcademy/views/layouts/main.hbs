@@ -96,13 +96,14 @@
                     </li>
 
                     {{#if isAuthorized}}
+                    {{#if (eq user.role 'student')}}
                     <li id="cart">
                         <a href="#">
                             Cart
                             <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                         </a>
                     </li>
-
+                    {{/if}}
                     <li class="dropdown" id="user-preferences">
                         <a class="dropdown-toggle noselect disabled" role="button" data-toggle="dropdown">
                             Hi, <b>{{user.name}}</b>
@@ -133,7 +134,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" id="lectures" href="/lecturer/myLectures">
+                                <a class="dropdown-item" id="lectures" href="/lecturer/lectures">
                                     Lectures 
                                 </a>
                             </li>

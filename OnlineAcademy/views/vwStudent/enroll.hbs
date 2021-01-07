@@ -23,8 +23,6 @@
         }
         const pageActive = parseInt(pagination.querySelector(".active").textContent);
         const maxPage = pagination.querySelectorAll("li").length - 2;
-        console.log(pageActive);
-        console.log(maxPage);
         if (pageActive <= 1) {
             pagination.querySelector("#previousPage").className += "disabled";
         }
@@ -94,7 +92,7 @@
 
                             <div class="thumbnail">
                                 <div class="container">
-                                    <img class="img-responsive center-block" src="/resource/public/course/{{id}}/photo.png"
+                                    <img class="img-responsive center-block" src="{{imagePath}}"
                                          alt="...">
                                 </div>
 

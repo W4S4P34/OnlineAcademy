@@ -1,0 +1,167 @@
+{{#section 'js'}}
+<script>
+    function NextPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) + 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive - 1 >= maxPage)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+
+    }
+    function PreviousPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
+        if (pageActive + 1 <= 1)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+    }
+    jQuery(function () {
+        const pagination = jQuery(".pagination")[0];
+        if (pagination === null || pagination === undefined) {
+            return;
+        }
+        const pageActive = parseInt(pagination.querySelector(".active").textContent);
+        const maxPage = pagination.querySelectorAll("li").length - 2;
+        if (pageActive <= 1) {
+            pagination.querySelector("#previousPage").className += "disabled";
+        }
+        if (pageActive >= maxPage) {
+            pagination.querySelector("#nextPage").className += "disabled";
+        }
+    });
+</script>
+{{/section}}
+
+<!-- Header -->
+<header id="head" class="secondary">
+    <div class="container">
+
+        <h1>Profile</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eliras scele!</p>
+
+    </div>
+</header>
+<!-- ./Header -->
+<!-- Main -->
+<!-- Main panel -->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div id="user-sidebar" class="panel panel-default sidebar-categories">
+                <div class="panel-heading">My account</div>
+
+                <div class="list-group">
+                    <a href="/lecturer/info" class="list-group-item">
+                        Profile
+                    </a>
+
+                    <a href="#currentpage" class="list-group-item active">
+                        My Courses
+                        <span class="badge">{{lecturesSize}}</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div id="user-information" class="panel panel-default main-categories">
+
+                <div class="panel-heading">
+                    <div id="heading-information-container" class="container-fluid">
+
+                        <div id="heading-information-container-row-favorite" class="row">
+                            <div id="heading-information-favorite" class="col-md-3">
+                                My Courses
+                            </div>
+                            <div id="heading-information-btn-group" class="col-md-9">
+                                <a id="heading-information-add-lecture-btn" class="btn btn-success" href="#" type="button">
+                                    Add course
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="cat-courses" class="container-fluid">
+                    <div class="row">
+
+                        {{#each lectures}}
+                        <div id="course" class="col-md-4">
+
+                            <div class="thumbnail">
+                                <div class="container">
+                                    <img class="img-responsive center-block" src="{{imagePath}}"
+                                         alt="...">
+                                </div>
+
+                                <div class="caption">
+                                    <div id="cat-course-caption">
+                                        <p>{{title}}</p>
+                                    </div>
+                                    <div id="cat-course-price">
+                                        <p>$ {{price}}</p>
+                                    </div>
+                                    <div id="cat-course-field">
+                                        <p>{{fieldName}}</p>
+                                    </div>
+                                    <div id="cat-course-lecturer">
+                                        <p>{{lecturerName}}</p>
+                                    </div>
+                                    <div id="cat-course-review">
+                                        <p>
+                                            {{likes}} likes &nbsp;
+                                            <i class="fa fa-thumbs-up"></i>
+                                        </p>
+                                    </div>
+
+                                    <p id="cat-transaction-btn" class="container">
+                                        <!--<a id="lecturer-remove-btn" href="#" class="btn btn-danger" role="button">
+                                            Remove
+                                        </a>-->
+                                        <a id="lecturer-edit-btn" href="/editCourse" class="btn btn-primary" role="button">
+                                            Edit
+                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
+                                        </a>
+                                        <a id="lecturer-details-btn" href="/course/detail/{{id}}" class="btn btn-primary" role="button">
+                                            Details
+                                        </a>
+                                    </p>
+                                </div>
+
+                            </div>
+                        </div>
+                        {{/each}}
+                    </div>
+                </div>
+
+                {{#with pageNumbers}}
+                <div id="user-pagination">
+                    <ul class="pagination">
+                        <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
+                        {{#each this}}
+                        {{#if this.isActive}}
+                        <li class="active">
+                            <a href="?page={{this.value}}">
+                                {{this.value}} <span class="sr-only">(current)</span>
+                            </a>
+                        </li>
+                        {{else}}
+                        <li><a href="?page={{this.value}}">{{this.value}}</a></li>
+                        {{/if}}
+                        {{/each}}
+                        <li id="nextPage"><a href="javascript:NextPage();">&raquo;</a> </li>
+                    </ul>
+                </div>
+                {{/with}}
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>

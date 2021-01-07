@@ -92,6 +92,12 @@ module.exports = {
             return null;
         return rows[0];
     },
+    async IsExist(email,studentId) {
+        const sql = 'select * from student where email = ? and id != ?';
+        const condition = [email, studentId];
+        const [rows, field] = await db.load(sql, condition);
+        return rows.length !== 0;
+    },
     async UpdateProfile(studentId,name,phoneNumber,email) {
         try {
             const newData = {
@@ -116,8 +122,8 @@ module.exports = {
             const condition = {
                 id: studentId
             }
-            const result = await db.update(newData, condition, 'student');
-            console.log(result);
+            await db.update(newData, condition, 'student');
+            
         } catch (e) {
             return e;
         }
