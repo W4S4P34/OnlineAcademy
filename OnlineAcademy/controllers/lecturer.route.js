@@ -16,5 +16,10 @@ router.get('/edit/password', async (req, res) => {
         layout: 'main.hbs'
     });
 })
+router.get('/add/course', async (req, res) => {
+    res.render('vwLecturer/addcourse', {
+        layout: 'main.hbs'
+    });
+})
 
 module.exports = router;

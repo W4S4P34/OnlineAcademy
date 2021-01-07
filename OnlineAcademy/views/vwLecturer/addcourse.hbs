@@ -1,0 +1,389 @@
+{{#section 'css'}}
+
+{{!-- ----------- --}}
+{{!-- Import ZONE --}}
+{{!-- ----------- --}}
+<!-- Filepond stylesheet -->
+<link href="https://unpkg.com/filepond/dist/filepond.css" rel="stylesheet">
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+<link rel="stylesheet" href="/views/assets/css/filepond-custom.css" type="text/css">
+<link rel="stylesheet" href="/views/assets/css/quilljs-custom.css" type="text/css">
+
+{{/section}}
+
+{{#section 'js'}}
+
+{{!-- ----------- --}}
+{{!-- Import ZONE --}}
+{{!-- ----------- --}}
+<!-- Load FilePond library -->
+<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-validate-size/dist/filepond-plugin-image-validate-size.js">
+</script>
+<script src="https://unpkg.com/filepond-plugin-file-rename/dist/filepond-plugin-file-rename.js"></script>
+<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+<script src="https://unpkg.com/filepond/dist/filepond.js"></script>
+<!-- Include the Quill library -->
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+<!-- Turn all file input elements into ponds -->
+<script>
+    // Register the plugin with FilePond
+    FilePond.registerPlugin(
+        FilePondPluginImagePreview,
+        FilePondPluginFileValidateSize,
+        FilePondPluginFileValidateType,
+        FilePondPluginImageValidateSize,
+        FilePondPluginFileRename
+    );
+
+    // Get a reference to the file input element
+    const inputElementPondCoverImage = document.querySelector('input[type="file"]#main-information-cover-img');
+    const inputElementPondCourseVideo = document.querySelector('input[type="file"]#main-information-course-video');
+    const inputElementPondPreviewVideo = document.querySelector('input[type="file"]#main-information-preview-video');
+
+    // Create the FilePond instance
+    const pondCoverImage = FilePond.create(inputElementPondCoverImage, {
+        maxFileSize: '10MB',
+        imagePreviewHeight: 500,
+        acceptedFileTypes: ['image/*'],
+        fileRenameFunction: (file) => {
+            return `cover${file.extension}`;
+        },
+        imageValidateSizeMinWidth: 600,
+        imageValidateSizeMinHeight: 400
+    });
+    const pondCourseVideo = FilePond.create(inputElementPondCourseVideo, {
+        acceptedFileTypes: ['video/*'],
+        fileRenameFunction: (file) => {
+            return `main${file.extension}`;
+        }
+    });
+    const pondPreviewVideo = FilePond.create(inputElementPondPreviewVideo, {
+        acceptedFileTypes: ['video/*'],
+        fileRenameFunction: (file) => {
+            return `preview${file.extension}`;
+        }
+    });
+
+    // Initialize Quill editor
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'], // toggled buttons
+        ['blockquote', 'code-block'],
+
+        [{
+            'header': 1
+        }, {
+            'header': 2
+        }], // custom button values
+
+        [{
+            'list': 'ordered'
+        }, {
+            'list': 'bullet'
+        }],
+
+        [{
+            'script': 'sub'
+        }, {
+            'script': 'super'
+        }], // superscript/subscript
+
+        [{
+            'indent': '-1'
+        }, {
+            'indent': '+1'
+        }], // outdent/indent
+
+        [{
+            'direction': 'rtl'
+        }], // text direction
+
+        [{
+            'size': ['small', false, 'large', 'huge']
+        }], // custom dropdown
+
+        [{
+            'header': [1, 2, 3, 4, 5, 6, false]
+        }],
+
+        [{
+            'color': []
+        }, {
+            'background': []
+        }], // dropdown with defaults from theme
+
+        [{
+            'font': []
+        }],
+
+        [{
+            'align': []
+        }],
+
+        ['clean'] // remove formatting button
+    ];
+
+    var quill = new Quill('#editor', {
+        modules: {
+            toolbar: toolbarOptions
+        },
+        theme: 'snow'
+    });
+</script>
+
+<script>
+    function addNewCourseSubmit() {
+        jQuery('#add-new-course').submit();
+    }
+</script>
+
+{{/section}}
+
+<!-- Header -->
+<header id="head" class="secondary">
+    <div class="container">
+
+        <h1>Profile</h1>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing eliras scele!</p>
+
+    </div>
+</header>
+<!-- ./Header -->
+<!-- Main -->
+<!-- Main panel -->
+<div class="container-fluid">
+    <div class="row">
+
+        <div class="col-md-3">
+            <div id="user-sidebar" class="panel panel-default sidebar-categories">
+                <div class="panel-heading">My account</div>
+
+                <div class="list-group">
+                    <a href="/lecturer/info" class="list-group-item">
+                        Profile
+                    </a>
+
+                    <a href="/lecturer/lectures" class="list-group-item">
+                        My Courses
+                        <span class="badge">2</span>
+                    </a>
+
+                    <a href="#currentpage" class="list-group-item active">
+                        Add New Course
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <div id="user-information" class="panel panel-default main-categories">
+
+                <div class="panel-heading">
+                    <div id="heading-information-container" class="container-fluid">
+
+                        <div id="heading-information-container-row-profile" class="row">
+                            <div id="heading-information-profile" class="col-md-3">
+                                Add new course
+                            </div>
+                            <div id="heading-information-btn-group" class="col-md-9">
+                                <a id="heading-information-save-password-btn" class="btn btn-success" type="submit"
+                                    form="add-new-course" href="javascript: addNewCourseSubmit();">
+                                    Add
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div id="main-information-container" class="container-fluid">
+                    <form id="add-new-course" method="POST">
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-cover-img">Cover image (Image type; 600x400
+                                    above; &leq;10MB)</label>
+                                <input name="coverImage" type="file" id="main-information-cover-img">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-name">Course name</label>
+                                <input name="courseName" id="main-information-name" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-field">Field</label>
+                                <input name="field" id="main-information-field" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-sdesc">Short description</label>
+                                <input name="shortDescription" id="main-information-sdesc" type="text"
+                                    class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-desc">Description</label>
+                                <div id="editor"></div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-fee">Tuition Fee</label>
+                                <input name="fee" id="main-information-fee" type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group">
+                                <label id="main-label" for="main-information-content">Syllabus/Content</label>
+
+                                <div id="main-information-content" class="list-group container-fluid">
+                                    <div id="main-information-section-list" class="list-item">
+                                        <button type="button" id="delete-list-btn" class="btn btn-danger content-btn">
+                                            Delete
+                                        </button>
+                                        <button type="button" id="list-btn" class="btn btn-primary content-btn">
+                                            Section 1
+                                        </button>
+
+                                        <ul id="mainContent" class="showContent container-fluid">
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture">Lecture
+                                                    Name</label>
+                                                <input name="lecture" id="main-information-lecture" type="text"
+                                                    class="form-control">
+                                            </li>
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture-video">Lecture
+                                                    video</label>
+                                                <input name="mainVideo" type="file" id="main-information-course-video">
+                                            </li>
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture-preview">Lecture
+                                                    preview</label>
+                                                <input name="previewVideo" type="file"
+                                                    id="main-information-preview-video">
+                                            </li>
+
+                                            <div id="delete-content-btn-container" class="container-fluid">
+                                                <button type="button" id="delete-content-btn"
+                                                    class="btn btn-danger content-btn">
+                                                    Delete lecture
+                                                </button>
+                                            </div>
+
+                                        </ul>
+
+                                        <ul id="mainContent" class="showContent container-fluid">
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture">Lecture
+                                                    Name</label>
+                                                <input name="lecture" id="main-information-lecture" type="text"
+                                                    class="form-control">
+                                            </li>
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture-video">Lecture
+                                                    video</label>
+                                                <input name="mainVideo" type="file" id="main-information-course-video">
+                                            </li>
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture-preview">Lecture
+                                                    preview</label>
+                                                <input name="previewVideo" type="file"
+                                                    id="main-information-preview-video">
+                                            </li>
+
+                                            <div id="delete-content-btn-container" class="container-fluid">
+                                                <button type="button" id="delete-content-btn"
+                                                    class="btn btn-danger content-btn">
+                                                    Delete lecture
+                                                </button>
+                                            </div>
+
+                                        </ul>
+
+                                        <div id="add-list-btn-container" class="container-fluid">
+                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
+                                                Add new lecture
+                                            </button>
+                                        </div>
+
+                                    </div>
+
+                                    <div id="main-information-section-list" class="list-item">
+                                        <button type="button" id="delete-list-btn" class="btn btn-danger content-btn">
+                                            Delete
+                                        </button>
+                                        <button type="button" id="list-btn" class="btn btn-primary content-btn">
+                                            Section 2
+                                        </button>
+
+                                        <ul id="mainContent" class="showContent container-fluid">
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture">Lecture
+                                                    Name</label>
+                                                <input name="lecture" id="main-information-lecture" type="text"
+                                                    class="form-control">
+                                            </li>
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture-video">Lecture
+                                                    video</label>
+                                                <input name="mainVideo" type="file" id="main-information-course-video">
+                                            </li>
+                                            <li>
+                                                <label id="main-label" for="main-information-lecture-preview">Lecture
+                                                    preview</label>
+                                                <input name="previewVideo" type="file"
+                                                    id="main-information-preview-video">
+                                            </li>
+
+                                            <div id="delete-content-btn-container" class="container-fluid">
+                                                <button type="button" id="delete-content-btn"
+                                                    class="btn btn-danger content-btn">
+                                                    Delete lecture
+                                                </button>
+                                            </div>
+
+                                        </ul>
+
+                                        <div id="add-list-btn-container" class="container-fluid">
+                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
+                                                Add new lecture
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+
+                                <div id="add-course-btn-container" class="container-fluid">
+                                    <button type="button" id="add-course-btn" class="btn btn-success">
+                                        Add new section
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
