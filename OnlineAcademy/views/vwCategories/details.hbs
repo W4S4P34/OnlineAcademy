@@ -89,25 +89,39 @@
                 }
             });
 
+            jQuery('textarea').on("input", function () {
+                var maxlength = jQuery(this).attr("maxlength");
+                var currentLength = jQuery(this).val().length;
+
+                if (currentLength >= maxlength) {
+                    jQuery('#char-number').text(
+                        "You have reached the maximum number of characters.");
+                } else {
+                    jQuery('#char-number').text(maxlength - currentLength + " chars left");
+                }
+            });
+
         })();
 
         /* end ready */
     });
-
-
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
     function AddToWatchList() {
         const id = "{{detailCourse.id}}";
-        $.post('/student/addToWatchList', { id: id }, function (data, status) {
+        $.post('/student/addToWatchList', {
+            id: id
+        }, function (data, status) {
             if (data) {
                 swal("Add to watch list successfully!", {
                     icon: "success",
                     buttons: false,
                 });
-                setTimeout(() => { location.reload(); }, 1000);
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
             } else {
                 swal("Something is wrong, please try again!", {
                     icon: "error",
@@ -116,6 +130,7 @@
             }
         });
     }
+
     function BuyNow() {
         swal({
             title: "Are you sure?",
@@ -125,7 +140,9 @@
         }).then((value) => {
             if (value) {
                 const id = "{{detailCourse.id}}";
-                $.post('/student/buyNow', { id: id }, function (err, status) {
+                $.post('/student/buyNow', {
+                    id: id
+                }, function (err, status) {
                     if (!err) {
                         swal("Buy successfully!", {
                             icon: "success",
@@ -141,13 +158,14 @@
             }
 
         });
-       
+
     }
+
     function stopVideo(element) {
 
         var iframe = element.find('iframe')[0];
         var video = element.find('video')[0];
-        
+
         if (iframe) {
             var iframeSrc = iframe.src;
             iframe.src = iframeSrc;
@@ -166,13 +184,6 @@
             stopVideo(video);
         }
     }
-
-    function countChar(val) {
-        var len = val.value.length;
-        jQuery('#char-number').text(1024 - len);
-    }
-
-    
 </script>
 
 {{/section}}
@@ -221,13 +232,13 @@
                         <div class="container">
                             {{!-- <img class="img-responsive center-block" src="/resource/public/lecturer/1.png"
                                 alt="Cover Image"> --}}
-                            <img class="img-responsive center-block" src="{{detailCourse.imagePath}}"
-                                alt="Cover Image">
+                            <img class="img-responsive center-block" src="{{detailCourse.imagePath}}" alt="Cover Image">
                             {{#if isAuthorized}}
                             {{#if (eq user.role 'student')}}
                             <div id="btn-list-detail" class="container-fluid">
                                 {{#unless isInWatchList}}
-                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary" onclick="AddToWatchList()">
+                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary"
+                                    onclick="AddToWatchList()">
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
@@ -239,7 +250,8 @@
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </button>
                                 {{/unless}}
-                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary" onclick="BuyNow()">
+                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary"
+                                    onclick="BuyNow()">
                                     Buy now
                                 </button>
                                 {{/unless}}
@@ -247,15 +259,18 @@
                             {{/if}}
                             {{else}}
                             <div id="btn-list-detail" class="container-fluid">
-                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary" onclick="location.replace('/user/login')">
+                                <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary"
+                                    onclick="location.replace('/user/login')">
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
-                                <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary" onclick="location.replace('/user/login')">
+                                <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary"
+                                    onclick="location.replace('/user/login')">
                                     Add to cart&nbsp;
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </button>
-                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary" onclick="location.replace('/user/login')">
+                                <button id="buy-now-btn-detail" type="button" class="btn btn-primary"
+                                    onclick="location.replace('/user/login')">
                                     Buy now
                                 </button>
                             </div>
@@ -265,10 +280,15 @@
 
                     <div id="course-info-detail" class="row">
                         <div class="container-fluid" id="details">
-                            
+
                             <h1>
                                 Details
                             </h1>
+
+                            <a href="#" id="like-btn" class="btn btn-primary content-btn" role="button">
+                                Like
+                                <i class="fa fa-thumbs-up" aria-hidden="true"></i>
+                            </a>
 
                             <h2>
                                 Information
@@ -318,6 +338,13 @@
                                 Content
                             </h1>
 
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                                    aria-valuemax="100" style="width: 60%;">
+                                    60%
+                                </div>
+                            </div>
+
                             <h2>
                                 {{detailCourse.briefDescription}}
                             </h2>
@@ -344,23 +371,23 @@
                                                 Preview
                                             </a>
                                             <div class="popupVideo" id="preview{{../id}}">
-                                                <video src="{{../preview}}" type="video/mp4"
-                                                       controls="true"></video>
+                                                <video src="{{../preview}}" type="video/mp4" controls="true"></video>
                                                 <img src="/views/assets/images/closebutton.png" class="close-btn"
-                                                     onclick="togglePopupVideo(preview{{../id}}, false);">
+                                                    onclick="togglePopupVideo(preview{{../id}}, false);">
                                             </div>
                                             <script type="text/javascript">
                                                 function RenderDuration(videoId, durationId) {
-                                                    document.getElementById(`${videoId}`).children[0].onloadedmetadata = function () {
-                                                        const duration_s = this.duration;
-                                                        const min = Math.floor(duration_s / 60);
-                                                        const sec = Math.ceil(duration_s % 60);
-                                                        const duration = min.toString().padStart(2, 0) + ':' + sec.toString().padStart(2, 0);
-                                                        document.getElementById(durationId).textContent = duration;
-                                                    };
+                                                    document.getElementById(`${videoId}`).children[0].onloadedmetadata =
+                                                        function () {
+                                                            const duration_s = this.duration;
+                                                            const min = Math.floor(duration_s / 60);
+                                                            const sec = Math.ceil(duration_s % 60);
+                                                            const duration = min.toString().padStart(2, 0) + ':' + sec
+                                                                .toString().padStart(2, 0);
+                                                            document.getElementById(durationId).textContent = duration;
+                                                        };
                                                 }
                                                 RenderDuration("preview{{../id}}", "preview-duration{{../id}}");
-                                                
                                             </script>
                                             {{/with}}
 
@@ -368,7 +395,8 @@
                                         <li>
                                             {{#if ../isEnrolled}}
                                             <div id="lecture-duration{{this.id}}" class="pull-right"></div>
-                                            <a href="#currentvideo" onclick="togglePopupVideo(lecture{{this.id}}, true);">
+                                            <a href="#currentvideo"
+                                                onclick="togglePopupVideo(lecture{{this.id}}, true);">
                                                 {{this.title}}
                                             </a>
                                             {{else}}
@@ -377,28 +405,47 @@
                                             {{/if}}
 
                                             <div class="popupVideo" id="lecture{{this.id}}">
-                                                <video src="/resource/private/course/{{../detailCourse.id}}/{{this.id}}.mp4" type="video/mp4" controls="true"></video>
+                                                <video
+                                                    src="/resource/private/course/{{../detailCourse.id}}/{{this.id}}.mp4"
+                                                    type="video/mp4" controls="true"></video>
                                                 <img src="/views/assets/images/closebutton.png" class="close-btn"
-                                                     onclick="togglePopupVideo(lecture{{this.id}}, false);">
+                                                    onclick="togglePopupVideo(lecture{{this.id}}, false);">
                                             </div>
 
                                             <script type="text/javascript">
                                                 function RenderDuration(videoId, durationId) {
-                                                    document.getElementById(`${videoId}`).children[0].onloadedmetadata = function () {
-                                                        const duration_s = this.duration;
-                                                        const min = Math.floor(duration_s / 60);
-                                                        const sec = Math.ceil(duration_s % 60);
-                                                        const duration = min.toString().padStart(2, 0) + ':' + sec.toString().padStart(2, 0);
-                                                        document.getElementById(durationId).textContent = duration;
-                                                    };
+                                                    document.getElementById(`${videoId}`).children[0].onloadedmetadata =
+                                                        function () {
+                                                            const duration_s = this.duration;
+                                                            const min = Math.floor(duration_s / 60);
+                                                            const sec = Math.ceil(duration_s % 60);
+                                                            const duration = min.toString().padStart(2, 0) + ':' + sec
+                                                                .toString().padStart(2, 0);
+                                                            document.getElementById(durationId).textContent = duration;
+                                                        };
                                                 }
                                                 RenderDuration("lecture{{this.id}}", "lecture-duration{{this.id}}");
                                             </script>
                                         </li>
+
+                                        <li>
+                                            <div id="mark-complete-container" class="container-fluid">
+                                                <a id="mark-complete-btn" class="btn btn-primary content-btn" href="#" role="button">
+                                                    Mark as complete
+                                                </a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div id="mark-incomplete-container" class="container-fluid">
+                                                <a id="mark-incomplete-btn" class="btn btn-primary content-btn" href="#" role="button">
+                                                    Mark as incomplete
+                                                </a>
+                                            </div>
+                                        </li>
+
                                     </ul>
                                 </div>
                                 {{/each}}
-
                             </div>
                         </div>
 
@@ -410,8 +457,8 @@
                             <div id="related-course" class="media">
                                 <div id="related-course-img" class="pull-left">
                                     <img class="media-object" src="{{imagePath}}" alt="Hello">
-                                    <a id="related-course-transaction-btn" href="/course/detail/{{id}}" class="btn btn-primary"
-                                        role="button">
+                                    <a id="related-course-transaction-btn" href="/course/detail/{{id}}"
+                                        class="btn btn-primary" role="button">
                                         Details
                                     </a>
                                 </div>
@@ -446,7 +493,8 @@
                             {{#with lecturer}}
                             <div id="lecturer" class="media">
                                 <div id="lecturer-img" class="pull-left">
-                                    <img class="media-object" src="/resource/public/lecturer/{{id}}.png" alt="portfolio">
+                                    <img class="media-object" src="/resource/public/lecturer/{{id}}.png"
+                                        alt="portfolio">
                                 </div>
                                 <div class="media-body">
                                     <h4 id="lecturer-name" class="media-heading">
@@ -485,8 +533,8 @@
                                 <form role="form" method="POST">
                                     <div class="row" id="feedback-section">
                                         <textarea name="userfeedback" class="form-control" rows="3" maxlength="1024"
-                                                  placeholder="Your feedback..." onkeyup="countChar(this)"></textarea>
-                                        <div id="char-number">1024</div>
+                                            placeholder="Your feedback..."></textarea>
+                                        <div id="char-number">1024 chars left</div>
                                     </div>
 
                                     <div class="row" id="form-submit-btn">
