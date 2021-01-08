@@ -1428,11 +1428,26 @@ nav#filter a.current {
 	margin: auto;
 }
 
-#cat-transaction-btn {
+#cat-transaction-btn,
+#cat-remove-btn {
 	display: flex;
 	justify-content: center;
 	align-items: center;
 }
+
+#cat-transaction-btn a.btn,
+#cat-remove-btn a.btn {
+	width: 100%;
+}
+
+#cat-remove-btn a.btn {
+	background-color: firebrick;
+}
+
+#cat-remove-btn a.btn:hover {
+	background-color: darkred;
+}
+
 
 #cat-course-caption {
 	margin-top: 30px;
@@ -1543,6 +1558,17 @@ nav#filter a.current {
 	margin: 10px 0px 10px 0px;
 	font-size: 25px;
 	color: rgb(145, 145, 145);
+}
+
+#course-info-detail #details {
+	position: relative;
+}
+
+#course-info-detail #details #like-btn {
+	position: absolute;
+
+	top: 2%;
+	right: 1%;
 }
 
 #course-info-detail #details #title {
@@ -1752,6 +1778,15 @@ nav#filter a.current {
 	line-height: inherit;
 }
 
+#mark-complete-container,
+#mark-incomplete-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	margin: 15px 0px;
+}
+
 /* **************************************** */
 /* Login::Main-layouts */
 
@@ -1767,7 +1802,9 @@ nav#filter a.current {
 #navi-bar #navi-selections #user-preferences #profile,
 #navi-bar #navi-selections #user-preferences #signout,
 #navi-bar #navi-selections #user-preferences #favorite,
-#navi-bar #navi-selections #user-preferences #lectures {
+#navi-bar #navi-selections #user-preferences #lectures,
+#navi-bar #navi-selections #user-preferences #add-course,
+#navi-bar #navi-selections #user-preferences #management {
 	display: flex;
 	justify-content: space-between;
 }
@@ -1803,6 +1840,13 @@ nav#filter a.current {
 #navi-bar #navi-selections #user-preferences li a#add-course::before {
 	display: inline-block;
 	content: '\f067 \2003';
+	font-family: fontAwesome;
+	vertical-align: middle;
+}
+
+#navi-bar #navi-selections #user-preferences li a#management::before {
+	display: inline-block;
+	content: '\f0ad \2003';
 	font-family: fontAwesome;
 	vertical-align: middle;
 }
@@ -1854,7 +1898,8 @@ nav#filter a.current {
 
 #heading-information-container-row-profile,
 #heading-information-container-row-favorite,
-#heading-information-container-row-enrolled-courses {
+#heading-information-container-row-enrolled-courses,
+#heading-information-container-row-admin {
 	height: 50px;
 }
 
@@ -1862,6 +1907,11 @@ nav#filter a.current {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+}
+
+#heading-information-container-row-admin{
+	display: flex;
+	align-items: center;
 }
 
 #heading-information-container-row-favorite,
@@ -2066,9 +2116,19 @@ a#heading-information-add-lecture-btn:hover {
 	background-color: darkgreen;
 }
 
-#main-information-container #main-information-input-group #add-course-btn-container {
+#main-information-container #main-information-input-group #add-course-btn-container,
+#course-info-detail #content #add-course-btn-container {
 	display: flex;
 	justify-content: center;
+}
+
+#course-info-detail #content #add-course-btn-container .btn-success#add-course-btn  {
+	background-color: forestgreen;
+}
+
+#course-info-detail #content #add-course-btn-container .btn-success#add-course-btn:hover {
+	background-color: darkgreen;
+	color: #c0c0c0
 }
 
 #main-information-container #main-information-input-group #add-course-btn {
@@ -2158,7 +2218,7 @@ a#heading-information-add-lecture-btn:hover {
 	justify-content: center;
 }
 
-#edit-btn-container #save-change-btn {
+#course-info-detail #content #edit-btn-container #save-change-btn {
 	background-color: forestgreen;
 
 	margin: 0px 10px;
@@ -2171,8 +2231,9 @@ a#heading-information-add-lecture-btn:hover {
 	text-align: center;
 }
 
-#edit-btn-container #save-change-btn:hover {
+#course-info-detail #content #edit-btn-container #save-change-btn:hover {
 	background-color: darkgreen;
+	color: #c0c0c0
 }
 
 #edit-btn-container #cancel-change-btn {
@@ -2184,6 +2245,11 @@ a#heading-information-add-lecture-btn:hover {
 	font-size: 14px;
 	border-radius: 4px;
 	text-align: center;
+}
+
+#course-info-detail #content #edit-btn-container #cancel-change-btn:hover {
+	background-color:  #2c5fa7;
+	color: #c0c0c0
 }
 
 #course-info-detail,
@@ -2220,4 +2286,78 @@ a#heading-information-add-lecture-btn:hover {
 
 #content #edit-btn-container {
 	margin-bottom: 15px;
+}
+
+/* **************************************** */
+/* Admin Categories */
+#main-information-container #category {
+	border: 1px solid #3d84e6;
+	border-radius: 10px;
+	border-color: #66afe9;
+	outline: 0;
+	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+
+	padding-bottom: 15px;
+	margin: 15px 0px;
+}
+
+#main-information-container #category #main-category #main-category-container {
+	position: relative;
+
+	display: flex;
+	align-items: center;
+
+	padding: 20px 20px;
+	margin-top: 10px;
+}
+
+#main-information-container #category #main-category #main-category-container #main-category-btn-group,
+#main-information-container #category #sub-category #sub-category-container #sub-category-btn-group {
+	position: absolute;
+	top: 50%;
+	right: 2%;
+	transform: translate(0%, -50%);
+}
+
+#category #main-category #main-category-container #main-category-btn-group a.btn,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn {
+	padding: 10px 30px;
+	margin: 0px 0px 0px 20px;
+
+	border-radius: 10px;
+}
+
+#category #main-category #main-category-container #main-category-btn-group a.btn#remove-btn,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn#remove-btn {
+	background-color: firebrick;
+}
+
+#category #main-category #main-category-container #main-category-btn-group a.btn#remove-btn:hover,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn#remove-btn:hover {
+	background-color: darkred;
+}
+
+#category #main-category #main-category-container #main-category-btn-group a.btn#save-btn,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn#save-btn {
+	background-color: forestgreen;
+}
+
+#category #main-category #main-category-container #main-category-btn-group a.btn#save-btn:hover,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn#save-btn:hover {
+	background-color: darkgreen;
+}
+
+#main-information-container #category #sub-category #sub-category-container {
+	position: relative;
+
+	display: flex;
+	align-items: center;
+
+	padding: 15px 55px;
+}
+
+#student-management-pagination-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }

@@ -603,7 +603,7 @@
                                 <div id="main-information-container" class="container-fluid">
                                     <div id="main-information-input-group" class="input-group form-group">
                                         <div id="main-information-content" class="list-group container-fluid">
-                                            <form id="edit-content" method="POST">
+                                            <form id="add-new-content" method="POST">
                                                 <div id="main-information-section-list" class="list-item">
                                                     <button type="button" id="list-btn"
                                                         class="btn btn-primary content-btn">
@@ -665,6 +665,77 @@
                                 </div>
 
                                 {{/each}}
+
+                                <!-- EDIT HERE YOU BLIND PEOPLE -->
+                                <div id="main-information-container" class="container-fluid">
+                                    <div id="main-information-input-group" class="input-group form-group">
+                                        <div id="main-information-content" class="list-group container-fluid">
+                                            <form id="edit-content" method="POST">
+                                                <div id="main-information-section-list" class="list-item">
+                                                    <button type="button" id="list-btn"
+                                                        class="btn btn-primary content-btn">
+                                                        Section ?
+                                                    </button>
+
+                                                    <ul id="mainContent" class="container-fluid">
+                                                        <li>
+                                                            <label id="main-label"
+                                                                for="main-information-lecture">Lecture
+                                                                Name</label>
+                                                            <input name="lecture" id="main-information-lecture"
+                                                                type="text" class="form-control">
+                                                        </li>
+                                                        <li>
+                                                            <label id="main-label"
+                                                                for="main-information-lecture-video">Lecture
+                                                                video</label>
+                                                            <input name="mainVideo" type="file"
+                                                                id="main-information-course-video">
+                                                        </li>
+                                                        <li>
+                                                            <label id="main-label"
+                                                                for="main-information-lecture-preview">Lecture
+                                                                preview</label>
+                                                            <input name="previewVideo" type="file"
+                                                                id="main-information-preview-video">
+                                                        </li>
+
+                                                        {{!-- <div id="delete-content-btn-container" class="container-fluid">
+                                                <button type="button" id="delete-content-btn"
+                                                    class="btn btn-danger content-btn">
+                                                    Delete lecture
+                                                </button>
+                                            </div> --}}
+
+                                                    </ul>
+
+                                                    {{!-- <div id="add-list-btn-container" class="container-fluid">
+                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
+                                                Add new lecture
+                                            </button>
+                                        </div> --}}
+
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+
+                                    <div id="edit-btn-container" class="row">
+                                        <button id="cancel-change-btn" class="btn btn-primary">
+                                            Cancel
+                                        </button>
+
+                                        <button id="save-change-btn" class="btn btn-success">
+                                            Save
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div id="add-course-btn-container" class="container-fluid">
+                                    <button type="button" id="add-course-btn" class="btn btn-success content-btn">
+                                        Add new section
+                                    </button>
+                                </div>
 
                             </div>
                         </div>
