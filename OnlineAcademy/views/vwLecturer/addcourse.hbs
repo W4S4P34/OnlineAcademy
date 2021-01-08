@@ -27,6 +27,9 @@
 <script src="https://unpkg.com/filepond/dist/filepond.js"></script>
 <!-- Include the Quill library -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+<!-- Load sweet alert and jQuery ajax-->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
 <!-- Turn all file input elements into ponds -->
 <script>
@@ -39,11 +42,89 @@
         FilePondPluginFileRename
     );
 
+    FilePond.setOptions({
+        server: {
+            process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
+
+                
+                //console.log(file);
+                //console.log(file.name);
+                
+                // fieldName is the name of the input field
+                // file is the actual file object to send
+
+                var func = (fieldName, file, callback) => {
+                    console.log("Send Data");
+                    const formData = new FormData();
+                    const request = new XMLHttpRequest();
+                    formData.append(fieldName, file, file.name);
+
+                    request.open('POST', '/lecturer/upload');
+
+                    request.upload.onprogress = (e) => {
+                        console.log("On Progress");
+                        progress(e.lengthComputable, e.loaded, e.total);
+                    };
+                    request.upload.onloadend = (e) => {
+                        console.log("On Load End");
+                        callback();
+                    };
+
+                    request.onload = function () {
+                        console.log("On load");
+                        if (request.status >= 200 && request.status < 300) {
+                            // the load method accepts either a string (id) or an object
+                            load(request.responseText);
+                        }
+                        else {
+                            error('oh no');
+                        }
+                    };
+                    request.send(formData);
+                    
+                };
+
+                let key = 0;
+                if (file.type === "video/mp4") {
+                    key = parseInt(file.name.replace(".mp4", ""));
+                    file.name = `${key}.mp4`;
+                }
+                const data = {
+                    callbackSubmit: func,
+                    fieldName: fieldName,
+                    file: file
+                }
+                if (fieldName === "mainVideo") {
+                    AddMainVideo(key, data);
+                }
+                else if (fieldName === "previewVideo") {
+                    AddPreviewVideo(key, data);
+                }
+                else {
+                    console.log("Add Image " + key);
+                    pondImageCover = data;
+                }
+
+                return {
+                    abort: () => {
+                        console.log("Cancel");
+                        abort();
+                        if (key === 0) {
+                            return pondImageCover = null;
+                        }
+                        return fieldName === "mainVideo" ? DeleteMainnVideo(key) : DeletePreviewVideo(key);
+                    }
+                };
+            }
+            
+        }
+    });
+
+    
     // Get a reference to the file input element
     const inputElementPondCoverImage = document.querySelector('input[type="file"]#main-information-cover-img');
-    const inputElementPondCourseVideo = document.querySelector('input[type="file"]#main-information-course-video');
-    const inputElementPondPreviewVideo = document.querySelector('input[type="file"]#main-information-preview-video');
 
+    
     // Create the FilePond instance
     const pondCoverImage = FilePond.create(inputElementPondCoverImage, {
         maxFileSize: '10MB',
@@ -55,19 +136,36 @@
         imageValidateSizeMinWidth: 600,
         imageValidateSizeMinHeight: 400
     });
-    const pondCourseVideo = FilePond.create(inputElementPondCourseVideo, {
-        acceptedFileTypes: ['video/*'],
-        fileRenameFunction: (file) => {
-            return `main${file.extension}`;
-        }
-    });
-    const pondPreviewVideo = FilePond.create(inputElementPondPreviewVideo, {
-        acceptedFileTypes: ['video/*'],
-        fileRenameFunction: (file) => {
-            return `preview${file.extension}`;
-        }
-    });
 
+    function InitPond(element, number) {
+        
+        const index = 1;
+        const inputElementPondCourseVideo = document.querySelectorAll('input[type="file"]#main-information-course-video')[index];
+        const inputElementPondPreviewVideo = document.querySelectorAll('input[type="file"]#main-information-preview-video')[index];
+
+
+        const pondCourseVideo = FilePond.create(inputElementPondCourseVideo, {
+            acceptedFileTypes: ['video/*'],
+            fileRenameFunction: (file) => {
+                console.log("Change name " + `${number}${file.extension}`);
+                return `${number}${file.extension}`;
+            }
+        });
+
+        const pondPreviewVideo = FilePond.create(inputElementPondPreviewVideo, {
+            acceptedFileTypes: ['video/*'],
+            fileRenameFunction: (file) => {
+                console.log("Change name " + `${number}${file.extension}`);
+                return `${number}${file.extension}`;
+            }
+        });
+        
+        return {
+            element: element,
+            courseVideo: pondCourseVideo,
+            previewVideo: pondPreviewVideo
+        }
+    }
     // Initialize Quill editor
     var toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'], // toggled buttons
@@ -135,9 +233,182 @@
 </script>
 
 <script>
-    function addNewCourseSubmit() {
-        jQuery('#add-new-course').submit();
+    var numOfSection = 0;
+    var mainContent = jQuery("#main-information-content");
+    var courseSections = new Map();
+    var pondMainVideo = new Map();
+    var pondPreviewVideo = new Map();
+    var pondImageCover = null;
+    var numOfTaskDone = 0;
+    var infoCourse = null;
+    function DisplayError(message) {
+        swal(message, {
+            icon: "error",
+            buttons: "OK",
+        });
     }
+    function CheckValidInput(cName,shortDesc,desc,price,lectureName) {
+        if (cName.length === 0) {
+            DisplayError("Course name is empty!");
+            return false;
+        }
+        if (shortDesc.length === 0) {
+            DisplayError("Short description is empty!");
+            return false;
+        }
+        if (desc.length === 0) {
+            DisplayError("Description is empty!");
+            return false;
+        }
+        if (price.length === 0) {
+            DisplayError("Price is empty!");
+            return false;
+        }
+        for (var i = 0; i < lectureName.length; i++) {
+            if (lectureName[i].length === 0) {
+                DisplayError(`Lecture name ${i + 1} is empty`);
+                return false;
+            }
+        }
+        if (!pondImageCover) {
+            DisplayError("Course image is empty!");
+            return false;
+        }
+        return true;
+    }
+    function AddNewCourseSubmit() {
+        const courseName = jQuery('#main-information-name').val();
+        const field = jQuery('#main-information-field').val();
+        const subField = jQuery('#main-information-subfield').val();
+        const shortDescription = jQuery('#main-information-sdesc').val();
+        const description = jQuery('#editor').children(".ql-editor")[0].innerHTML;
+        const price = jQuery('#main-information-fee').val();
+        const status = jQuery('#main-information-status').val();
+        const lectureName = [];
+
+        document.querySelectorAll('#main-information-lecture').forEach(function (ele,index) {
+            if (index !== 0) {
+                lectureName.push(ele.value);
+            }
+        })
+        if (CheckValidInput(courseName, shortDescription, description, price, lectureName)) {
+            infoCourse = {
+                courseName: courseName,
+                field: field,
+                subField: subField,
+                shortDescription: shortDescription,
+                description: description,
+                price: price,
+                status: status,
+                lectureName: lectureName
+            }
+            let i = 1;
+            for (var [key, value] of courseSections) {
+                if (pondPreviewVideo.get(key)) {
+                    pondPreviewVideo.get(key).file.name = `${i}.mp4`;
+                }
+                if (!pondMainVideo.get(key)) {
+                    return DisplayError(`Section ${i} miss main video`);
+                }
+                pondMainVideo.get(key).file.name = `${i}.mp4`;
+                i++;
+            }
+            swal({
+                title: "Are you sure?",
+                text: "Please confirm your choice!",
+                icon: "info",
+                buttons: true,
+            }).then((value) => {
+                if (value) {
+                    pondImageCover.callbackSubmit(pondImageCover.fieldName, pondImageCover.file, OnTaskDone);
+                    for (var [key, value] of courseSections) {
+                        let data = pondMainVideo.get(key);
+                        data.callbackSubmit(data.fieldName, data.file, OnTaskDone);
+                        data = pondPreviewVideo.get(key);
+                        if (data) {
+                            data.callbackSubmit(data.fieldName, data.file, OnTaskDone);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    function OnTaskDone() {
+        numOfTaskDone++;
+        if (numOfTaskDone === (pondMainVideo.size + pondPreviewVideo.size + 1)) {
+            return $.post('/lecturer/addCourse', infoCourse, function (err, status) {
+                if (!err) {
+                    swal("Add to watch list successfully!", {
+                        icon: "success",
+                        text: "Add course successfully",
+                        buttons: true,
+                    }).then((value) => {
+                        location.reload();
+                    });
+                } else {
+                    DisplayError(err);
+                }
+            });
+        }
+    }
+
+    function AddNewSection() {
+        numOfSection++;
+
+        var element = jQuery("#main-information-section-list").clone();
+        element.removeAttr("hidden");
+        element.children("#list-btn")[0].textContent = "Section " + (courseSections.size + 1);
+        element.children("#delete-list-btn").val(numOfSection);
+        element.appendTo(mainContent[0]);
+        element.children("#delete-list-btn").on("click", function () {
+            const tmp = parseInt(this.value);
+            courseSections.delete(tmp);
+            DeleteMainnVideo(tmp);
+            DeletePreviewVideo(tmp);
+            let i = 1;
+            for (var [key, value] of courseSections) {
+                value.element.children("#list-btn")[0].textContent = "Section " + i;
+                i++;
+            }
+            this.parentElement.remove();
+        });
+        courseSections.set(numOfSection, InitPond(element, numOfSection));
+
+    }
+    function DeleteMainnVideo(key) {
+        if (pondMainVideo.get(key)) {
+            console.log("Delete main video " + key);
+            pondMainVideo.delete(key);
+        }
+    }
+    function AddMainVideo(key, data) {
+        console.log("Add main video " + key);
+        pondMainVideo.set(key, data);
+    }
+    function DeletePreviewVideo(key) {
+        if (pondPreviewVideo.get(key)) {
+            console.log("Delete preview video " + key);
+            pondPreviewVideo.delete(key);
+        }
+    }
+    function AddPreviewVideo(key, data) {
+        console.log("Add preview video " + key);
+        pondPreviewVideo.set(key, data);
+    }
+
+    function OnFieldChange(sel) {
+        document.querySelectorAll("#main-information-subfield option").forEach((ele, index) => {
+            if (ele.getAttribute("id") === sel.value) {
+                ele.removeAttribute("hidden");
+                ele.parentNode.value = ele.value;
+            }
+            else {
+                ele.setAttribute("hidden", null);
+            }
+        });
+    }
+
 </script>
 
 {{/section}}
@@ -168,7 +439,7 @@
 
                     <a href="/lecturer/lectures" class="list-group-item">
                         My Courses
-                        <span class="badge">2</span>
+                        <span class="badge">{{lecturesSize}}</span>
                     </a>
 
                     <a href="#currentpage" class="list-group-item active">
@@ -191,7 +462,7 @@
                             </div>
                             <div id="heading-information-btn-group" class="col-md-9">
                                 <a id="heading-information-save-password-btn" class="btn btn-success" type="submit"
-                                    form="add-new-course" href="javascript: addNewCourseSubmit();">
+                                    form="add-new-course" href="javascript: AddNewCourseSubmit();">
                                     Add
                                 </a>
                             </div>
@@ -201,11 +472,13 @@
                 </div>
 
                 <div id="main-information-container" class="container-fluid">
-                    <form id="add-new-course" method="POST">
+                    <form id="add-new-course" method="POST" action="/lecturer/addCourse" enctype="multipart/form-data">
                         <div class="row">
                             <div id="main-information-input-group" class="input-group form-group">
-                                <label id="main-label" for="main-information-cover-img">Cover image (Image type; 600x400
-                                    above; &leq;10MB)</label>
+                                <label id="main-label" for="main-information-cover-img">
+                                    Cover image (Image type; 600x400
+                                    above; &leq;10MB)
+                                </label>
                                 <input name="coverImage" type="file" id="main-information-cover-img">
                             </div>
                         </div>
@@ -213,7 +486,7 @@
                         <div class="row">
                             <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-name">Course name</label>
-                                <input name="courseName" id="main-information-name" type="text" class="form-control">
+                                <input name="courseName" id="main-information-name" type="text" class="form-control" maxlength="70">
                             </div>
                         </div>
 
@@ -221,9 +494,29 @@
                             <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-field">Field</label>
                                 <div id="main-information-field-container" class="container-fluid">
-                                    <select id="main-information-field" name="status" class="form-control">
-                                        <option value="complete">Field 1</option>
-                                        <option value="incomplete">Field 2</option>
+                                    <select id="main-information-field" name="field" class="form-control" onchange="OnFieldChange(this);">
+                                        {{#each listCourseFields}}
+                                        <option value="{{this.name}}">{{this.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div id="main-information-input-group" class="input-group form-group">
+                                <label id="main-label" for="main-information-field">SubField</label>
+                                <div id="main-information-field-container" class="container-fluid">
+                                    <select id="main-information-subfield" name="subField" class="form-control">
+                                        {{#each listCourseFields}}
+                                        {{#each listTheme}}
+                                        {{#if (eq ../name "Business")}}
+                                        <option id="{{../name}}" value="{{name}}">{{name}}</option>
+                                        {{else}}
+                                        <option id="{{../name}}" value="{{name}}" hidden>{{name}}</option>
+                                        {{/if}}
+                                        {{/each}}
+                                        {{/each}}
                                     </select>
                                 </div>
                             </div>
@@ -233,14 +526,14 @@
                             <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-sdesc">Short description</label>
                                 <input name="shortDescription" id="main-information-sdesc" type="text"
-                                    class="form-control">
+                                       class="form-control" maxlength="100">
                             </div>
                         </div>
 
                         <div class="row">
                             <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-desc">Description</label>
-                                <div id="editor"></div>
+                                <div id="editor" name="description"></div>
 
                             </div>
                         </div>
@@ -248,7 +541,7 @@
                         <div class="row">
                             <div id="main-information-input-group" class="input-group form-group">
                                 <label id="main-label" for="main-information-fee">Tuition Fee</label>
-                                <input name="fee" id="main-information-fee" type="text" class="form-control">
+                                <input name="fee" id="main-information-fee" type="text" class="form-control" onkeypress="return /[0-9]/i.test(event.key)" maxlength="10" >
                             </div>
                         </div>
 
@@ -257,7 +550,7 @@
                                 <label id="main-label" for="main-information-content">Syllabus/Content</label>
 
                                 <div id="main-information-content" class="list-group container-fluid">
-                                    <div id="main-information-section-list" class="list-item">
+                                    <div id="main-information-section-list" class="list-item" hidden>
                                         <button type="button" id="delete-list-btn" class="btn btn-danger content-btn">
                                             Delete
                                         </button>
@@ -267,87 +560,51 @@
 
                                         <ul id="mainContent" class="showContent container-fluid">
                                             <li>
-                                                <label id="main-label" for="main-information-lecture">Lecture
-                                                    Name</label>
+                                                <label id="main-label" for="main-information-lecture">
+                                                    Lecture
+                                                    Name
+                                                </label>
                                                 <input name="lecture" id="main-information-lecture" type="text"
-                                                    class="form-control">
+                                                       class="form-control" maxlength="50">
                                             </li>
                                             <li>
-                                                <label id="main-label" for="main-information-lecture-video">Lecture
-                                                    video</label>
+                                                <label id="main-label" for="main-information-lecture-video">
+                                                    Lecture
+                                                    video
+                                                </label>
                                                 <input name="mainVideo" type="file" id="main-information-course-video">
                                             </li>
                                             <li>
-                                                <label id="main-label" for="main-information-lecture-preview">Lecture
-                                                    preview</label>
+                                                <label id="main-label" for="main-information-lecture-preview">
+                                                    Lecture
+                                                    preview
+                                                </label>
                                                 <input name="previewVideo" type="file"
-                                                    id="main-information-preview-video">
+                                                       id="main-information-preview-video">
                                             </li>
 
-                                            {{!-- <div id="delete-content-btn-container" class="container-fluid">
-                                                <button type="button" id="delete-content-btn"
-                                                    class="btn btn-danger content-btn">
-                                                    Delete lecture
-                                                </button>
-                                            </div> --}}
+
+                                            <!--<div id="delete-content-btn-container" class="container-fluid">
+                            <button type="button" id="delete-content-btn"
+                                class="btn btn-danger content-btn">
+                                delete lecture
+                            </button>
+                        </div>--}}-->
 
                                         </ul>
 
-                                        {{!-- <div id="add-list-btn-container" class="container-fluid">
-                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
-                                                Add new lecture
-                                            </button>
-                                        </div> --}}
+                                        <!--<div id="add-list-btn-container" class="container-fluid">
+                        <button type="button" id="add-list-btn" class="btn btn-success content-btn">
+                            Add new lecture
+                        </button>
+                    </div>-->
 
                                     </div>
 
-                                    <div id="main-information-section-list" class="list-item">
-                                        <button type="button" id="delete-list-btn" class="btn btn-danger content-btn">
-                                            Delete
-                                        </button>
-                                        <button type="button" id="list-btn" class="btn btn-primary content-btn">
-                                            Section 2
-                                        </button>
-
-                                        <ul id="mainContent" class="showContent container-fluid">
-                                            <li>
-                                                <label id="main-label" for="main-information-lecture">Lecture
-                                                    Name</label>
-                                                <input name="lecture" id="main-information-lecture" type="text"
-                                                    class="form-control">
-                                            </li>
-                                            <li>
-                                                <label id="main-label" for="main-information-lecture-video">Lecture
-                                                    video</label>
-                                                <input name="mainVideo" type="file" id="main-information-course-video">
-                                            </li>
-                                            <li>
-                                                <label id="main-label" for="main-information-lecture-preview">Lecture
-                                                    preview</label>
-                                                <input name="previewVideo" type="file"
-                                                    id="main-information-preview-video">
-                                            </li>
-
-                                            {{!-- <div id="delete-content-btn-container" class="container-fluid">
-                                                <button type="button" id="delete-content-btn"
-                                                    class="btn btn-danger content-btn">
-                                                    Delete lecture
-                                                </button>
-                                            </div> --}}
-
-                                        </ul>
-
-                                        {{!-- <div id="add-list-btn-container" class="container-fluid">
-                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
-                                                Add new lecture
-                                            </button>
-                                        </div> --}}
-
-                                    </div>
                                 </div>
 
                                 <div id="add-course-btn-container" class="container-fluid">
-                                    <button type="button" id="add-course-btn" class="btn btn-success">
+                                    <button type="button" id="add-course-btn" class="btn btn-success" onclick="AddNewSection()">
                                         Add new section
                                     </button>
                                 </div>

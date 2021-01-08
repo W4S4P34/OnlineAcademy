@@ -9,7 +9,7 @@ module.exports = {
         return true;
     },
     async GetEnrolledCourses(studentId, limit, offset) {
-        const sql = 'select course.*,`fields`.name as fieldName,lecturer.name as lecturerName from enroll join course on enroll.courseId = course.id and enroll.studentId = ? join `fields` on `fields`.id = fieldsId join lecturer on lecturer.id = lecturerId limit ? offset ?';
+        const sql = 'select course.*,`subField`.fieldName as fieldName,lecturer.name as lecturerName from enroll join course on enroll.courseId = course.id and enroll.studentId = ? join `subField` on `subField`.id = subFieldId join lecturer on lecturer.id = lecturerId limit ? offset ?';
         const condition = [studentId, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -67,11 +67,10 @@ module.exports = {
     async RemoveFromWatchList(studentId, courseId) {
         const sql = 'delete from watchList where studentId = ? and courseId = ?';
         const condition = [studentId, parseInt(courseId)];
-        const result = db.load(sql, condition);
-        console.log(result);
+        const result = await db.load(sql, condition);
     },
     async GetWatchList(studentId, limit, offset) {
-        const sql = 'select course.*,`fields`.name as fieldName,lecturer.name as lecturerName from watchList join course on watchList.courseId = course.id and watchList.studentId = ? join `fields` on `fields`.id = fieldsId join lecturer on lecturer.id = lecturerId limit ? offset ?';
+        const sql = 'select course.*,`subField`.fieldName as fieldName,lecturer.name as lecturerName from watchList join course on watchList.courseId = course.id and watchList.studentId = ? join `subField` on `subField`.id = subFieldId join lecturer on lecturer.id = lecturerId limit ? offset ?';
         const condition = [studentId, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)

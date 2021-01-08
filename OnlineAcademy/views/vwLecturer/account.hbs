@@ -85,13 +85,17 @@
                 <div class="panel-heading">My account</div>
 
                 <div class="list-group">
-                    <a href="/lecturer/info" class="list-group-item active">
+                    <a href="#currentPage" class="list-group-item active">
                         Profile
                     </a>
 
                     <a href="/lecturer/lectures" class="list-group-item">
                         My Courses
                         <span class="badge">{{lecturesSize}}</span>
+                    </a>
+
+                    <a href="/lecturer/addCourse" class="list-group-item">
+                        Add New Course
                     </a>
 
                 </div>
@@ -128,25 +132,25 @@
                 <div id="main-information-container" class="container-fluid">
                     <div class="row">
                         <div id="main-information-input-group" class="input-group">
-                            <label for="main-information-name">Name</label>
+                            <label id="main-label" for="main-information-name">Name</label>
                             <input id="main-information-name" type="text" class="form-control" value="{{user.name}}"
                                    onkeypress="return /[a-z\s]/i.test(event.key);" maxlength="50" disabled>
                         </div>
 
                         <div id="main-information-input-group" class="input-group">
-                            <label for="main-information-email">Email</label>
+                            <label id="main-label" for="main-information-email">Email</label>
                             <input id="main-information-email" type="email" class="form-control"
                                    value="{{user.email}}" maxlength="50" disabled>
                         </div>
 
                         <div id="main-information-input-group" class="input-group">
-                            <label for="main-information-phone-number">Phone Number</label>
+                            <label id="main-label" for="main-information-phone-number">Phone Number</label>
                             <input id="main-information-phone-number" type="tel" class="form-control" value="{{user.phoneNumber}}"
                                    onkeypress="return /[0-9\s]/i.test(event.key)" maxlength="16" disabled>
                         </div>
 
                         <div id="main-information-input-group" class="input-group">
-                            <label for="main-information-university">University</label>
+                            <label id="main-label" for="main-information-university">University</label>
                             <input id="main-information-university" type="text" class="form-control" value="{{user.university}}"
                                    maxlength="50" disabled>
                         </div>

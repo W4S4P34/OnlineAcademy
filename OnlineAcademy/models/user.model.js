@@ -7,7 +7,6 @@ module.exports = {
     async GetAll() {
         const sql = "select * from student";
         const [rows, fields] = await db.load(sql);
-        console.log(rows);
     },
 
     async Add(user) {

@@ -1,6 +1,9 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const mkdirp = require('mkdirp');
+
 const { ROLES } = require('../utils/enum');
 const courseModel = require('../models/course.model');
 const lecturerModel = require('../models/lecturer.model');
@@ -26,9 +29,9 @@ router.use(async (req, res, next) => {
     if (res.locals.user.role !== ROLES.LECTURER) {
         return res.redirect('/');
     }
-    res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(req.params.field);
+    res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme();
     res.locals.lecturesSize = await lecturerModel.GetLecturesSize(res.locals.user.username);
-    
+    res.locals.courseSize = await courseModel.CountCourse();
     next();
 })
 
@@ -113,5 +116,59 @@ router.post('/editProfile/communication', async (req, res) => {
 })
 router.get('/editCourse', (req, res) => {
     
+})
+router.get('/addCourse', (req, res) => {
+    res.render('vwLecturer/addcourse');
+})
+router.post('/addCourse', async (req, res) => {
+    //console.log(req.body.courseName);
+    //console.log(req.body.field);
+    //console.log(req.body.subField);
+    //console.log(req.body.shortDescription);
+    //console.log(req.body.description);
+    //console.log(req.body.price);
+    //console.log(req.body.status);
+    //console.log(req.body.lectureName);
+    var today = new Date();
+    var date = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, 0)}-${today.getDate().toString().padStart(2, 0)}`;
+    let err = await lecturerModel.AddCourse(req.body,res.locals.user.username,res.locals.courseSize+1,date);
+    err = await lecturerModel.AddSections(res.locals.courseSize + 1, req.body.lectureName);
+    res.json(err);
+})
+router.post('/upload', (req, res) => {
+
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            const courseId = res.locals.courseSize+1;
+            console.log(courseId);
+            var path = null;
+            if (file.fieldname === "previewVideo") {
+                path = `./resource/public/course/${courseId}/preview`;
+            } else if (file.fieldname === "mainVideo") {
+                path = `./resource/private/course/${courseId}`;
+            } else {
+                path = `./resource/public/course/${courseId}`;
+            }
+            const made = mkdirp.sync(path);
+            console.log(made);
+            cb(null, path);
+        },
+        filename: function (req, file, cb) {
+            if (file.fieldname === "coverImage") {
+                return cb(null, "photo.png");
+            }
+            cb(null, file.originalname);
+            // cb(null, file.fieldname + '-' + Date.now())
+        }
+    });
+
+    const upload = multer({ storage: storage });
+    upload.any()(req, res, function (err) {
+        
+        if (err) {
+            console.log(err);
+        }
+    });
+
 })
 module.exports = router;
