@@ -14,6 +14,7 @@ function CreatePageNumber(nPages,curPage = 1) {
     }
     return list;
 }
+
 router.get('/byField/:field', async (req, res) => {
     res.locals.currentView = '#categories';
     res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(req.params.field);

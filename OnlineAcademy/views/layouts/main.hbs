@@ -57,6 +57,7 @@
                         </a>
 
                         <ul class="dropdown-menu">
+                            {{log listCourseFields}}
                             {{#each listCourseFields}}
                             {{#if this.empty}}
                             <li>
@@ -72,7 +73,7 @@
                                     {{#each this.listTheme}}
                                     <li>
                                         <a class="dropdown-item"
-                                            href='/course/byTheme/{{this.theme}}/?page=1'>{{this.theme}}</a>
+                                            href='/course/byTheme/{{this.name}}/?page=1'>{{this.name}}</a>
                                     </li>
                                     {{/each}}
                                 </ul>
@@ -139,13 +140,13 @@
                                 </a>
                             </li>
                             <li>
-                                <a class="dropdown-item" id="add-course" href="/lecturer/add/course">
+                                <a class="dropdown-item" id="add-course" href="/lecturer/addCourse">
                                     Add new course 
                                 </a>
                             </li>
                             {{/if}}
                             <li>
-                                <form id="signout-form" method="POST">
+                                <form id="signout-form" method="POST" action="/user/logout">
                                     <a class="dropdown-item" id="signout" href="javascript:jQuery('#signout-form').submit()">
                                         Sign out                                   
                                     </a>
