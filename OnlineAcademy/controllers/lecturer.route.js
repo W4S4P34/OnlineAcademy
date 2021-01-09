@@ -114,10 +114,63 @@ router.post('/editProfile/communication', async (req, res) => {
     }
     res.json(err);
 })
-router.get('/editCourse', (req, res) => {
-    
+router.post('/editCourse/details/:courseId',async (req, res) => {
+    console.log(req.params.courseId);
+    var today = new Date();
+    var date = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, 0)}-${today.getDate().toString().padStart(2, 0)}`;
+    const err = await lecturerModel.UpdateDetail(req.body, req.params.courseId, date);
+    res.json(err);
+})
+router.post('/editCourse/section/:courseId', (req, res) => {
+    console.log(req.params.courseId);
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            console.log(file);
+            let path = null;
+            if (file.fieldname === "mainVideo") {
+                path = `./resource/private/course/${req.params.courseId}`;
+            }
+            else {
+                path = `./resource/public/course/${req.params.courseId}/preview`;
+            }
+            cb(null, path);
+        },
+        filename: function (req, file, cb) {
+            cb(null, file.originalname);
+        }
+    });
+
+    const upload = multer({ storage: storage });
+    upload.any()(req, res, async function (err) {
+        if (req.body.sectionId && req.body.lectureName !== undefined) {
+            const err = await lecturerModel.UpdateSection(req.params.courseId, req.body.sectionId, req.body.lectureName);
+            res.json(err);
+        }
+        if (err) {
+            console.log(err);
+        }
+    });
+})
+router.post('/editCourse/image/:courseId', (req, res) => {
+    const storage = multer.diskStorage({
+        destination: function (req, file, cb) {
+            const path = `./resource/public/course/${req.params.courseId}`;
+            cb(null, path);
+        },
+        filename: function (req, file, cb) {
+            cb(null, "photo.png");
+        }
+    });
+
+    const upload = multer({ storage: storage });
+    upload.any()(req, res, function (err) {
+        if (err) {
+            console.log(err);
+        }
+    });
 })
 router.get('/addCourse', (req, res) => {
+    res.locals.currentView = '#user-preferences';
     res.render('vwLecturer/addcourse');
 })
 router.post('/addCourse', async (req, res) => {
@@ -158,7 +211,6 @@ router.post('/upload', (req, res) => {
                 return cb(null, "photo.png");
             }
             cb(null, file.originalname);
-            // cb(null, file.fieldname + '-' + Date.now())
         }
     });
 

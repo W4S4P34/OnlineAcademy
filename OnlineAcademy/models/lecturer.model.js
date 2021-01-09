@@ -106,5 +106,42 @@ module.exports = {
             return e;
         }
         return null;
+    },
+    async UpdateSection(courseId, sectionId, lectureName) {
+        console.log("Update section: " + courseId + " " + sectionId + " " + lectureName);
+        try {
+            const newData = {
+                title: lectureName
+            }
+            const condition = {
+                id: parseInt(sectionId),
+                courseId: parseInt(courseId)
+            }
+            await db.update(newData, condition, 'section');
+        } catch (e) {
+            return e;
+        }
+        return null;
+    },
+    async UpdateDetail(detail,courseId,date) {
+        try {
+            const subFieldId = await this.GetFieldId(detail.field, detail.subField);
+            const newData = {
+                title: detail.courseName,
+                subFieldId: subFieldId,
+                description: detail.description,
+                briefDescription: detail.shortDescription,
+                price: detail.price,
+                status: detail.status,
+                date: date
+            }
+            const condition = {
+                id: courseId
+            }
+            await db.update(newData, condition, 'course');
+        } catch (e) {
+            return e;
+        }
+        return null;
     }
 };

@@ -28,6 +28,7 @@
 <!-- Include the Quill library -->
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
+
 <!-- Turn all file input elements into ponds -->
 <script>
     // Register the plugin with FilePond
@@ -39,35 +40,115 @@
         FilePondPluginFileRename
     );
 
-    // Get a reference to the file input element
-    const inputElementPondCoverImage = document.querySelector('input[type="file"]#main-information-cover-img');
-    const inputElementPondCourseVideo = document.querySelector('input[type="file"]#main-information-course-video');
-    const inputElementPondPreviewVideo = document.querySelector('input[type="file"]#main-information-preview-video');
+    FilePond.setOptions({
+        server: {
+            process: (fieldName, file, metadata, load, error, progress, abort, transfer, options) => {
 
-    // Create the FilePond instance
+                var func = (fieldName, file, callback) => {
+                    console.log("Send Data");
+                    const formData = new FormData();
+                    const request = new XMLHttpRequest();
+                    formData.append(fieldName, file, file.name);
+
+                    const courseId = "{{detailCourse.id}}";
+                    if (fieldName === "coverImage") {
+                        request.open('POST', `/lecturer/editCourse/image/${courseId}`);
+                    }
+                    else {
+                        request.open('POST', `/lecturer/editCourse/section/${courseId}`);
+                    }
+                    
+                    request.upload.onprogress = (e) => {
+                        console.log("On Progress");
+                        progress(e.lengthComputable, e.loaded, e.total);
+                    };
+                    request.upload.onloadend = (e) => {
+                        console.log("On Load End");
+                        callback(null);
+                    };
+
+                    request.onload = function () {
+                        console.log("On load");
+                        if (request.status >= 200 && request.status < 300) {
+                            // the load method accepts either a string (id) or an object
+                            load(request.responseText);
+                        }
+                        else {
+                            error('oh no');
+                        }
+                    };
+                    request.send(formData);
+                    
+                };
+                if (currentUploadPond === null) {
+                    currentUploadPond = [];
+                }
+                currentUploadPond.push({
+                    fieldName: fieldName,
+                    file: file,
+                    callbackSubmit: func
+                });
+
+                return {
+                    abort: () => {
+                        console.log("Cancel");
+                        abort();
+                    }
+                };
+                
+            }
+            
+        }
+    });
+
+
+    // Get a reference to the file input element
+    var pondCourseVideo = new Map();
+    var pondPreviewVideo = new Map();
+    const inputElementPondCoverImage = document.querySelector('input[type="file"]#main-information-cover-img');
     const pondCoverImage = FilePond.create(inputElementPondCoverImage, {
         maxFileSize: '10MB',
         imagePreviewHeight: 500,
         acceptedFileTypes: ['image/*'],
         fileRenameFunction: (file) => {
-            return `cover${file.extension}`;
+            return `photo${file.extension}`;
         },
         imageValidateSizeMinWidth: 600,
         imageValidateSizeMinHeight: 400
     });
-    const pondCourseVideo = FilePond.create(inputElementPondCourseVideo, {
-        acceptedFileTypes: ['video/*'],
-        fileRenameFunction: (file) => {
-            return `main${file.extension}`;
-        }
+
+
+    document.querySelectorAll('input[type="file"]#main-information-course-video').forEach((ele, index) => {
+        InitPondVideo(ele,null,index);
     });
-    const pondPreviewVideo = FilePond.create(inputElementPondPreviewVideo, {
-        acceptedFileTypes: ['video/*'],
-        fileRenameFunction: (file) => {
-            return `preview${file.extension}`;
-        }
+    document.querySelectorAll('input[type="file"]#main-information-preview-video').forEach((ele, index) => {
+        InitPondVideo(null, ele,index);
     });
 
+    // Create the FilePond instance
+
+    function InitPondVideo(inputElementPondCourseVideo, inputElementPondPreviewVideo,index) {
+        if (inputElementPondCourseVideo) {
+
+            const instance = FilePond.create(inputElementPondCourseVideo, {
+                acceptedFileTypes: ['video/*'],
+                fileRenameFunction: (file) => {
+                    return `${index+1}${file.extension}`;
+                }
+            });
+            pondCourseVideo.set(index, instance);
+        }
+        if (inputElementPondPreviewVideo) {
+            const instance = FilePond.create(inputElementPondPreviewVideo, {
+                acceptedFileTypes: ['video/*'],
+                fileRenameFunction: (file) => {
+                    return `${index+1}${file.extension}`;
+                }
+            });
+            pondPreviewVideo.set(index, instance);
+        }
+    }
+    
     // Initialize Quill editor
     var toolbarOptions = [
         ['bold', 'italic', 'underline', 'strike'], // toggled buttons
@@ -217,58 +298,12 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    function AddToWatchList() {
-        const id = "{{detailCourse.id}}";
-        $.post('/student/addToWatchList', {
-            id: id
-        }, function (data, status) {
-            if (data) {
-                swal("Add to watch list successfully!", {
-                    icon: "success",
-                    buttons: false,
-                });
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
-            } else {
-                swal("Something is wrong, please try again!", {
-                    icon: "error",
-                    buttons: false,
-                });
-            }
-        });
-    }
-
-    function BuyNow() {
-        swal({
-            title: "Are you sure?",
-            text: "Please confirm your choice!",
-            icon: "info",
-            buttons: true,
-        }).then((value) => {
-            if (value) {
-                const id = "{{detailCourse.id}}";
-                $.post('/student/buyNow', {
-                    id: id
-                }, function (err, status) {
-                    if (!err) {
-                        swal("Buy successfully!", {
-                            icon: "success",
-                        }).then((value) => {
-                            location.reload();
-                        });
-                    } else {
-                        swal("Something is wrong, please try again!", {
-                            icon: "error",
-                        });
-                    }
-                });
-            }
-
-        });
-
-    }
-
+    var currentEditPlace = null;
+    var currentUploadPond = null;
+    var currentElement = null;
+    var previousElement = null;
+    var numOfTaskDone = 0;
+    var inUploadProgress = false;
     function stopVideo(element) {
 
         var iframe = element.find('iframe')[0];
@@ -285,17 +320,218 @@
     }
 
     function togglePopupVideo(video, activeState) {
-
+        
         video = jQuery(video);
         video.toggleClass("active", activeState);
         if (!activeState) {
             stopVideo(video);
         }
     }
+    function DisplayError(message) {
+        swal({
+            title: "Something is wrong",
+            text: message,
+            icon: "error",
+            button: "Ok",
+        });
+    }
+    function EditImage() {
+        if (currentEditPlace) {
+            return DisplayError("Complete your edit first!");
+        }
+        currentEditPlace = "image";
+        currentUploadPond = null;
+        previousElement = jQuery("#cover-image-container");
+        currentElement = jQuery('#main-information-container[name="image"]');
+        previousElement[0].setAttribute("hidden", null);
+        currentElement.removeAttr("hidden");
+    }
+    function EditDetail() {
+        if (currentEditPlace) {
+            return DisplayError("Complete your edit first!");
+        }
+        currentEditPlace = "detail";
+        currentUploadPond = null;
+        currentElement = jQuery('#main-information-container[name="detail"]');
+        previousElement = jQuery(".container-fluid#details");
+        currentElement.removeAttr("hidden");
+        previousElement[0].setAttribute("hidden", null);
 
-    function countChar(val) {
-        var len = val.value.length;
-        jQuery('#char-number').text(1024 - len);
+    }
+    function EditContent(courseId,element) {
+        if (currentEditPlace) {
+            return DisplayError("Complete your edit first!");
+        }
+        currentEditPlace = "content";
+        currentUploadPond = null;
+        currentElement = jQuery(`#main-information-container.container-fluid[name=${courseId}]`);
+        previousElement = jQuery(`#content-list-item.list-item[name=${courseId}]`);
+        currentElement.removeAttr("hidden");
+        previousElement[0].setAttribute("hidden", null);
+    }
+    function Cancel() {
+        if (inUploadProgress)
+            return DisplayError("Complete upload progress first!");
+        if(currentElement)
+            currentElement[0].setAttribute("hidden", null);
+        if (previousElement)
+            previousElement.removeAttr("hidden");
+        currentEditPlace = null;
+        
+    }
+
+    function Save(id) {
+        if (inUploadProgress) {
+            return DisplayError("Complete upload progress first!");
+        }
+        if (!currentUploadPond) {
+            if (currentEditPlace === "image") {
+                return DisplayError("Image cover is empty!");
+            }
+            if (currentEditPlace === "content") {
+                return DisplayError("Section miss main video");
+            }
+        }
+        
+        if (currentEditPlace === "image") {
+            AjaxRequest(() => {
+                inUploadProgress = true;
+                currentUploadPond[0].callbackSubmit(currentUploadPond[0].fieldName, currentUploadPond[0].file, (error) => {
+                    //Cancel();
+                    OnUploadDone(error);
+                });
+
+            });
+        }
+        else if (currentEditPlace === "content") {
+            const lectureName = document.querySelectorAll('#main-information-lecture')[id-1].value;
+            if (lectureName.length === 0) {
+                return DisplayError("Lecture name is empty");
+            }
+            AjaxRequest(() => {
+                inUploadProgress = true;
+                for (var i = 0; i < currentUploadPond.length; i++) {
+                    currentUploadPond[i].callbackSubmit(currentUploadPond[i].fieldName, currentUploadPond[i].file, (error) => {
+                        numOfTaskDone++;
+                        if (numOfTaskDone === currentUploadPond.length) {
+                            const courseId = "{{detailCourse.id}}"
+                            $.post(`/lecturer/editCourse/section/${courseId}`, { sectionId: id, lectureName: lectureName }, function (err, status) {
+                                //Cancel();
+                                OnUploadDone(err);
+                            })
+                        }
+
+                    });
+                }
+            });
+        }
+        else {
+            const courseName = jQuery('#main-information-name').val();
+            const field = jQuery('#main-information-field').val();
+            const subField = jQuery('#main-information-subfield').val();
+            const shortDescription = jQuery('#main-information-sdesc').val();
+            const description = jQuery('#editor').children(".ql-editor")[0].innerHTML;
+            const price = jQuery('#main-information-fee').val();
+            const status = jQuery('#main-information-status').val();
+            if (!CheckValidInput(courseName, shortDescription, description, price))
+                return;
+            AjaxRequest(() => {
+                inUploadProgress = true;
+                const courseId = "{{detailCourse.id}}";
+                $.post(`/lecturer/editCourse/details/${courseId}`, {
+                    courseName: courseName,
+                    field: field,
+                    subField: subField,
+                    shortDescription: shortDescription,
+                    description: description,
+                    price: price,
+                    status: status
+                }, function (err, status) {
+                        //Cancel();
+                        OnUploadDone(err);
+                })
+            });
+        }
+    }
+    function AjaxRequest(callback) {
+
+        //swal({
+        //    title: "Are you sure?",
+        //    text: "Please confirm your choice!",
+        //    type: "warning",
+        //    showCancelButton: true,
+        //    confirmButtonColor: "#DD6B55",
+        //    confirmButtonText: "Yes",
+        //    closeOnConfirm: false
+        //}).then((isConfirm) => {
+        //    if(isConfirm)
+        //        callback();
+        //});
+        swal({
+            title: "Are you sure?",
+            text: "Please confirm your choice!",
+            icon: "warning",
+            confirmButtonClass: "btn-danger",
+            buttons: true,
+            confirm: {
+                text: "OK",
+                value: true,
+                visible: true,
+                className: "",
+                closeModal: false
+            }
+        }).then((value) => {
+            if(value)
+                callback();
+        })
+    }
+    function CheckValidInput(cName, shortDesc, desc, price) {
+        if (cName.length === 0) {
+            DisplayError("Course name is empty!");
+            return false;
+        }
+        if (shortDesc.length === 0) {
+            DisplayError("Short description is empty!");
+            return false;
+        }
+        if (desc.length === 0) {
+            DisplayError("Description is empty!");
+            return false;
+        }
+        if (price.length === 0) {
+            DisplayError("Price is empty!");
+            return false;
+        }
+        return true;
+    }
+
+    function OnUploadDone(err) {
+        inUploadProgress = false;
+        currentUploadPond = null;
+        if (err) {
+            DisplayError(err);
+            //return setTimeout(() => { location.reload() }, 1000);
+        }
+        swal({
+            title: "Success!",
+            text: "Edit course successfully!",
+            icon: "success",
+        }).then(() => {
+            location.reload();
+        });
+    }
+
+
+    function OnFieldChange(sel) {
+        document.querySelectorAll("#main-information-subfield option").forEach((ele, index) => {
+            if (ele.getAttribute("id") === sel.value) {
+                ele.removeAttribute("hidden");
+                ele.parentNode.value = ele.value;
+            }
+            else {
+                ele.setAttribute("hidden", null);
+            }
+        });
     }
 </script>
 
@@ -342,11 +578,9 @@
                     <!-- Cover image -->
                     <div id="cover-image-detail" class="row">
                         <div id="cover-image-container" class="container">
-                            {{!-- <img class="img-responsive center-block" src="/resource/public/lecturer/1.png"
-                                alt="Cover Image"> --}}
                             <img class="img-responsive center-block" src="{{detailCourse.imagePath}}" alt="Cover Image">
 
-                            <a id="cover-image-edit-btn" href="#" class="btn btn-primary" role="button">
+                            <a id="cover-image-edit-btn" href="javascript:EditImage()" class="btn btn-primary" role="button">
                                 Edit
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             </a>
@@ -355,7 +589,7 @@
 
                         <!-- EDIT HERE YOU BLIND PEOPLE -->
 
-                        <div id="main-information-container" class="container-fluid">
+                        <div id="main-information-container" name="image" class="container-fluid" hidden>
                             <form id="edit-cover-image" method="POST">
                                 <div id="main-information-input-group" class="input-group form-group">
                                     <label id="main-label" for="main-information-cover-img">Cover image (Image type;
@@ -366,11 +600,11 @@
                             </form>
 
                             <div id="edit-btn-container" class="row">
-                                <button id="cancel-change-btn" class="btn btn-primary">
+                                <button id="cancel-change-btn" class="btn btn-primary" onclick="Cancel()    ">
                                     Cancel
                                 </button>
 
-                                <button id="save-change-btn" class="btn btn-success">
+                                <button id="save-change-btn" class="btn btn-success" onclick="Save()">
                                     Save
                                 </button>
                             </div>
@@ -385,7 +619,7 @@
                                 Details
                             </h1>
 
-                            <a id="details-edit-btn" href="#" class="btn btn-primary" role="button">
+                            <a id="details-edit-btn" href="javascript:EditDetail()" class="btn btn-primary" role="button">
                                 Edit
                                 <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                             </a>
@@ -435,7 +669,7 @@
 
                         <!-- EDIT HERE YOU BLIND PEOPLE -->
 
-                        <div id="main-information-container" class="container-fluid">
+                        <div id="main-information-container" name="detail" class="container-fluid" hidden>
                             <h1>
                                 Details
                             </h1>
@@ -445,16 +679,34 @@
                                 <div id="main-information-input-group" class="input-group form-group">
                                     <label id="main-label" for="main-information-name">Course name</label>
                                     <input name="courseName" id="main-information-name" type="text"
-                                        class="form-control">
+                                           class="form-control" maxlength="70">
                                 </div>
 
 
                                 <div id="main-information-input-group" class="input-group form-group">
                                     <label id="main-label" for="main-information-field">Field</label>
                                     <div id="main-information-field-container" class="container-fluid">
-                                        <select id="main-information-field" name="status" class="form-control">
-                                            <option value="complete">Field 1</option>
-                                            <option value="incomplete">Field 2</option>
+                                        <select id="main-information-field" name="field" class="form-control" onchange="OnFieldChange(this);">
+                                            {{#each listCourseFields}}
+                                            <option value="{{this.name}}">{{this.name}}</option>
+                                            {{/each}}
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="main-information-input-group" class="input-group form-group">
+                                    <label id="main-label" for="main-information-field">SubField</label>
+                                    <div id="main-information-field-container" class="container-fluid">
+                                        <select id="main-information-subfield" name="subField" class="form-control">
+                                            {{#each listCourseFields}}
+                                            {{#each listTheme}}
+                                            {{#if (eq ../name "Business")}}
+                                            <option id="{{../name}}" value="{{name}}">{{name}}</option>
+                                            {{else}}
+                                            <option id="{{../name}}" value="{{name}}" hidden>{{name}}</option>
+                                            {{/if}}
+                                            {{/each}}
+                                            {{/each}}
                                         </select>
                                     </div>
                                 </div>
@@ -463,7 +715,7 @@
                                 <div id="main-information-input-group" class="input-group form-group">
                                     <label id="main-label" for="main-information-sdesc">Short description</label>
                                     <input name="shortDescription" id="main-information-sdesc" type="text"
-                                        class="form-control">
+                                           class="form-control" maxlength="100">
                                 </div>
 
                                 <div id="main-information-input-group" class="input-group form-group">
@@ -474,7 +726,7 @@
 
                                 <div id="main-information-input-group" class="input-group form-group">
                                     <label id="main-label" for="main-information-fee">Tuition Fee</label>
-                                    <input name="fee" id="main-information-fee" type="text" class="form-control">
+                                    <input name="fee" id="main-information-fee" type="text" class="form-control" onkeypress="return /[0-9]/i.test(event.key)" maxlength="10">
                                 </div>
 
                                 <div id="main-information-input-group" class="input-group form-group">
@@ -491,11 +743,11 @@
                             </form>
 
                             <div id="edit-btn-container" class="row">
-                                <button id="cancel-change-btn" class="btn btn-primary">
+                                <button id="cancel-change-btn" class="btn btn-primary" onclick="Cancel()">
                                     Cancel
                                 </button>
 
-                                <button id="save-change-btn" class="btn btn-success">
+                                <button id="save-change-btn" class="btn btn-success" onclick="Save()">
                                     Save
                                 </button>
                             </div>
@@ -520,7 +772,7 @@
 
                             <div class="list-group">
                                 {{#each listSections}}
-                                <div id="content-list-item" class="list-item">
+                                <div id="content-list-item" class="list-item" name="{{this.id}}">
                                     <button type="button" id="list-btn" class="btn btn-primary content-btn">
                                         <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
                                         Section {{this.id}}
@@ -556,16 +808,11 @@
 
                                         </li>
                                         <li>
-                                            {{#if ../isEnrolled}}
                                             <div id="lecture-duration{{this.id}}" class="pull-right"></div>
                                             <a href="#currentvideo"
                                                 onclick="togglePopupVideo(lecture{{this.id}}, true);">
                                                 {{this.title}}
                                             </a>
-                                            {{else}}
-                                            <div id="lecture-duration{{this.id}}" class="pull-right"></div>
-                                            {{this.title}}
-                                            {{/if}}
 
                                             <div class="popupVideo" id="lecture{{this.id}}">
                                                 <video
@@ -592,7 +839,7 @@
                                         </li>
                                     </ul>
 
-                                    <a id="content-edit-btn" href="#" class="btn btn-primary" role="button">
+                                    <a id="content-edit-btn" onclick="EditContent({{this.id}},this)" class="btn btn-primary" role="button">
                                         Edit
                                         <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                     </a>
@@ -600,14 +847,14 @@
 
                                 <!-- EDIT HERE YOU BLIND PEOPLE -->
 
-                                <div id="main-information-container" class="container-fluid">
+                                <div id="main-information-container" class="container-fluid" name="{{this.id}}" hidden>
                                     <div id="main-information-input-group" class="input-group form-group">
                                         <div id="main-information-content" class="list-group container-fluid">
                                             <form id="edit-content" method="POST">
                                                 <div id="main-information-section-list" class="list-item">
                                                     <button type="button" id="list-btn"
                                                         class="btn btn-primary content-btn">
-                                                        Section ?
+                                                        Section {{this.id}}
                                                     </button>
 
                                                     <ul id="mainContent" class="container-fluid">
@@ -616,7 +863,7 @@
                                                                 for="main-information-lecture">Lecture
                                                                 Name</label>
                                                             <input name="lecture" id="main-information-lecture"
-                                                                type="text" class="form-control">
+                                                                type="text" class="form-control" value="{{this.title}}">
                                                         </li>
                                                         <li>
                                                             <label id="main-label"
@@ -654,11 +901,11 @@
                                     </div>
 
                                     <div id="edit-btn-container" class="row">
-                                        <button id="cancel-change-btn" class="btn btn-primary">
+                                        <button id="cancel-change-btn" class="btn btn-primary" onclick="Cancel({{this.id}})">
                                             Cancel
                                         </button>
 
-                                        <button id="save-change-btn" class="btn btn-success">
+                                        <button id="save-change-btn" class="btn btn-success" onclick="Save({{this.id}})">
                                             Save
                                         </button>
                                     </div>
