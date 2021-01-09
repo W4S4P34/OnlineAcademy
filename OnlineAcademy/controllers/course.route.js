@@ -68,10 +68,9 @@ router.get('/detail/:id', async (req, res) => {
         res.locals.isInCart = studentModel.IsInCart(req.session.cart, req.params.id) || await studentModel.IsEnrolled(res.locals.user.username, req.params.id);
         res.locals.isInWatchList = await studentModel.IsInWatchList(res.locals.user.username, req.params.id);
         res.locals.isEnrolled = await IsEnrolled(res.locals.user.username, req.params.id);
-    }
-    if (res.locals.user.role === ROLES.LECTURER && await lecturerModel.IsMyLecture(res.locals.user.username, req.params.id)) {
-        console.log("Edit course");
-        return res.render('vwLecturer/editcourse');
+        if (res.locals.user.role === ROLES.LECTURER && await lecturerModel.IsMyLecture(res.locals.user.username, req.params.id)) {
+            return res.render('vwLecturer/editcourse');
+        }
     }
     return res.render('vwCategories/details');
 })
