@@ -13,6 +13,7 @@
         location.replace(url);
 
     }
+
     function PreviousPage() {
         const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
         if (pageActive + 1 <= 1)
@@ -36,12 +37,14 @@
     });
 
     function Remove(button) {
-        
+
         const id = jQuery(button).data("id");
         const name = button.getAttribute("name");
         const container = button;
         Warning(`Ban student ${name}!\nOnce confirm you will not be able to recover this action!`, () => {
-            $.post('/admin/ban/student', { id: id }, function (err, status) {
+            $.post('/admin/ban/student', {
+                id: id
+            }, function (err, status) {
                 if (err) {
                     return DisplayError(err);
                 }
@@ -55,10 +58,13 @@
             })
         });
     }
+
     function Unlock(button) {
         const id = jQuery(button).data("id");
         const container = button;
-        $.post('/admin/unlock/student', { id: id }, function (err, status) {
+        $.post('/admin/unlock/student', {
+            id: id
+        }, function (err, status) {
             if (err) {
                 return DisplayError(err);
             }
@@ -70,8 +76,9 @@
                 jQuery(container).css("display", "none");
             });
         })
-        
+
     }
+
     function Warning(message, callback) {
         swal({
             title: "Are you sure?",
@@ -85,6 +92,7 @@
             }
         });
     }
+
     function DisplayError(message) {
         swal({
             title: "Something is wrong",
@@ -93,7 +101,6 @@
             button: "Ok",
         });
     }
-
 </script>
 {{/section}}
 
@@ -161,17 +168,23 @@
 
                                     <div id="main-category-btn-group" class="btn-group">
                                         {{#if this.block}}
-                                        <a id="remove-btn" onclick="Unlock(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}">
-                                            Unlock
+                                        <a id="unlock-btn" onclick="Unlock(this)" class="btn btn-success content-btn"
+                                            role="button" name="{{this.name}}" data-id="{{this.id}}">
+                                            Remove Ban
                                         </a>
-                                        <a id="remove-btn" onclick="Remove(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}" style="display:none">
+                                        <a id="remove-btn" onclick="Remove(this)" class="btn btn-danger content-btn"
+                                            role="button" name="{{this.name}}" data-id="{{this.id}}"
+                                            style="display:none">
                                             Ban
                                         </a>
                                         {{else}}
-                                        <a id="remove-btn" onclick="Unlock(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}" style="display:none">
-                                            Unlock
+                                        <a id="unlock-btn" onclick="Unlock(this)" class="btn btn-success content-btn"
+                                            role="button" name="{{this.name}}" data-id="{{this.id}}"
+                                            style="display:none">
+                                            Remove Ban
                                         </a>
-                                        <a id="remove-btn" onclick="Remove(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}">
+                                        <a id="remove-btn" onclick="Remove(this)" class="btn btn-danger content-btn"
+                                            role="button" name="{{this.name}}" data-id="{{this.id}}">
                                             Ban
                                         </a>
                                         {{/if}}
@@ -184,7 +197,8 @@
                             {{#with pageNumbers}}
                             <div id="user-pagination">
                                 <ul class="pagination">
-                                    <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
+                                    <li id="previousPage"><a href="javascript:PreviousPage();"
+                                            class="disable">&laquo;</a></li>
                                     {{#each this}}
                                     {{#if this.isActive}}
                                     <li class="active">
