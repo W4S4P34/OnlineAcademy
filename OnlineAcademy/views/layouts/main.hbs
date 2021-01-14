@@ -28,7 +28,7 @@
 </head>
 
 <body>
-    <!-- Fixe"d navbar -->
+    <!-- Fixed navbar -->
     <div id="navi-bar" class="navbar navbar-inverse">
         <div class="container">
             <div class="navbar-header">
@@ -51,7 +51,7 @@
                     </li>
 
                     <li class="dropdown" id="categories">
-                        <a class="dropdown-toggle noselect disabled" role="button" data-toggle="dropdown">
+                        <a class="dropdown-toggle disabled" href="#" role="button" data-toggle="dropdown">
                             Categories
                             <b class="caret"></b>
                         </a>
@@ -112,18 +112,18 @@
                         </a>
 
                         <ul class="dropdown-menu">
-                            
+
 
                             {{#if (eq user.role 'student')}}
                             {{!-- Student --}}
                             <li>
                                 <a class="dropdown-item" id="profile" href="/student/info">
-                                    Profile 
+                                    Profile
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" id="favorite" href="/student/myWatchList">
-                                    Favorite 
+                                    Favorite
                                 </a>
                             </li>
                             {{/if}}
@@ -131,17 +131,17 @@
                             {{!-- Lecturer --}}
                             <li>
                                 <a class="dropdown-item" id="profile" href="/lecturer/info">
-                                    Profile 
+                                    Profile
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" id="lectures" href="/lecturer/lectures">
-                                    Lectures 
+                                    Lectures
                                 </a>
                             </li>
                             <li>
                                 <a class="dropdown-item" id="add-course" href="/lecturer/addCourse">
-                                    Add new course 
+                                    Add new course
                                 </a>
                             </li>
                             {{/if}}
@@ -154,8 +154,9 @@
                             {{/if}}
                             <li>
                                 <form id="signout-form" method="POST" action="/user/logout">
-                                    <a class="dropdown-item" id="signout" href="javascript:jQuery('#signout-form').submit()">
-                                        Sign out                                   
+                                    <a class="dropdown-item" id="signout"
+                                        href="javascript:jQuery('#signout-form').submit()">
+                                        Sign out
                                     </a>
                                 </form>
                             </li>
@@ -202,7 +203,7 @@
     <script src="/views/assets/js/custom.js"></script>
 
     <script>
-        {{{ _sections.camera_wrap }}}
+        {{{_sections.camera_wrap}}}
 
         jQuery(() => {
             const currentView = '{{currentView}}';

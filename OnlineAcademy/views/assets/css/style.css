@@ -1909,7 +1909,7 @@ nav#filter a.current {
 	justify-content: space-between;
 }
 
-#heading-information-container-row-admin{
+#heading-information-container-row-admin {
 	display: flex;
 	align-items: center;
 }
@@ -2122,7 +2122,7 @@ a#heading-information-add-lecture-btn:hover {
 	justify-content: center;
 }
 
-#course-info-detail #content #add-course-btn-container .btn-success#add-course-btn  {
+#course-info-detail #content #add-course-btn-container .btn-success#add-course-btn {
 	background-color: forestgreen;
 }
 
@@ -2161,7 +2161,7 @@ a#heading-information-add-lecture-btn:hover {
 #main-information-container #main-information-input-group #main-information-field:focus {
 	border-color: #66afe9;
 	outline: 0;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
 }
 
 #main-information-container #main-information-input-group #main-information-status option,
@@ -2198,8 +2198,7 @@ a#heading-information-add-lecture-btn:hover {
 	outline-offset: -2px;
 }
 
-#content-edit-btn:hover
-#content-edit-btn:focus {
+#content-edit-btn:hover #content-edit-btn:focus {
 	color: #fff;
 	background-color: darkgreen;
 }
@@ -2248,7 +2247,7 @@ a#heading-information-add-lecture-btn:hover {
 }
 
 #course-info-detail #content #edit-btn-container #cancel-change-btn:hover {
-	background-color:  #2c5fa7;
+	background-color: #2c5fa7;
 	color: #c0c0c0
 }
 
@@ -2274,13 +2273,13 @@ a#heading-information-add-lecture-btn:hover {
 	margin-bottom: 0px;
 }
 
-#content #main-information-container #main-information-content #main-information-section-list li{
+#content #main-information-container #main-information-content #main-information-section-list li {
 	display: inherit;
-    list-style: none;
+	list-style: none;
 }
 
 #content #main-information-container #main-information-content #main-information-section-list li #main-label {
-    font-family: 'Oswald', sans-serif;
+	font-family: 'Oswald', sans-serif;
 	font-size: 15px;
 }
 
@@ -2295,7 +2294,7 @@ a#heading-information-add-lecture-btn:hover {
 	border-radius: 10px;
 	border-color: #66afe9;
 	outline: 0;
-	box-shadow: inset 0 1px 1px rgba(0,0,0,.075), 0 0 8px rgba(102,175,233,.6);
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px rgba(102, 175, 233, .6);
 
 	padding-bottom: 15px;
 	margin: 15px 0px;
@@ -2360,4 +2359,43 @@ a#heading-information-add-lecture-btn:hover {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+/* **************************************** */
+/* Search */
+
+#search-feature {
+	background: #F7F7F7;
+	background-clip: padding-box;
+	border: 0;
+	border-radius: 18px;
+	overflow: hidden;
+
+	border: 1px;
+	box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+
+	padding: 1px 1px;
+}
+
+#search-feature #search-input {
+	border-top-left-radius: 18px;
+	border-bottom-left-radius: 18px;
+
+	border: none;
+	border-width: 0;
+	box-shadow: none;
+}
+
+#search-feature #search-button {
+	border-radius: 100%;
+
+	padding: 10px 10px;
+	margin-left: 1px;
+}
+
+/* **************************************** */
+/* Home carousel */
+#new-courses-home-carousel .carousel-control {
+	padding-top: 22%;
+	width: 5%;
 }
