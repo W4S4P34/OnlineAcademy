@@ -1429,25 +1429,30 @@ nav#filter a.current {
 }
 
 #cat-transaction-btn,
-#cat-remove-btn {
+#cat-transaction-admin-btn {
 	display: flex;
-	justify-content: center;
-	align-items: center;
+	justify-content: flex-start;
+	flex-direction: column;
 }
 
 #cat-transaction-btn a.btn,
-#cat-remove-btn a.btn {
+#cat-transaction-admin-btn a.btn {
 	width: 100%;
+
+	margin: 5px 0px 5px 0px;
 }
 
-#cat-remove-btn a.btn {
-	background-color: firebrick;
+#cat-courses #cat-transaction-btn.container {
+	height: 50px;
+
+	margin: 0px;
 }
 
-#cat-remove-btn a.btn:hover {
-	background-color: darkred;
-}
+#cat-courses #cat-transaction-admin-btn.container {
+	height: 100px;
 
+	margin: 0px;
+}
 
 #cat-course-caption {
 	margin-top: 30px;
@@ -1971,13 +1976,25 @@ a#heading-information-add-lecture-btn:hover {
 }
 
 /* **************************************** */
-/* Student */
-#cat-transaction-btn #user-remove-btn,
-#cat-transaction-btn #user-details-btn {
-	margin-left: 5px;
-	margin-right: 5px;
+/* Admin */
+#cat-transaction-admin-btn #remove-ban-button {
+	background-color: forestgreen;
 }
 
+#cat-transaction-admin-btn #remove-ban-button:hover {
+	background-color: darkgreen;
+}
+
+#cat-transaction-admin-btn #ban-button {
+	background-color: firebrick;
+}
+
+#cat-transaction-admin-btn #ban-button:hover {
+	background-color: darkred;
+}
+
+/* **************************************** */
+/* Student */
 #cat-transaction-btn #user-remove-btn {
 	background-color: firebrick;
 }
@@ -1988,16 +2005,9 @@ a#heading-information-add-lecture-btn:hover {
 
 /* **************************************** */
 /* Lecturer */
-#cat-courses #cat-transaction-btn.container {
-	height: 50px;
-}
-
 #cat-transaction-btn #lecturer-remove-btn,
 #cat-transaction-btn #lecturer-edit-btn,
 #cat-transaction-btn #lecturer-details-btn {
-	margin-left: 5px;
-	margin-right: 5px;
-
 	padding: 10px 20px;
 }
 
@@ -2336,6 +2346,16 @@ a#heading-information-add-lecture-btn:hover {
 	background-color: darkred;
 }
 
+#category #main-category #main-category-container #main-category-btn-group a.btn#unlock-btn,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn#unlock-btn {
+	background-color: forestgreen;
+}
+
+#category #main-category #main-category-container #main-category-btn-group a.btn#unlock-btn:hover,
+#category #sub-category #sub-category-container #sub-category-btn-group a.btn#unlock-btn:hover {
+	background-color: darkgreen;
+}
+
 #category #main-category #main-category-container #main-category-btn-group a.btn#save-btn,
 #category #sub-category #sub-category-container #sub-category-btn-group a.btn#save-btn {
 	background-color: forestgreen;
@@ -2359,6 +2379,19 @@ a#heading-information-add-lecture-btn:hover {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+#add-new-lecturer-btn-container {
+	display: flex;
+	justify-content: center;
+}
+
+#add-new-lecturer-btn-container #add-new-lecturer-btn {
+	background-color: forestgreen;
+}
+
+#add-new-lecturer-btn-container #add-new-lecturer-btn:hover {
+	background-color: darkgreen;
 }
 
 /* **************************************** */
@@ -2395,7 +2428,18 @@ a#heading-information-add-lecture-btn:hover {
 
 /* **************************************** */
 /* Home carousel */
+#most-courses-home-carousel .carousel-control,
 #new-courses-home-carousel .carousel-control {
-	padding-top: 22%;
+	padding-top: 20%;
 	width: 5%;
+}
+
+#most-courses-home-carousel #course,
+#new-courses-home-carousel #course {
+	border-radius: 15px;
+	border: 3px dashed #3d84e6;
+
+	margin: 0px 15px;
+	width: 30%;
+	transform: translate(10px, 0px);
 }

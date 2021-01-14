@@ -204,11 +204,31 @@
                                         </p>
                                     </div>
 
-                                    <p id="cat-transaction-btn">
-                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary" role="button">
+                                    {{#if (eq ../user.role 'admin')}}
+                                    <div id="cat-transaction-admin-btn" class="container">
+                                        <a id="details-button" href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                            role="button">
                                             Details
                                         </a>
-                                    </p>
+                                        <a id="remove-ban-button" href="#" class="btn btn-success" role="button"
+                                            style="display: none;">
+                                            Remove Ban
+                                        </a>
+                                        <a id="ban-button" href="#" class="btn btn-danger" role="button">
+                                            Ban
+                                        </a>
+
+                                    </div>
+                                    {{else}}
+                                    <div id="cat-transaction-btn" class="container">
+                                        <a id="details-button" href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                            role="button">
+                                            Details
+                                        </a>
+
+                                    </div>
+                                    {{/if}}
+
                                 </div>
 
                             </div>
