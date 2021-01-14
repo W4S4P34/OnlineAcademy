@@ -83,6 +83,50 @@ module.exports = {
         const [rows, fields] = await db.load(sql, condition);
         return rows.length;
     },
+    async GetMarkComplete(studentId, courseId) {
+        const sql = 'select * from markComplete where studentId = ? and courseId = ?';
+        const condition = [studentId, parseInt(courseId)];
+        const [rows, fields] = await db.load(sql, condition);
+        if (rows.length === 0)
+            return null;
+        return rows;
+    },
+    async IsMarkAlready(studentId, courseId, sectionId) {
+        const sql = 'select * from markComplete where studentId = ? and courseId = ? and sectionId = ?';
+        const condition = [studentId, courseId, sectionId];
+        const [rows, fields] = await db.load(sql, condition);
+        return rows.length !== 0;
+    },
+    async MaskComplete(studentId, courseId, sectionId, isComplete) {
+        isComplete = isComplete === "true";
+        courseId = parseInt(courseId);
+        sectionId = parseInt(sectionId);
+        console.log(courseId);
+        console.log(sectionId);
+        const isMask = await this.IsMarkAlready(studentId, courseId, sectionId);
+        try {
+            if (isMask) {
+                const sql = "update markComplete set isComplete = ? where studentId = ? and courseId = ? and sectionId = ?"
+                const condition = [isComplete,studentId,courseId,sectionId];
+                
+                const [rows,field] = await db.load(sql,condition);
+                console.log(rows);
+            } else {
+                const newData = {
+                    studentId: studentId,
+                    courseId: courseId,
+                    sectionId: sectionId,
+                    isComplete: isComplete
+                }
+                console.log("bug");
+                await db.add(newData, 'markComplete');
+                console.log("bug");
+            }
+        } catch (e) {
+            return e;
+        }
+        return null;
+    },
     async GetInfo(studentId) {
         const sql = 'select * from student where id = ?';
         const condition = [studentId];
@@ -123,6 +167,20 @@ module.exports = {
             }
             await db.update(newData, condition, 'student');
             
+        } catch (e) {
+            return e;
+        }
+        return null;
+    },
+    async SendFeedback(studentId, courseId, feedback, date) {
+        try {
+            const newData = {
+                studentId: studentId,
+                courseId: courseId,
+                comment: feedback,
+                date: date
+            }
+            await db.add(newData, 'feedback');
         } catch (e) {
             return e;
         }

@@ -145,13 +145,13 @@
                                 </a>
                             </li>
                             {{/if}}
-
+                            {{#if (eq user.role 'admin')}}
                             <li>
-                                <a class="dropdown-item" id="management" href="/lecturer/add/course">
+                                <a class="dropdown-item" id="management" href="/admin/categoriesManagement">
                                     Management Tools 
                                 </a>
                             </li>
-
+                            {{/if}}
                             <li>
                                 <form id="signout-form" method="POST" action="/user/logout">
                                     <a class="dropdown-item" id="signout" href="javascript:jQuery('#signout-form').submit()">

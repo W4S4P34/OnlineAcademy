@@ -167,4 +167,27 @@ router.post('/editProfile/communication', async (req, res) => {
     }
     res.json(err);
 })
+router.post('/maskComplete', async (req, res) => {
+    if (req.body.isComplete && req.body.courseId && req.body.sectionId === undefined) {
+        return res.json("Invalid input!");
+    }
+    const err = await studentModel.MaskComplete(res.locals.user.username, req.body.courseId, req.body.sectionId, req.body.isComplete);
+    return res.json(err);
+})
+router.post('/like', async (req, res) => {
+    if (req.body.courseId === undefined) {
+        return res.json("Invalid input!");
+    }
+    const err = await courseModel.UpdateNumberOfLike(req.body.courseId);
+    return res.json(err);
+})
+router.post('/feedback', async (req, res) => {
+    if (req.body.feedback && req.body.courseId === undefined) {
+        return res.json("Invalid input!");
+    }
+    var today = new Date();
+    var date = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, 0)}-${today.getDate().toString().padStart(2, 0)} ${today.getHours()}:${today.getMinutes()}`;
+    const err = await studentModel.SendFeedback(res.locals.user.username, req.body.courseId, req.body.feedback, date);
+    res.json(err);
+})
 module.exports = router;

@@ -2,12 +2,9 @@ const express = require('express');
 const courseModel = require('../models/course.model');
 const studentModel = require('../models/student.model');
 const lecturerModel = require('../models/lecturer.model');
-const {
-    IsEnrolled
-} = require('../models/student.model');
-const {
-    ROLES
-} = require('../utils/enum');
+const { ROLES } = require('../utils/enum');
+
+
 const router = express.Router();
 
 function CreatePageNumber(nPages, curPage = 1) {
@@ -20,6 +17,37 @@ function CreatePageNumber(nPages, curPage = 1) {
     }
     return list;
 }
+function InitMarkCompleteSection(listSection, listMarkComplete) {
+    if (!listMarkComplete)
+        return listSection;
+    const newlst = [];
+    for (var i = 0; i < listSection.length; i++) {
+        newlst.push({
+            id: listSection[i].id,
+            title: listSection[i].title,
+            description: listSection[i].description,
+            videoPath: listSection[i].videoPath,
+            courseId: listSection[i].courseId,
+            preview: listSection[i].preview,
+            isComplete: false
+        })
+    }
+    console.log(listMarkComplete);
+    for (var i = 0; i < listMarkComplete.length; i++) {
+        var sectionId = listMarkComplete[i].sectionId;
+        newlst[parseInt(sectionId)-1].isComplete = listMarkComplete[i].isComplete;
+    }
+    return newlst;
+}
+router.use(async (req, res, next) => {
+    // Middleware check auth protect this route
+    if (!res.locals.isAuthorized) {
+        res.locals.user = {
+            role: ROLES.GUEST
+        }
+    }
+    next();
+})
 
 router.get('/byField/:field', async (req, res) => {
     res.locals.currentView = '#categories';
@@ -31,8 +59,8 @@ router.get('/byField/:field', async (req, res) => {
         res.locals.pageNumbers = CreatePageNumber(nPages, page);
         res.locals.listCourse = await courseModel.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
     }
+
     res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
-    // console.log(req.params.field);
     res.render('vwCategories/index');
 })
 router.get('/byTheme/:theme', async (req, res) => {
@@ -58,6 +86,7 @@ router.get('/detail/:id', async (req, res) => {
         res.status(500).send("Not found");
         return;
     }
+    courseModel.UpdateNumberOfView(req.params.id);
     res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(res.locals.detailCourse.fieldName);
     res.locals.lecturer = await courseModel.GetLecturer(req.params.id);
     res.locals.relatedCourses = await courseModel.GetRelatedCourses(req.params.id, 3);
@@ -65,13 +94,20 @@ router.get('/detail/:id', async (req, res) => {
     res.locals.numberOfSection = res.locals.listSections === null ? 0 : res.locals.listSections.length;
     res.locals.listFeedbacks = await courseModel.GetFeedbacks(req.params.id);
     if (res.locals.isAuthorized) {
-        res.locals.isInCart = studentModel.IsInCart(req.session.cart, req.params.id) || await studentModel.IsEnrolled(res.locals.user.username, req.params.id);
-        res.locals.isInWatchList = await studentModel.IsInWatchList(res.locals.user.username, req.params.id);
-        res.locals.isEnrolled = await IsEnrolled(res.locals.user.username, req.params.id);
+        if (res.locals.user.role === ROLES.STUDENT) {
+            res.locals.isEnrolled = await studentModel.IsEnrolled(res.locals.user.username, req.params.id);
+            res.locals.isInCart = studentModel.IsInCart(req.session.cart, req.params.id) || res.locals.isEnrolled;
+            res.locals.isInWatchList = await studentModel.IsInWatchList(res.locals.user.username, req.params.id);
+            const mark = await studentModel.GetMarkComplete(res.locals.user.username, req.params.id);
+            res.locals.listSections = InitMarkCompleteSection(res.locals.listSections, mark);
+            const numComplete = mark === null ? 0 : mark.filter((value) => { return value.isComplete }).length;
+            res.locals.currentProgress = res.locals.numberOfSection !== 0 ? Math.round((numComplete / res.locals.numberOfSection * 100)) : 0;
+        }
         if (res.locals.user.role === ROLES.LECTURER && await lecturerModel.IsMyLecture(res.locals.user.username, req.params.id)) {
             return res.render('vwLecturer/editcourse');
         }
     }
+
     return res.render('vwCategories/details');
 })
 module.exports = router;

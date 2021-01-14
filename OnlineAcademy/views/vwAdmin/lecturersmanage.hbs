@@ -1,3 +1,100 @@
+{{#section 'js'}}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+<script>
+    function NextPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) + 1;
+        const maxPage = jQuery(".pagination")[0].querySelectorAll("li").length - 2;
+        if (pageActive - 1 >= maxPage)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+
+    }
+    function PreviousPage() {
+        const pageActive = parseInt(jQuery(".pagination")[0].querySelector(".active").textContent) - 1;
+        if (pageActive + 1 <= 1)
+            return;
+        const url = `?page=${pageActive}`;
+        location.replace(url);
+    }
+    jQuery(function () {
+        const pagination = jQuery(".pagination")[0];
+        if (pagination === null || pagination === undefined) {
+            return;
+        }
+        const pageActive = parseInt(pagination.querySelector(".active").textContent);
+        const maxPage = pagination.querySelectorAll("li").length - 2;
+        if (pageActive <= 1) {
+            pagination.querySelector("#previousPage").className += "disabled";
+        }
+        if (pageActive >= maxPage) {
+            pagination.querySelector("#nextPage").className += "disabled";
+        }
+    });
+    function Remove(button) {    
+        const id = jQuery(button).data("id");
+        const name = button.getAttribute("name");
+        const container = button;
+        Warning(`Ban lecturer ${name}!\nOnce confirm you will not be able to recover this action!`, () => {
+            $.post('/admin/ban/lecturer', { id: id }, function (err, status) {
+                if (err) {
+                    return DisplayError(err);
+                }
+                swal(`Success`, {
+                    icon: "success",
+                    buttons: "OK",
+                }).then(() => {
+                    jQuery(container).prev().css("display", "");
+                    jQuery(container).css("display", "none");
+                });
+            })
+        });
+    }
+    function Unlock(button) {
+        const id = jQuery(button).data("id");
+        const container = button;
+        $.post('/admin/unlock/lecturer', { id: id }, function (err, status) {
+            if (err) {
+                return DisplayError(err);
+            }
+            swal(`Success`, {
+                icon: "success",
+                buttons: "OK",
+            }).then(() => {
+                jQuery(container).next().css("display", "");
+                jQuery(container).css("display", "none");
+            });
+        })
+
+    }
+    function Warning(message, callback) {
+        swal({
+            title: "Are you sure?",
+            text: message,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                callback();
+            }
+        });
+    }
+    function DisplayError(message) {
+        swal({
+            title: "Something is wrong",
+            text: message,
+            icon: "error",
+            button: "Ok",
+        });
+    }
+
+</script>
+{{/section}}
+
 <!-- Header -->
 <header id="head" class="secondary">
     <div class="container">
@@ -42,7 +139,7 @@
 
                         <div id="heading-information-container-row-admin" class="row">
                             <div id="heading-information-admin" class="col-md-3">
-                                Categories
+                                Lecturers
                             </div>
                         </div>
 
@@ -55,45 +152,52 @@
                         <div class="container-fluid">
 
                             <div id="main-category" class="row">
+                                {{#each listLecturer}}
                                 <div id="main-category-container" class="container-fluid">
 
-                                    <label>Lecturer 1</label>
+                                    <label>{{this.name}}</label>
 
                                     <div id="main-category-btn-group" class="btn-group">
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
-                                            Remove
+                                        {{#if this.block}}
+                                        <a id="remove-btn" onclick="Unlock(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}">
+                                            Unlock
                                         </a>
+                                        <a id="remove-btn" onclick="Remove(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}" style="display:none">
+                                            Ban
+                                        </a>
+                                        {{else}}
+                                        <a id="remove-btn" onclick="Unlock(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}" style="display:none">
+                                            Unlock
+                                        </a>
+                                        <a id="remove-btn" onclick="Remove(this)" class="btn btn-danger content-btn" role="button" name="{{this.name}}" data-id="{{this.id}}">
+                                            Ban
+                                        </a>
+                                        {{/if}}
                                     </div>
 
                                 </div>
+                                {{/each}}
+                            </div>
 
-                                <div id="main-category-container" class="container-fluid">
-
-                                    <label>Lecturer 2</label>
-
-                                    <div id="main-category-btn-group" class="btn-group">
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
-                                            Remove
+                            {{#with pageNumbers}}
+                            <div id="user-pagination">
+                                <ul class="pagination">
+                                    <li id="previousPage"><a href="javascript:PreviousPage();" class="disable">&laquo;</a></li>
+                                    {{#each this}}
+                                    {{#if this.isActive}}
+                                    <li class="active">
+                                        <a href="?page={{this.value}}">
+                                            {{this.value}} <span class="sr-only">(current)</span>
                                         </a>
-                                    </div>
-
-                                </div>
-
+                                    </li>
+                                    {{else}}
+                                    <li><a href="?page={{this.value}}">{{this.value}}</a></li>
+                                    {{/if}}
+                                    {{/each}}
+                                    <li id="nextPage"><a href="javascript:NextPage();">&raquo;</a> </li>
+                                </ul>
                             </div>
-
-                            <div class="row">
-                                <div id="student-management-pagination-container" class="container-fluid">
-                                    <ul class="pagination">
-                                        <li><a href="#">&laquo;</a></li>
-                                        <li><a href="#">1</a></li>
-                                        <li><a href="#">2</a></li>
-                                        <li><a href="#">3</a></li>
-                                        <li><a href="#">4</a></li>
-                                        <li><a href="#">5</a></li>
-                                        <li><a href="#">&raquo;</a></li>
-                                    </ul>
-                                </div>
-                            </div>
+                            {{/with}}
 
                         </div>
                     </div>

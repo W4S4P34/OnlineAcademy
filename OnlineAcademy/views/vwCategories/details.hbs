@@ -101,6 +101,7 @@
                 }
             });
 
+
         })();
 
         /* end ready */
@@ -109,7 +110,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 <script>
-    function AddToWatchList() {
+    function AddToWatchList(button) {
         const id = "{{detailCourse.id}}";
         $.post('/student/addToWatchList', {
             id: id
@@ -117,11 +118,10 @@
             if (data) {
                 swal("Add to watch list successfully!", {
                     icon: "success",
-                    buttons: false,
+                    buttons: "OK",
+                }).then(() => {
+                    jQuery(button).remove();
                 });
-                setTimeout(() => {
-                    location.reload();
-                }, 1000);
             } else {
                 swal("Something is wrong, please try again!", {
                     icon: "error",
@@ -160,7 +160,47 @@
         });
 
     }
+    function MarkAsComplete(button) {
+        const sectionId = button.getAttribute("name");
+        const courseId = "{{detailCourse.id}}";
+        jQuery(button.parentNode).css("display", "none");
+        jQuery(button.parentNode.parentNode).next().children("div").css("display", "");
+        const data = {
+            courseId: courseId,
+            sectionId: sectionId,
+            isComplete: true
+        }
+        $.post('/student/maskComplete', data, function (err, status) {
+            console.log(err);
+            if (!err) {
+                const section = document.querySelector(`#list-btn[name="${sectionId}"]`);
+                jQuery(section).css("background", "forestgreen");
+                UpdateProgressBar(1);
+            }
+        });
 
+
+    }
+    function MarkAsInComplete(button) {
+        const sectionId = button.getAttribute("name");
+        const courseId = "{{detailCourse.id}}";
+        jQuery(button.parentNode).css("display", "none");
+        jQuery(button.parentNode.parentNode).prev().children("div").css("display", "");
+        const data = {
+            courseId: courseId,
+            sectionId: sectionId,
+            isComplete: false
+        }
+        $.post('/student/maskComplete', data, function (err, status) {
+            console.log(err);
+            if (!err) {
+                const section = document.querySelector(`#list-btn[name="${sectionId}"]`);
+                jQuery(section).css("background", "");
+                UpdateProgressBar(-1);
+            }
+        });
+
+    }
     function stopVideo(element) {
 
         var iframe = element.find('iframe')[0];
@@ -175,6 +215,16 @@
         }
 
     }
+    function UpdateProgressBar(add) {
+        const progressBar = jQuery(".progress-bar");
+        const currentProgress = progressBar.attr("aria-valuenow");
+        const numberOfSection = "{{numberOfSection}}";
+        var updateProgress = parseInt(currentProgress) + Math.round(add / numberOfSection * 100);
+        updateProgress = updateProgress < 0 ? 0 : updateProgress > 100 ? 100 : updateProgress;
+        progressBar.attr("aria-valuenow", updateProgress.toString());
+        progressBar.css("width",updateProgress.toString()+"%");
+        progressBar[0].innerHTML = updateProgress.toString() + "%";
+    }
 
     function togglePopupVideo(video, activeState) {
 
@@ -183,6 +233,41 @@
         if (!activeState) {
             stopVideo(video);
         }
+    }
+    function SubmitLike() {
+        const courseId = "{{detailCourse.id}}";
+        $.post('/student/like', { courseId: courseId }, function (err, data) {
+            if (!err) {
+                const likeElement = jQuery("#review-like");
+                const likes = parseInt(likeElement.attr("value")) + 1;
+                likeElement[0].innerHTML = "Likes " + likes + ", ";
+                likeElement.attr("value",likes);
+            }
+        })
+    }
+    function SubmitFeedback(){
+        const feedback = jQuery("#feedback-section").children('[name="userfeedback"]').val();
+        const courseId = "{{detailCourse.id}}";
+        $.post('/student/feedback', { feedback: feedback,courseId: courseId }, function (err, data) {
+            if (!err) {
+                swal("Send feedback successfully!", {
+                    icon: "success",
+                }).then((value) => {
+                    location.reload();
+                });
+            }
+            else {
+                DisplayError(err.message);
+            }
+        });
+    }
+    function DisplayError(message) {
+        swal({
+            title: "Something is wrong",
+            text: message,
+            icon: "error",
+            button: "Ok",
+        });
     }
 </script>
 
@@ -238,18 +323,18 @@
                             <div id="btn-list-detail" class="container-fluid">
                                 {{#unless isInWatchList}}
                                 <button id="add-to-wishlist-btn-detail" type="button" class="btn btn-primary"
-                                    onclick="AddToWatchList()">
+                                    onclick="AddToWatchList(this)">
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
                                 {{/unless}}
                                 {{#unless isEnrolled}}
-                                {{#unless isInCart}}
+                                <!--{{#unless isInCart}}
                                 <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary">
                                     Add to cart&nbsp;
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
                                 </button>
-                                {{/unless}}
+                                {{/unless}}-->
                                 <button id="buy-now-btn-detail" type="button" class="btn btn-primary"
                                     onclick="BuyNow()">
                                     Buy now
@@ -264,11 +349,11 @@
                                     Add to favorite&nbsp;
                                     <i class="fa fa-heart-o" aria-hidden="true"></i>
                                 </button>
-                                <button id="add-to-cart-btn-detail" type="button" class="btn btn-primary"
+                                <!--<button id="add-to-cart-btn-detail" type="button" class="btn btn-primary"
                                     onclick="location.replace('/user/login')">
                                     Add to cart&nbsp;
                                     <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-                                </button>
+                                </button>-->
                                 <button id="buy-now-btn-detail" type="button" class="btn btn-primary"
                                     onclick="location.replace('/user/login')">
                                     Buy now
@@ -284,12 +369,12 @@
                             <h1>
                                 Details
                             </h1>
-
-                            <a href="#" id="like-btn" class="btn btn-primary content-btn" role="button">
+                            {{#if isEnrolled}}
+                            <a onclick="SubmitLike()" id="like-btn" class="btn btn-primary content-btn" role="button">
                                 Like
                                 <i class="fa fa-thumbs-up" aria-hidden="true"></i>
                             </a>
-
+                            {{/if}}
                             <h2>
                                 Information
                             </h2>
@@ -311,7 +396,7 @@
                             </div>
                             <div id="review">
                                 <i class="fa fa-eye" aria-hidden="true"></i> Views {{detailCourse.view}},&nbsp;
-                                <i class="fa fa-heart-o" aria-hidden="true"></i> Likes {{detailCourse.likes}},&nbsp;
+                                <i class="fa fa-heart-o" aria-hidden="true"></i> <div id="review-like" style="display:inline" value="{{detailCourse.likes}}"> Likes {{detailCourse.likes}},&nbsp; </div>
                                 <i class="fa fa-user" aria-hidden="true"></i> Students {{detailCourse.enrollNumber}}
                             </div>
                             <div id="last-update">
@@ -337,14 +422,14 @@
                             <h1>
                                 Content
                             </h1>
-
+                            {{#if isEnrolled}}
                             <div class="progress">
-                                <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0"
-                                    aria-valuemax="100" style="width: 60%;">
-                                    60%
+                                <div class="progress-bar" role="progressbar" aria-valuenow="{{currentProgress}}" aria-valuemin="0"
+                                    aria-valuemax="100" style="width: {{currentProgress}}%;">
+                                    {{currentProgress}}%
                                 </div>
                             </div>
-
+                            {{/if}}
                             <h2>
                                 {{detailCourse.briefDescription}}
                             </h2>
@@ -359,10 +444,17 @@
                             <div class="list-group">
                                 {{#each listSections}}
                                 <div class="list-item">
-                                    <button type="button" id="list-btn" class="btn btn-primary content-btn">
+                                    {{#if isComplete}}
+                                    <button type="button" id="list-btn" class="btn btn-primary content-btn" name="{{this.id}}" style="background:forestgreen">
                                         <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
                                         Section {{this.id}}
                                     </button>
+                                    {{else}}
+                                    <button type="button" id="list-btn" class="btn btn-primary content-btn" name="{{this.id}}">
+                                        <i class="fa fa-angle-down pull-right" aria-hidden="true"></i>
+                                        Section {{this.id}}
+                                    </button>
+                                    {{/if}}
                                     <ul class="showContent">
                                         <li>
                                             {{#with this.preview}}
@@ -427,22 +519,39 @@
                                                 RenderDuration("lecture{{this.id}}", "lecture-duration{{this.id}}");
                                             </script>
                                         </li>
-
+                                        {{#if ../isEnrolled}}
+                                        {{#if isComplete}}
                                         <li>
-                                            <div id="mark-complete-container" class="container-fluid">
-                                                <a id="mark-complete-btn" class="btn btn-primary content-btn" href="#" role="button">
+                                            <div id="mark-complete-container" class="container-fluid" style="display:none">
+                                                <a id="mark-complete-btn" class="btn btn-primary content-btn" onclick="MarkAsComplete(this)" role="button" name="{{this.id}}">
                                                     Mark as complete
                                                 </a>
                                             </div>
                                         </li>
                                         <li>
                                             <div id="mark-incomplete-container" class="container-fluid">
-                                                <a id="mark-incomplete-btn" class="btn btn-primary content-btn" href="#" role="button">
+                                                <a id="mark-incomplete-btn" class="btn btn-primary content-btn" onclick="MarkAsInComplete(this)" role="button" name="{{this.id}}">
                                                     Mark as incomplete
                                                 </a>
                                             </div>
                                         </li>
-
+                                        {{else}}
+                                        <li>
+                                            <div id="mark-complete-container" class="container-fluid">
+                                                <a id="mark-complete-btn" class="btn btn-primary content-btn" onclick="MarkAsComplete(this)" role="button" name="{{this.id}}">
+                                                    Mark as complete
+                                                </a>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div id="mark-incomplete-container" class="container-fluid" style="display:none">
+                                                <a id="mark-incomplete-btn" class="btn btn-primary content-btn" onclick="MarkAsInComplete(this)" role="button" name="{{this.id}}">
+                                                    Mark as incomplete
+                                                </a>
+                                            </div>
+                                        </li>
+                                        {{/if}}
+                                        {{/if}}
                                     </ul>
                                 </div>
                                 {{/each}}
@@ -530,17 +639,17 @@
                                     </h3>
                                 </div>
 
-                                <form role="form" method="POST">
-                                    <div class="row" id="feedback-section">
-                                        <textarea name="userfeedback" class="form-control" rows="3" maxlength="1024"
-                                            placeholder="Your feedback..."></textarea>
-                                        <div id="char-number">1024 chars left</div>
-                                    </div>
 
-                                    <div class="row" id="form-submit-btn">
-                                        <button type="submit" class="btn btn-primary">Submit</button>
-                                    </div>
-                                </form>
+                                <div class="row" id="feedback-section">
+                                    <textarea name="userfeedback" class="form-control" rows="3" maxlength="1024"
+                                        placeholder="Your feedback..."></textarea>
+                                    <div id="char-number">1024 chars left</div>
+                                </div>
+
+                                <div class="row" id="form-submit-btn">
+                                    <button onclick="SubmitFeedback()" class="btn btn-primary">Submit</button>
+                                </div>
+
 
                             </div>
                             {{/if}}

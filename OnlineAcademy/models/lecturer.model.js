@@ -107,17 +107,12 @@ module.exports = {
         }
         return null;
     },
-    async UpdateSection(courseId, sectionId, lectureName) {
-        console.log("Update section: " + courseId + " " + sectionId + " " + lectureName);
+    async InsertAndUpdateSection(courseId, sectionId, lectureName, preview, videoPath) {
+        console.log("Insert and Update section: " + courseId + " " + sectionId + " " + lectureName + " " + preview + " " + videoPath);
         try {
-            const newData = {
-                title: lectureName
-            }
-            const condition = {
-                id: parseInt(sectionId),
-                courseId: parseInt(courseId)
-            }
-            await db.update(newData, condition, 'section');
+            const sql = `insert into section (id,title,videoPath,courseId,preview) values(?,?,?,?,?) on duplicate key update title = ?,videoPath = ?,preview = ?`;
+            const condition = [parseInt(sectionId), lectureName, videoPath, parseInt(courseId), preview, lectureName, videoPath, preview];
+            await db.load(sql,condition);
         } catch (e) {
             return e;
         }

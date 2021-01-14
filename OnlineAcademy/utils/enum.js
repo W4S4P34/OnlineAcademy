@@ -1,7 +1,8 @@
 const ROLE = {
     GUEST: 'guest',
     STUDENT: 'student',
-    LECTURER: 'lecturer'
+    LECTURER: 'lecturer',
+    ADMIN: 'admin'
 };
 
 class Enum {

@@ -337,7 +337,7 @@
     }
     function EditImage() {
         if (currentEditPlace) {
-            return DisplayError("Complete your edit first!");
+            return DisplayError("Please complete your edit/add progress first!");
         }
         currentEditPlace = "image";
         currentUploadPond = null;
@@ -348,7 +348,7 @@
     }
     function EditDetail() {
         if (currentEditPlace) {
-            return DisplayError("Complete your edit first!");
+            return DisplayError("Please complete your edit/add progress first!");
         }
         currentEditPlace = "detail";
         currentUploadPond = null;
@@ -360,7 +360,7 @@
     }
     function EditContent(courseId,element) {
         if (currentEditPlace) {
-            return DisplayError("Complete your edit first!");
+            return DisplayError("Please complete your edit/add progress first!");
         }
         currentEditPlace = "content";
         currentUploadPond = null;
@@ -372,8 +372,18 @@
     function Cancel() {
         if (inUploadProgress)
             return DisplayError("Complete upload progress first!");
-        if(currentElement)
+        if (currentElement) {
+            if (currentEditPlace === "content" || currentEditPlace === "new-section") {
+                const inputElementLectureName = currentElement.find('#main-information-lecture');
+                inputElementLectureName.val("");
+                //console.log(pondCourseVideo.get(1).destroy());
+                //console.log(pondPreviewVideo.get(1).destroy());
+                //console.log(currentElement.find('input[type="file"]')[0]);
+                //console.log(currentElement.find('input[type="file"]')[1]);
+                //InitPondVideo(currentElement.find('input[type="file"]')[0], currentElement.find('input[type="file"]')[1], 10);
+            }
             currentElement[0].setAttribute("hidden", null);
+        }
         if (previousElement)
             previousElement.removeAttr("hidden");
         currentEditPlace = null;
@@ -388,7 +398,7 @@
             if (currentEditPlace === "image") {
                 return DisplayError("Image cover is empty!");
             }
-            if (currentEditPlace === "content") {
+            if (currentEditPlace === "content" || currentEditPlace === "new-section") {
                 return DisplayError("Section miss main video");
             }
         }
@@ -403,8 +413,9 @@
 
             });
         }
-        else if (currentEditPlace === "content") {
-            const lectureName = document.querySelectorAll('#main-information-lecture')[id-1].value;
+        else if (currentEditPlace === "content" || currentEditPlace === "new-section") {
+            const lectureName = document.querySelectorAll('#main-information-lecture')[id - 1].value;
+            console.log(lectureName);
             if (lectureName.length === 0) {
                 return DisplayError("Lecture name is empty");
             }
@@ -414,13 +425,16 @@
                     currentUploadPond[i].callbackSubmit(currentUploadPond[i].fieldName, currentUploadPond[i].file, (error) => {
                         numOfTaskDone++;
                         if (numOfTaskDone === currentUploadPond.length) {
-                            const courseId = "{{detailCourse.id}}"
-                            $.post(`/lecturer/editCourse/section/${courseId}`, { sectionId: id, lectureName: lectureName }, function (err, status) {
-                                //Cancel();
+                            const courseId = "{{detailCourse.id}}";
+                            $.post(`/lecturer/editCourse/section/${courseId}`, {
+                                sectionId: id,
+                                lectureName: lectureName,
+                                preview: currentUploadPond.length == 2 ? `/resource/public/course/${courseId}/preview/${id}.mp4` : null,
+                                imagePath: `/resource/private/course/${courseId}/${id}.mp4`
+                            }, function (err, status) {
                                 OnUploadDone(err);
                             })
                         }
-
                     });
                 }
             });
@@ -454,19 +468,6 @@
         }
     }
     function AjaxRequest(callback) {
-
-        //swal({
-        //    title: "Are you sure?",
-        //    text: "Please confirm your choice!",
-        //    type: "warning",
-        //    showCancelButton: true,
-        //    confirmButtonColor: "#DD6B55",
-        //    confirmButtonText: "Yes",
-        //    closeOnConfirm: false
-        //}).then((isConfirm) => {
-        //    if(isConfirm)
-        //        callback();
-        //});
         swal({
             title: "Are you sure?",
             text: "Please confirm your choice!",
@@ -509,16 +510,18 @@
         inUploadProgress = false;
         currentUploadPond = null;
         if (err) {
-            DisplayError(err);
-            //return setTimeout(() => { location.reload() }, 1000);
+            console.log(err);
+            DisplayError(err.message);
+            //setTimeout(() => { location.reload() }, 1000);
+        } else {
+            swal({
+                title: "Success!",
+                text: "Edit course successfully!",
+                icon: "success",
+            }).then(() => {
+                location.reload();
+            });
         }
-        swal({
-            title: "Success!",
-            text: "Edit course successfully!",
-            icon: "success",
-        }).then(() => {
-            location.reload();
-        });
     }
 
 
@@ -533,6 +536,41 @@
             }
         });
     }
+    function AddNewSection(button) {
+        if (currentEditPlace) {
+            return DisplayError("Please complete your edit/add progress first!");
+        }
+        const numberOfSection = "{{numberOfSection}}";
+        currentEditPlace = "new-section";
+        currentElement = jQuery('#main-information-container[name="new-section"]');
+        currentElement.removeAttr("hidden");
+        currentElement.find('#list-btn[name="new-section"]')[0].innerHTML = "Section " + (parseInt(numberOfSection) + 1);
+    }
+    //function SaveAddNewSection(id) {
+    //    const lectureName = currentElement.find('#main-information-lecture').val();
+    //    if (lectureName.length === 0) {
+    //        return DisplayError("Lecture name is empty");
+    //    }
+    //    AjaxRequest(() => {
+    //        inUploadProgress = true;
+    //        for (var i = 0; i < currentUploadPond.length; i++) {
+    //            currentUploadPond[i].callbackSubmit(currentUploadPond[i].fieldName, currentUploadPond[i].file, (error) => {
+    //                numOfTaskDone++;
+    //                if (numOfTaskDone === currentUploadPond.length) {
+    //                    const courseId = "{{detailCourse.id}}";
+    //                    $.post(`/lecturer/editCourse/section/${courseId}`, {
+    //                        sectionId: id,
+    //                        lectureName: lectureName,
+    //                        preview: currentUploadPond.length == 2 ? `/resource/public/course/${courseId}/preview/${id}.mp4` : null
+    //                    }, function (err, status) {
+    //                        OnUploadDone(err);
+    //                    })
+    //                }
+
+    //            });
+    //        }
+    //    });
+    //}
 </script>
 
 {{/section}}
@@ -600,7 +638,7 @@
                             </form>
 
                             <div id="edit-btn-container" class="row">
-                                <button id="cancel-change-btn" class="btn btn-primary" onclick="Cancel()    ">
+                                <button id="cancel-change-btn" class="btn btn-primary" onclick="Cancel()">
                                     Cancel
                                 </button>
 
@@ -879,22 +917,7 @@
                                                             <input name="previewVideo" type="file"
                                                                 id="main-information-preview-video">
                                                         </li>
-
-                                                        {{!-- <div id="delete-content-btn-container" class="container-fluid">
-                                                <button type="button" id="delete-content-btn"
-                                                    class="btn btn-danger content-btn">
-                                                    Delete lecture
-                                                </button>
-                                            </div> --}}
-
                                                     </ul>
-
-                                                    {{!-- <div id="add-list-btn-container" class="container-fluid">
-                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
-                                                Add new lecture
-                                            </button>
-                                        </div> --}}
-
                                                 </div>
                                             </form>
                                         </div>
@@ -914,13 +937,13 @@
                                 {{/each}}
 
                                 <!-- EDIT HERE YOU BLIND PEOPLE -->
-                                <div id="main-information-container" class="container-fluid">
+                                <div id="main-information-container" class="container-fluid" name="new-section" hidden>
                                     <div id="main-information-input-group" class="input-group form-group">
                                         <div id="main-information-content" class="list-group container-fluid">
                                             <form id="edit-content" method="POST">
                                                 <div id="main-information-section-list" class="list-item">
                                                     <button type="button" id="list-btn"
-                                                        class="btn btn-primary content-btn">
+                                                            class="btn btn-primary content-btn" name="new-section">
                                                         Section ?
                                                     </button>
 
@@ -947,20 +970,9 @@
                                                                 id="main-information-preview-video">
                                                         </li>
 
-                                                        {{!-- <div id="delete-content-btn-container" class="container-fluid">
-                                                <button type="button" id="delete-content-btn"
-                                                    class="btn btn-danger content-btn">
-                                                    Delete lecture
-                                                </button>
-                                            </div> --}}
 
                                                     </ul>
 
-                                                    {{!-- <div id="add-list-btn-container" class="container-fluid">
-                                            <button type="button" id="add-list-btn" class="btn btn-success content-btn">
-                                                Add new lecture
-                                            </button>
-                                        </div> --}}
 
                                                 </div>
                                             </form>
@@ -968,18 +980,18 @@
                                     </div>
 
                                     <div id="edit-btn-container" class="row">
-                                        <button id="cancel-change-btn" class="btn btn-primary">
+                                        <button id="cancel-change-btn" class="btn btn-primary" onclick="Cancel()">
                                             Cancel
                                         </button>
 
-                                        <button id="save-change-btn" class="btn btn-success">
+                                        <button id="save-change-btn" class="btn btn-success" onclick="Save({{numberOfSection}}+1)">
                                             Save
                                         </button>
                                     </div>
                                 </div>
 
                                 <div id="add-course-btn-container" class="container-fluid">
-                                    <button type="button" id="add-course-btn" class="btn btn-success content-btn">
+                                    <button type="button" id="add-course-btn" class="btn btn-success content-btn" onclick="AddNewSection(this)">
                                         Add new section
                                     </button>
                                 </div>

@@ -29,6 +29,9 @@ router.post('/login', async (req, res) => {
     if (user == null) {
         return res.json("Your username or password is not valid");
     }
+    if (user.block) {
+        return res.json("Your account has been banned. Please contact admin to unlock account!");
+    }
     try {
         if (activeAccount.findIndex(value => value === user.username) !== -1) {
             return res.json("This account is used in somewhere!");

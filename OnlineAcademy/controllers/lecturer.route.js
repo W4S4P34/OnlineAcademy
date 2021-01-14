@@ -133,6 +133,7 @@ router.post('/editCourse/section/:courseId', (req, res) => {
             else {
                 path = `./resource/public/course/${req.params.courseId}/preview`;
             }
+            const made = mkdirp.sync(path);
             cb(null, path);
         },
         filename: function (req, file, cb) {
@@ -143,7 +144,7 @@ router.post('/editCourse/section/:courseId', (req, res) => {
     const upload = multer({ storage: storage });
     upload.any()(req, res, async function (err) {
         if (req.body.sectionId && req.body.lectureName !== undefined) {
-            const err = await lecturerModel.UpdateSection(req.params.courseId, req.body.sectionId, req.body.lectureName);
+            const err = await lecturerModel.InsertAndUpdateSection(req.params.courseId, req.body.sectionId, req.body.lectureName, req.body.preview, req.body.imagePath);
             res.json(err);
         }
         if (err) {
@@ -203,7 +204,6 @@ router.post('/upload', (req, res) => {
                 path = `./resource/public/course/${courseId}`;
             }
             const made = mkdirp.sync(path);
-            console.log(made);
             cb(null, path);
         },
         filename: function (req, file, cb) {

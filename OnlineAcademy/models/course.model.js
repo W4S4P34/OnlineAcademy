@@ -33,20 +33,19 @@ module.exports = {
         return rows;
     },
     async GetAllFieldsAndTheme(fieldName = "") {
-        const sql = 'select distinct subField.fieldName,count(course.id) as courseNumber from subField join course on subField.id = course.subFieldId group by subField.fieldName';
+        const sql = 'select `fields`.name as fieldName,count(course.id) as courseNumber from fields left join subField on subField.fieldName = `fields`.name left join course on subField.id = course.subFieldId group by `fields`.name';
         const [rows, fields] = await db.load(sql);
         if (rows.length === 0)
             return null;
         var listFields = [];
         for (var i = 0; i < rows.length; i++) {
-            
             const listTheme = await this.GetThemeByField(rows[i].fieldName);
             listFields.push({
                 name: rows[i].fieldName,
-                empty: listTheme.length === 0,
+                empty: listTheme === null,
                 listTheme: listTheme,
                 courseNumber: rows[i].courseNumber,
-                isActive: fieldName === rows[i].name
+                isActive: fieldName === rows[i].fieldName
             })
 
         }
@@ -66,18 +65,18 @@ module.exports = {
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
             return null;
-        return rows[0].name;
+        return rows[0].fieldName;
     },
     async GetCourseByField(fieldName, limit, offset) {
-        const sql = 'select course.id,course.title,subField.fieldName as fieldName,lecturer.name as lecturerName,course.likes,course.imagePath,course.price from subField join course on course.subFieldId = subField.id and subField.fieldName = ? join lecturer on course.lecturerId = lecturer.Id group by course.title order by course.view desc limit ? offset ?';
+        const sql = 'select course.id,course.title,subField.fieldName as fieldName,lecturer.name as lecturerName,course.likes,course.imagePath,course.price,count(studentId) as numOfStudent from subField join course on course.subFieldId = subField.id and subField.fieldName = ? join enroll on enroll.courseId = course.id join lecturer on course.lecturerId = lecturer.Id group by course.id order by course.view desc limit ? offset ?';
         const condition = [fieldName, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
             return null;
         return rows;
     },
-    async GetCourseByTheme(theme,limit,offset) {
-        const sql = 'select course.id,course.title,subField.fieldName as fieldName,lecturer.name as lecturerName,course.likes,course.imagePath,course.price from subField join course on course.subFieldId = subField.id and subField.name = ? join lecturer on course.lecturerId = lecturer.Id group by course.title order by course.view desc limit ? offset ?';
+    async GetCourseByTheme(theme, limit, offset) {
+        const sql = 'select course.id,course.title,subField.fieldName as fieldName,lecturer.name as lecturerName,course.likes,course.imagePath,course.price,count(studentId) as numOfStudent from subField join course on course.subFieldId = subField.id and subField.name = ? join enroll on enroll.courseId = course.id join lecturer on course.lecturerId = lecturer.Id group by course.id order by course.view desc limit ? offset ?';
         const condition = [theme, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -126,7 +125,7 @@ module.exports = {
         return rows;
     },
     async GetFeedbacks(courseId) {
-        const sql = 'select feedback.comment,DATE_FORMAT(feedback.date, "%H:%i %m/%d/%Y") as date,student.name from feedback join student on studentId = id and courseId = ?';
+        const sql = 'select feedback.comment,DATE_FORMAT(feedback.date, "%H:%i %m/%d/%Y") as date,student.name from feedback join student on studentId = id and courseId = ? order by feedback.date desc';
         const condition = [courseId];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -153,5 +152,20 @@ module.exports = {
         const sql = 'select count(id) as count from course';
         const [rows, fields] = await db.load(sql);
         return rows[0].count;
+    },
+    async UpdateNumberOfView(productId) {
+        try {
+            const sql = 'update course set view = view + 1 where id = ?';
+            const condition = [productId];
+            const [rows, fields] = await db.load(sql, condition);
+        } catch (ignore) {}
+    },
+    async UpdateNumberOfLike(productId) {
+        try {
+            const sql = 'update course set likes = likes + 1 where id = ?';
+            const condition = [productId];
+            const [rows, fields] = await db.load(sql, condition);
+        } catch (e) { return e; }
+        return null;
     }
 };

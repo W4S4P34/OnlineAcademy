@@ -1,3 +1,216 @@
+{{#section 'js'}}
+
+{{!-- ----------- --}}
+{{!-- Import ZONE --}}
+{{!-- ----------- --}}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+<script>
+    var isOnEditProgress = false;
+    var currentElement = null;
+    var previousElement = null;
+
+    function DisplayError(message) {
+        swal({
+            title: "Something is wrong",
+            text: message,
+            icon: "error",
+            button: "Ok",
+        });
+    }
+    
+    function EditField(button) {
+        if (isOnEditProgress)
+            return DisplayError("Complete your edit first!");
+        if (newCategory)
+            return DisplayError("Complete add category progress first!");
+        isOnEditProgress = true;
+
+        const container = button.parentNode.parentNode.parentNode;
+        previousElement = container.children[0];
+        currentElement = container.children[1];
+        previousElement.style.display = "none";
+        currentElement.style.display = "inherit";
+    }
+    function EditSubField(button) {
+        if (isOnEditProgress)
+            return DisplayError("Complete your edit first!");
+        if (newCategory)
+            return DisplayError("Complete add category progress first!");
+        isOnEditProgress = true;
+
+        const name = button.getAttribute("name");
+        const container = document.querySelectorAll(`#sub-category-container[name="${name}"]`);
+        previousElement = container[0];
+        currentElement = container[1];
+        previousElement.style.display = "none";
+        currentElement.style.display = "inherit";
+    }
+    function RemoveField(button) {
+        if (isOnEditProgress)
+            return DisplayError("Complete your edit first!");
+        if (newCategory)
+            return DisplayError("Complete add category progress first!");
+        isOnEditProgress = true;
+
+        const fieldName = button.getAttribute("name");
+        Warning(`Delete fields ${fieldName}, once delete you will not be able to recover this action!`, () => {
+            $.post('/admin/remove/categories/', { fieldName: fieldName }, function (err, status) {
+                if (!err) {
+                    swal(`Fields ${fieldName} has been deleted`, {
+                        icon: "success",
+                        buttons: false,
+                    });
+                    setTimeout(() => { location.reload(); }, 1000);
+                } else {
+                    DisplayError(err);
+                }
+                Cancel();
+            });
+        });
+    }
+    function RemoveSubField(button) {
+        if (isOnEditProgress)
+            return DisplayError("Complete your edit first!");
+        if (newCategory)
+            return DisplayError("Complete add category progress first!");
+        isOnEditProgress = true;
+
+        const subFieldName = button.getAttribute("name");
+        Warning(`Delete fields ${subFieldName}, once delete you will not be able to recover this action!`, () => {
+            $.post('/admin/remove/categories', { subFieldName: subFieldName }, function (err, status) {
+                if (!err) {
+                    swal(`Fields ${subFieldName} has been deleted`, {
+                        icon: "success",
+                        buttons: false,
+                    });
+                    setTimeout(() => { location.reload(); }, 1000);
+                } else {
+                    DisplayError(err.message);
+                }
+                Cancel();
+            });
+        });
+    }
+    function Cancel() {
+        if (previousElement)
+            previousElement.style.display = "inherit";
+        if(currentElement)
+            currentElement.style.display = "none";
+
+        isOnEditProgress = false;
+    }
+    function Warning(message,callback) {
+        swal({
+            title: "Are you sure?",
+            text: message,
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+        }).then((willDelete) => {
+            if (willDelete) {
+                callback();
+            }
+            else {
+                isOnEditProgress = false;
+            }
+        });
+    }
+    function Save(fieldName, themeName) {
+        const button = fieldName || themeName;
+        const changeValue = button.parentNode.parentNode.children[0][0].value;
+        const currentValue = button.getAttribute("name");
+        if (changeValue.length === 0)
+            return DisplayError("Category can not have an empty name!");
+        var data = null;
+        if (fieldName) {
+            data = {
+                fieldName: changeValue,
+                preFieldName: currentValue
+            }
+        } else {
+            data = {
+                subFieldName: changeValue,
+                preSubFieldName: currentValue
+            }
+        }
+        Warning(`Change ${currentValue} to ${changeValue}!`, () => {
+            console.log(data);
+            $.post('/admin/edit/categories', data, function (err, status) {
+                if (!err) {
+                    swal(`Success`, {
+                        icon: "success",
+                        buttons: "OK",
+                    }).then(() => { location.reload(); });
+                } else {
+                    DisplayError(err.message);
+                }
+                Cancel();
+            });
+        });
+    }
+    var newCategory = null;
+    var categoryContainer = jQuery("#main-information-container");
+    const categoryElementLv1 = jQuery('#category.row[name="template"]');
+    const categoryElementLv2 = jQuery('#sub-category.row[name="template"]');
+    function AddCategoryLv1() {
+        if (newCategory) {
+            return DisplayError("Complete add category progress first!");
+        }
+        newCategory = categoryElementLv1.clone();
+        newCategory.removeAttr("hidden");
+        jQuery("#main-information-input-group").before(newCategory[0]);
+    }
+    function AddCategoryLv2() {
+        if (!newCategory)
+            return;
+        const newCategoryLv2 = categoryElementLv2.clone();
+        newCategoryLv2.removeAttr("hidden");
+        newCategoryLv2.appendTo(newCategory.children());
+        
+    }
+    function RemoveCategory() {
+        newCategory.remove();
+        newCategory = null;
+    }
+    function CheckValidInput(newField, newSubField) {
+        if (newField.length === 0) {
+            DisplayError("Category level 1 is empty!");
+            return false;
+        }
+        console.log(newSubField);
+        for (var str of newSubField) {
+            console.log(str);
+            if (str.length === 0) {
+                DisplayError("Category level 2 is empty!");
+                return false;
+            }
+        }   
+        return true;
+    }
+    function SaveAddNewCategory() {
+        const newField = jQuery(newCategory).find('[name="newMainCategoryName"]').val(); 
+        const newSubField = [];
+        jQuery(newCategory).find('[name="newSubCategoryName"]').each((index, ele) => {
+            
+            newSubField.push(ele.value);
+        });
+        if (CheckValidInput(newField, newSubField)) {
+            $.post('/admin/add/categories', { newField: newField, newSubField: newSubField }, function (err, status) {
+                if (!err) {
+                    swal(`Success`, {
+                        icon: "success",
+                        buttons: "OK",
+                    }).then(() => { location.reload(); });
+                } else {
+                    DisplayError(err.message);
+                }
+            })
+        }
+    }
+</script>
+{{/section}}
+
 <!-- Header -->
 <header id="head" class="secondary">
     <div class="container">
@@ -51,41 +264,43 @@
 
                 <div id="main-information-container" class="container-fluid">
 
+
+                    {{#each listCourseFields}}
                     <div id="category" class="row">
                         <div class="container-fluid">
 
-                            <div id="main-category" class="row">
+                            <div id="main-category" class="row" name="{{name}}">
                                 <div id="main-category-container" class="container-fluid">
 
-                                    <label>Category level 1</label>
+                                    <label>{{name}}</label>
 
                                     <div id="main-category-btn-group" class="btn-group">
-                                        <a id="edit-btn" href="#" class="btn btn-primary content-btn" role="button">
+                                        <a id="edit-btn" onclick="EditField(this)" class="btn btn-primary content-btn" role="button" name="{{name}}">
                                             Edit
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
+                                        <a id="remove-btn" onclick="RemoveField(this)" class="btn btn-danger content-btn" role="button" name="{{name}}">
                                             Remove
                                         </a>
                                     </div>
 
                                 </div>
 
-                                <div id="main-category-container" class="container-fluid">
+                                <div id="main-category-container" class="container-fluid" style="display:none">
 
                                     <form method="POST">
                                         <div id="main-category-input-group" class="input-group">
                                             <label for="main-category-new">New Name</label>
                                             <input name="newMainCategoryName" id="main-category-new" type="text"
-                                                class="form-control" maxlength="50">
+                                                   class="form-control" maxlength="50" value="{{name}}">
                                         </div>
                                     </form>
 
                                     <div id="main-category-btn-group" class="btn-group">
-                                        <a id="cancel-btn" href="#" class="btn btn-primary content-btn" role="button">
+                                        <a id="cancel-btn" onclick="Cancel()" class="btn btn-primary content-btn" role="button">
                                             Cancel
                                         </a>
-                                        <a id="save-btn" href="#" class="btn btn-success content-btn" role="button">
+                                        <a id="save-btn" onclick="Save(this,null)" class="btn btn-success content-btn" role="button" name="{{name}}">
                                             Save
                                         </a>
                                     </div>
@@ -94,200 +309,107 @@
                             </div>
 
                             <div id="sub-category" class="row">
-
-                                <div id="sub-category-container" class="container-fluid">
-                                    <label>Category level 2</label>
+                                {{#each listTheme}}
+                                <div id="sub-category-container" class="container-fluid" name="{{name}}">
+                                    <label>{{name}}</label>
 
                                     <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="edit-btn" href="#" class="btn btn-primary content-btn" role="button">
+                                        <a id="edit-btn" onclick="EditSubField(this)" class="btn btn-primary content-btn" role="button" name="{{name}}">
                                             Edit
                                             <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
                                         </a>
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
+                                        <a id="remove-btn" onclick="RemoveSubField(this)" class="btn btn-danger content-btn" role="button" name="{{name}}">
                                             Remove
                                         </a>
                                     </div>
                                 </div>
 
-                                <div id="sub-category-container" class="container-fluid">
+                                <div id="sub-category-container" class="container-fluid" style="display:none" name="{{name}}">
 
                                     <form method="POST">
                                         <div id="sub-category-input-group" class="input-group">
                                             <label for="sub-category-new">New Name</label>
                                             <input name="newSubCategoryName" id="sub-category-new" type="text"
-                                                class="form-control" maxlength="50">
+                                                   class="form-control" maxlength="50" value="{{name}}">
                                         </div>
                                     </form>
 
                                     <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="cancel-btn" href="#" class="btn btn-primary content-btn" role="button">
+                                        <a id="cancel-btn" onclick="Cancel()" class="btn btn-primary content-btn" role="button">
                                             Cancel
                                         </a>
-                                        <a id="save-btn" href="#" class="btn btn-success content-btn" role="button">
+                                        <a id="save-btn" onclick="Save(null, this)" class="btn btn-success content-btn" role="button" name="{{name}}">
                                             Save
                                         </a>
                                     </div>
 
                                 </div>
-
-                                <div id="sub-category-container" class="container-fluid">
-                                    <label>Category level 2</label>
-                                    <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="edit-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Edit
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        </a>
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
-                                            Remove
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div id="sub-category-container" class="container-fluid">
-
-                                    <form method="POST">
-                                        <div id="sub-category-input-group" class="input-group">
-                                            <label for="sub-category-new">New Name</label>
-                                            <input name="newSubCategoryName" id="sub-category-new" type="text"
-                                                class="form-control" maxlength="50">
-                                        </div>
-                                    </form>
-
-                                    <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="cancel-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Cancel
-                                        </a>
-                                        <a id="save-btn" href="#" class="btn btn-success content-btn" role="button">
-                                            Save
-                                        </a>
-                                    </div>
-
-                                </div>
+                                {{/each}}
 
                             </div>
 
                         </div>
                     </div>
+                    {{/each}}
 
-                    <div id="category" class="row">
-                        <div class="container-fluid">
-
-                            <div id="main-category" class="row">
-                                <div id="main-category-container" class="container-fluid">
-
-                                    <label>Category level 1</label>
-
-                                    <div id="main-category-btn-group" class="btn-group">
-                                        <a id="edit-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Edit
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        </a>
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
-                                            Remove
-                                        </a>
-                                    </div>
-
-                                </div>
-
-                                <div id="main-category-container" class="container-fluid">
-
-                                    <form method="POST">
-                                        <div id="main-category-input-group" class="input-group">
-                                            <label for="main-category-new">New Name</label>
-                                            <input name="newMainCategoryName" id="main-category-new" type="text"
-                                                class="form-control" maxlength="50">
-                                        </div>
-                                    </form>
-
-                                    <div id="main-category-btn-group" class="btn-group">
-                                        <a id="cancel-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Cancel
-                                        </a>
-                                        <a id="save-btn" href="#" class="btn btn-success content-btn" role="button">
-                                            Save
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-
-                            <div id="sub-category" class="row">
-
-                                <div id="sub-category-container" class="container-fluid">
-                                    <label>Category level 2</label>
-
-                                    <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="edit-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Edit
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        </a>
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
-                                            Remove
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div id="sub-category-container" class="container-fluid">
-
-                                    <form method="POST">
-                                        <div id="sub-category-input-group" class="input-group">
-                                            <label for="sub-category-new">New Name</label>
-                                            <input name="newSubCategoryName" id="sub-category-new" type="text"
-                                                class="form-control" maxlength="50">
-                                        </div>
-                                    </form>
-
-                                    <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="cancel-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Cancel
-                                        </a>
-                                        <a id="save-btn" href="#" class="btn btn-success content-btn" role="button">
-                                            Save
-                                        </a>
-                                    </div>
-
-                                </div>
-
-                                <div id="sub-category-container" class="container-fluid">
-                                    <label>Category level 2</label>
-                                    <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="edit-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Edit
-                                            <i class="fa fa-pencil-square-o" aria-hidden="true"></i>
-                                        </a>
-                                        <a id="remove-btn" href="#" class="btn btn-danger content-btn" role="button">
-                                            Remove
-                                        </a>
-                                    </div>
-                                </div>
-
-                                <div id="sub-category-container" class="container-fluid">
-
-                                    <form method="POST">
-                                        <div id="sub-category-input-group" class="input-group">
-                                            <label for="sub-category-new">New Name</label>
-                                            <input name="newSubCategoryName" id="sub-category-new" type="text"
-                                                class="form-control" maxlength="50">
-                                        </div>
-                                    </form>
-
-                                    <div id="sub-category-btn-group" class="btn-group">
-                                        <a id="cancel-btn" href="#" class="btn btn-primary content-btn" role="button">
-                                            Cancel
-                                        </a>
-                                        <a id="save-btn" href="#" class="btn btn-success content-btn" role="button">
-                                            Save
-                                        </a>
-                                    </div>
-
-                                </div>
-
-                            </div>
-
+                    <div id="main-information-input-group" class="input-group form-group">
+                        <div id="add-course-btn-container" class="container-fluid">
+                            <button type="button" id="add-course-btn" class="btn btn-success" onclick="AddCategoryLv1()">
+                                Add new category
+                            </button>
                         </div>
                     </div>
-
                 </div>
+                <div id="category" class="row" name="template" hidden>
+                    <div class="container-fluid">
+
+                        <div id="main-category" class="row">
+                            <div id="main-category-container" class="container-fluid">
+                                <label>Category level 1</label>
+                                <div id="main-category-btn-group" class="btn-group">
+                                    <a id="remove-btn" onclick="RemoveCategory()" class="btn btn-danger content-btn" role="button">
+                                        Remove
+                                    </a>
+                                    <a id="save-btn" onclick="SaveAddNewCategory()" class="btn btn-success content-btn" role="button">
+                                        Save
+                                    </a>
+                                    <a id="edit-btn" onclick="AddCategoryLv2()" class="btn btn-success content-btn" role="button">
+                                        Add category level 2
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div id="main-category-container" class="container-fluid">
+
+                                <form method="POST">
+                                    <div id="main-category-input-group" class="input-group">
+                                        <input name="newMainCategoryName" id="main-category-new" type="text"
+                                               class="form-control" maxlength="50">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+                <div id="sub-category" class="row" name="template" hidden>
+                    <div>
+                        <div id="sub-category-container" class="container-fluid">
+                            <label>Category level 2</label>
+                        </div>
+
+                        <div id="sub-category-container" class="container-fluid">
+                            <form method="POST">
+                                <div id="sub-category-input-group" class="input-group">
+                                    <input name="newSubCategoryName" id="sub-category-new" type="text"
+                                           class="form-control" maxlength="50">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
     </div>

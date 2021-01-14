@@ -35,23 +35,35 @@ module.exports = {
                 email: rows[0].email,
                 name: rows[0].name,
                 phoneNumber: rows[0].phone_number,
+                block: rows[0].block,
                 role: ROLES.STUDENT
             };
-        sql = `select * from lecturer where id = ?`;
-        [rows, fields] = await db.load(sql, condition);
-        if (rows.length === 0) {
-            return null;
+        var sql = `select * from lecturer where id = ?`;
+        var [rows, fields] = await db.load(sql, condition);
+        if (rows.length !== 0) {
+            return {
+                username: rows[0].id,
+                password: rows[0].password,
+                email: rows[0].email,
+                name: rows[0].name,
+                phoneNumber: rows[0].phone_number,
+                university: rows[0].university,
+                gender: rows[0].gender,
+                block: rows[0].block,
+                role: ROLES.LECTURER
+            }
         }
-        return {
-            username: rows[0].id,
-            password: rows[0].password,
-            email: rows[0].email,
-            name: rows[0].name,
-            phoneNumber: rows[0].phone_number,
-            university: rows[0].university,
-            gender: rows[0].gender,
-            role: ROLES.LECTURER
+        var sql = `select * from admin where id = ?`;
+        var [rows, fields] = await db.load(sql, condition);
+        if (rows.length !== 0) {
+            return {
+                username: rows[0].id,
+                password: rows[0].password,
+                name: rows[0].id,
+                role: ROLES.ADMIN
+            }
         }
+        return null;
     },
 
     async IsExist(account) {
