@@ -338,3 +338,12 @@ li.subdropdown a.dropdown-toggle.noselect.disabled {
 	min-width: 64px;
 	text-align: center;
 }
+
+.navbar-wrapper {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100% !important;
+    left: 0;
+    z-index: 20;
+}

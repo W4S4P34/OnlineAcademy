@@ -1,19 +1,19 @@
 <!-- Import -->
 {{#section 'camera_wrap'}}
-    jQuery(() => {
-        jQuery('#camera_wrap_4').camera({
-        transPeriod: 500,
-        time: 3000,
-        height: '600',
-        loader: 'false',
-        pagination: true,
-        thumbnails: false,
-        hover: false,
-        playPause: false,
-        navigation: false,
-        opacityOnGrid: false,
-        imagePath: 'views/assets/images/'
-    });
+jQuery(() => {
+jQuery('#camera_wrap_4').camera({
+transPeriod: 500,
+time: 3000,
+height: '600',
+loader: 'false',
+pagination: true,
+thumbnails: false,
+hover: false,
+playPause: false,
+navigation: false,
+opacityOnGrid: false,
+imagePath: 'views/assets/images/'
+});
 
 });
 {{/section}}
@@ -38,7 +38,6 @@
                 <!-- 1st Slide -->
                 <div data-thumb="views/assets/images/slides/thumbs/img1.jpg"
                     data-src="views/assets/images/slides/img1.jpg">
-                    <h2>We develop.</h2>
                 </div>
 
                 <!-- 2nd Slide -->
@@ -73,7 +72,6 @@
                 <h4>Online Courses</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus eleifend risus ut congue
                     eset nec lacus elit dor broma.</p>
-                <p><a href="#"><em>Read More</em></a></p>
 
             </div>
         </div>
@@ -89,7 +87,6 @@
                 <h4>Meet our Staff</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus eleifend risus ut congue
                     eset nec lacus elit dor broma.</p>
-                <p><a href="#"><em>Read More</em></a></p>
 
             </div>
         </div>
@@ -105,7 +102,6 @@
                 <h4>Latest Updates</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus eleifend risus ut congue
                     eset nec lacus elit dor broma.</p>
-                <p><a href="#"><em>Read More</em></a></p>
 
             </div>
         </div>
@@ -121,7 +117,6 @@
                 <h4>Placements</h4>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent tempus eleifend risus ut congue
                     eset nec lacus elit dor broma.</p>
-                <p><a href="#"><em>Read More →</em></a></p>
 
             </div>
         </div>
@@ -133,7 +128,7 @@
     <!-- New Course -->
     <div class="container">
         <h2>
-            <span>New Courses</span>
+            <span>Hot courses</span>
         </h2>
 
         <!-- Row -->
@@ -226,6 +221,492 @@
     </div>
 </section>
 
+<section class="news-box top-margin">
+    <!-- New Course -->
+    <div class="container">
+        <h2>
+            <span>Most view courses</span>
+        </h2>
+
+        <!-- Row -->
+        <div class="row">
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div id="cat-courses" class="well">
+
+                        <div id="new-courses-home-carousel" class="carousel slide">
+                            <!-- Carousel items -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <div class="row">
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <a href="google.com">
+                                                        <img class="img-responsive center-block"
+                                                            src="/resource/public/course/1/photo.png"
+                                                            alt="Course Image">
+                                                    </a>
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <a href="google.com">
+                                                        <img class="img-responsive center-block"
+                                                            src="/resource/public/course/{{this.id}}/photo.png"
+                                                            alt="Course Image">
+                                                    </a>
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <img class="img-responsive center-block"
+                                                        src="/resource/public/course/{{this.id}}/photo.png"
+                                                        alt="Course Image">
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!--/row-->
+                                </div>
+                                <!--/item-->
+                                <div class="item">
+                                    <div class="row">
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <img class="img-responsive center-block"
+                                                        src="/resource/public/course/{{this.id}}/photo.png"
+                                                        alt="Course Image">
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/row-->
+                                </div>
+                                <!--/item-->
+
+                            </div>
+                            <!--/carousel-inner--> <a class="left carousel-control" href="#new-courses-home-carousel"
+                                data-slide="prev">‹</a>
+
+                            <a class="right carousel-control" href="#new-courses-home-carousel" data-slide="next">›</a>
+                        </div>
+                        <!--/myCarousel-->
+                    </div>
+                    <!--/well-->
+                </div>
+            </div>
+
+        </div>
+        <!-- /End row -->
+
+    </div>
+</section>
+
+<section class="news-box top-margin">
+    <!-- New Course -->
+    <div class="container">
+        <h2>
+            <span>Newest Courses</span>
+        </h2>
+
+        <!-- Row -->
+        <div class="row">
+
+            <div class="container">
+                <div class="col-md-12">
+                    <div id="cat-courses" class="well">
+
+                        <div id="new-courses-home-carousel" class="carousel slide">
+                            <!-- Carousel items -->
+                            <div class="carousel-inner">
+                                <div class="item active">
+                                    <div class="row">
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <a href="google.com">
+                                                        <img class="img-responsive center-block"
+                                                            src="/resource/public/course/1/photo.png"
+                                                            alt="Course Image">
+                                                    </a>
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <a href="google.com">
+                                                        <img class="img-responsive center-block"
+                                                            src="/resource/public/course/{{this.id}}/photo.png"
+                                                            alt="Course Image">
+                                                    </a>
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <img class="img-responsive center-block"
+                                                        src="/resource/public/course/{{this.id}}/photo.png"
+                                                        alt="Course Image">
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!--/row-->
+                                </div>
+                                <!--/item-->
+                                <div class="item">
+                                    <div class="row">
+                                        <div id="course" class="col-md-4">
+                                            <div class="thumbnail">
+                                                <div class="container">
+                                                    <img class="img-responsive center-block"
+                                                        src="/resource/public/course/{{this.id}}/photo.png"
+                                                        alt="Course Image">
+                                                </div>
+
+                                                <div class="caption">
+                                                    <div id="cat-course-caption">
+                                                        <p>{{this.title}}</p>
+                                                    </div>
+                                                    <div id="cat-course-price">
+                                                        <p>$ {{this.price}}</p>
+                                                    </div>
+                                                    <div id="cat-course-field">
+                                                        <p>{{this.fieldName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-lecturer">
+                                                        <p>{{this.lecturerName}}</p>
+                                                    </div>
+                                                    <div id="cat-course-status">
+                                                        <p>Complete</p>
+                                                    </div>
+                                                    <div id="cat-course-review">
+                                                        <p>
+                                                            ??? students &nbsp;
+                                                            <i class="fa fa-user" aria-hidden="true"></i>
+                                                        </p>
+                                                        <p>
+                                                            &nbsp; &nbsp;
+                                                        </p>
+                                                        <p>
+                                                            {{this.likes}} likes &nbsp;
+                                                            <i class="fa fa-thumbs-up"></i>
+                                                        </p>
+                                                    </div>
+
+                                                    <p id="cat-transaction-btn">
+                                                        <a href="/course/detail/{{this.id}}" class="btn btn-primary"
+                                                            role="button">
+                                                            Details
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!--/row-->
+                                </div>
+                                <!--/item-->
+
+                            </div>
+                            <!--/carousel-inner--> <a class="left carousel-control" href="#new-courses-home-carousel"
+                                data-slide="prev">‹</a>
+
+                            <a class="right carousel-control" href="#new-courses-home-carousel" data-slide="next">›</a>
+                        </div>
+                        <!--/myCarousel-->
+                    </div>
+                    <!--/well-->
+                </div>
+            </div>
+
+        </div>
+        <!-- /End row -->
+
+    </div>
+</section>
+
 <section class="container">
     <div class="row">
 
@@ -258,12 +739,13 @@
 
             <!-- Title -->
             <div class="title-box clearfix ">
-                <h2 class="title-box_primary">Up Coming Courses</h2>
+                <h2 class="title-box_primary">Top Fields</h2>
             </div>
 
             <!-- Upcoming courses list -->
             <div class="list styled custom-list">
                 <ul>
+                    <!-- Title show tooltip -->
                     <li><a title="Snatoque penatibus et magnis dis partu rient montes ascetur ridiculus mus."
                             href="#">Mathematics and Computer Science</a></li>
                     <li><a title="Fusce feugiat malesuada odio. Morbi nunc odio gravida at cursus nec luctus."
