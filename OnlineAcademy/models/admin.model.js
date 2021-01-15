@@ -124,8 +124,6 @@ module.exports = {
         return null;
     },
     async UpdateLecturerAccount(id, block) {
-        console.log(typeof (block));
-        console.log(block);
         try {
             var newData = {
                 block: block
@@ -134,6 +132,20 @@ module.exports = {
                 id: id
             }
             await db.update(newData, condition, 'lecturer');
+        } catch (e) {
+            return e;
+        }
+        return null;
+    },
+    async UpdateCourse(id, block) {
+        try {
+            var newData = {
+                available: block
+            }
+            var condition = {
+                id: id
+            }
+            await db.update(newData, condition, 'course');
         } catch (e) {
             return e;
         }

@@ -8,6 +8,7 @@
         });
         jQuery("#edit-profile-btn").css("display", "none");
         jQuery("#heading-information-save-btn").css("display", "inherit");
+        jQuery("#back-btn").css("display", "inherit");
     }
     function DisplayError(message) {
         swal(message, {
@@ -122,6 +123,9 @@
                                 </a>
                                 <a id="heading-information-save-btn" class="btn btn-success" href="javascript:SaveProfile()" type="button">
                                     Save
+                                </a>
+                                <a id="back-btn" class="btn btn-primary" href="/lecturer/info" type="button" style="display:none">
+                                    Back
                                 </a>
                             </div>
                         </div>

@@ -88,7 +88,7 @@ router.post('/remove/categories', async (req, res) => {
 
     if (req.body.fieldName) {
 
-        const course = await courseModel.GetCourseByField(req.body.fieldName, 1, 0);
+        const course = await courseModel.GetCourseByField(req.body.fieldName, 1, 0, true);
         if (course) {
             err = "Can not delete because this field has course";
         } else {
@@ -96,7 +96,7 @@ router.post('/remove/categories', async (req, res) => {
         }
     }
     else {
-        const course = await courseModel.GetCourseByTheme(req.body.subFieldName, 1, 0);
+        const course = await courseModel.GetCourseByTheme(req.body.subFieldName, 1, 0, true);
         if (course) {
             err = "Can not delete because this field has course";
         } else {
@@ -115,12 +115,20 @@ router.post('/ban/lecturer', async (req, res) => {
     const err = await adminModel.UpdateLecturerAccount(req.body.id,true);
     res.json(err);
 })
+router.post('/ban/course', async (req, res) => {
+    const err = await adminModel.UpdateCourse(req.body.courseId, false);
+    res.json(err);
+})
 router.post('/unlock/student', async (req, res) => {
     const err = await adminModel.UpdateStudentAccount(req.body.id, false);
     res.json(err);
 })
 router.post('/unlock/lecturer', async (req, res) => {
     const err = await adminModel.UpdateLecturerAccount(req.body.id, false);
+    res.json(err);
+})
+router.post('/unlock/course', async (req, res) => {
+    const err = await adminModel.UpdateCourse(req.body.courseId, true);
     res.json(err);
 })
 module.exports = router;

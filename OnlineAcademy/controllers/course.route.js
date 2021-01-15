@@ -39,6 +39,7 @@ function InitMarkCompleteSection(listSection, listMarkComplete) {
     }
     return newlst;
 }
+
 router.use(async (req, res, next) => {
     // Middleware check auth protect this route
     if (!res.locals.isAuthorized) {
@@ -53,11 +54,12 @@ router.get('/byField/:field', async (req, res) => {
     res.locals.currentView = '#categories';
     res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(req.params.field);
     if (res.locals.listCourseFields !== null) {
-        const total = await courseModel.CountCourseByField(req.params.field);
+        const total = await courseModel.CountCourseByField(req.params.field, res.locals.user.role === ROLES.ADMIN);
         const nPages = Math.ceil(total / process.env.PAGINATE);
         const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
         res.locals.pageNumbers = CreatePageNumber(nPages, page);
-        res.locals.listCourse = await courseModel.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
+        res.locals.listCourse = await courseModel.GetCourseByField(req.params.field, process.env.PAGINATE, (page - 1) * process.env.PAGINATE,res.locals.user.role === ROLES.ADMIN);
+        console.log(res.locals.listCourse);
     }
 
     res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
@@ -67,11 +69,11 @@ router.get('/byTheme/:theme', async (req, res) => {
     res.locals.currentView = '#categories';
     const field = await courseModel.GetFieldByTheme(req.params.theme);
     if (field !== null) {
-        const total = await courseModel.CountCourseByTheme(req.params.theme);
+        const total = await courseModel.CountCourseByTheme(req.params.theme, res.locals.user.role === ROLES.ADMIN);
         const nPages = Math.ceil(total / process.env.PAGINATE);
         const page = (req.query.page || 1) < 1 ? 1 : (req.query.page || 1);
         res.locals.pageNumbers = CreatePageNumber(nPages, page);
-        res.locals.listCourse = await courseModel.GetCourseByTheme(req.params.theme, process.env.PAGINATE, (page - 1) * process.env.PAGINATE);
+        res.locals.listCourse = await courseModel.GetCourseByTheme(req.params.theme, process.env.PAGINATE, (page - 1) * process.env.PAGINATE,res.locals.user.role === ROLES.ADMIN);
         res.locals.listCourseFields = await courseModel.GetAllFieldsAndTheme(field);
     }
     res.locals.listHighlightCourse = await courseModel.GetTopNewCourses(5);
@@ -109,5 +111,23 @@ router.get('/detail/:id', async (req, res) => {
     }
 
     return res.render('vwCategories/details');
+})
+router.post('/search', async (req, res) => {
+    console.log(req.body.searchString);
+    var list = [];
+    console.log(req.body.fillByName);
+    console.log(req.body.fillByField);
+    console.log(req.body.fillBySubField);
+    if (req.body.fillByName === 'true') {
+        
+       list = await courseModel.SearchByName(req.body.searchString, list);
+    }
+    if (req.body.fillByField === 'true') {
+        list = await courseModel.SearchByField(req.body.searchString, list);
+    }
+    if (req.body.fillBySubField === 'true') {
+        list = await courseModel.SearchBySubField(req.body.searchString, list);
+    }
+    res.json(list);
 })
 module.exports = router;

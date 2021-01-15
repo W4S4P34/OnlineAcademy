@@ -414,7 +414,7 @@
                                 Status
                             </h2>
                             <div id="status" class="truncate">
-                                Complete
+                                {{detailCourse.status}}
                             </div>
                         </div>
 
@@ -665,6 +665,7 @@
                                     {{/each}}
                                 </ul>
 
+                                {{#with listFeedbacks}}
                                 <div id="showmore-btn" class="container-fluid">
                                     <button class="btn btn-primary">
                                         Show More
@@ -677,7 +678,7 @@
                                         Show Less
                                     </button>
                                 </div>
-
+                                {{/with}}
                             </div>
                         </div>
                     </div>

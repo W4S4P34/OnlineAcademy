@@ -175,14 +175,6 @@ router.get('/addCourse', (req, res) => {
     res.render('vwLecturer/addcourse');
 })
 router.post('/addCourse', async (req, res) => {
-    //console.log(req.body.courseName);
-    //console.log(req.body.field);
-    //console.log(req.body.subField);
-    //console.log(req.body.shortDescription);
-    //console.log(req.body.description);
-    //console.log(req.body.price);
-    //console.log(req.body.status);
-    //console.log(req.body.lectureName);
     var today = new Date();
     var date = `${today.getFullYear()}-${(today.getMonth() + 1).toString().padStart(2, 0)}-${today.getDate().toString().padStart(2, 0)}`;
     let err = await lecturerModel.AddCourse(req.body,res.locals.user.username,res.locals.courseSize+1,date);

@@ -17,6 +17,11 @@ module.exports = {
                 })
             } catch (e) {}
         }
+        if (res.locals.user === undefined) {
+            res.locals.user = {
+                role: ROLES.GUEST
+            }
+        }
         res.locals.isAuthorized = isAuthorized;
         return next();
     },

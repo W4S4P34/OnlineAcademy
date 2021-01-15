@@ -9,7 +9,7 @@ module.exports = {
         return true;
     },
     async GetEnrolledCourses(studentId, limit, offset) {
-        const sql = 'select course.*,`subField`.fieldName as fieldName,lecturer.name as lecturerName from enroll join course on enroll.courseId = course.id and enroll.studentId = ? join `subField` on `subField`.id = subFieldId join lecturer on lecturer.id = lecturerId limit ? offset ?';
+        const sql = 'select course.*,`subField`.fieldName as fieldName,lecturer.name as lecturerName,coalesce(round((select count(*) from markComplete as mc where mc.studentId = enroll.studentId and mc.courseId = course.id and mc.isComplete = true)/(select count(*) from section as s where s.courseId = course.id)*100),0) as progress from enroll join course on enroll.courseId = course.id and enroll.studentId = ? join `subField` on `subField`.id = subFieldId join lecturer on lecturer.id = lecturerId limit ? offset ?';
         const condition = [studentId, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -70,7 +70,7 @@ module.exports = {
         const result = await db.load(sql, condition);
     },
     async GetWatchList(studentId, limit, offset) {
-        const sql = 'select course.*,`subField`.fieldName as fieldName,lecturer.name as lecturerName from watchList join course on watchList.courseId = course.id and watchList.studentId = ? join `subField` on `subField`.id = subFieldId join lecturer on lecturer.id = lecturerId limit ? offset ?';
+        const sql = 'select course.*,`subField`.fieldName as fieldName,lecturer.name as lecturerName from watchList join course on watchList.courseId = course.id and course.available = true and watchList.studentId = ? join `subField` on `subField`.id = subFieldId join lecturer on lecturer.id = lecturerId limit ? offset ?';
         const condition = [studentId, parseInt(limit), offset];
         const [rows, fields] = await db.load(sql, condition);
         if (rows.length === 0)
@@ -78,7 +78,7 @@ module.exports = {
         return rows;
     },
     async GetWatchListSize(studentId) {
-        const sql = 'select * from watchList where studentId = ?';
+        const sql = 'select * from watchList join course on watchList.courseId = course.id and course.available = true where studentId = ?';
         const condition = [studentId];
         const [rows, fields] = await db.load(sql, condition);
         return rows.length;
@@ -101,8 +101,6 @@ module.exports = {
         isComplete = isComplete === "true";
         courseId = parseInt(courseId);
         sectionId = parseInt(sectionId);
-        console.log(courseId);
-        console.log(sectionId);
         const isMask = await this.IsMarkAlready(studentId, courseId, sectionId);
         try {
             if (isMask) {
